@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Настя — AI-визуализация</title>
+<meta name="description" content="AI-визуализация: кадры, которые невозможно, негде или слишком дорого снять в реальности. Фото, видео, продукты и миры под ключ.">
+
+<link rel="preload" as="image" href="public/img/hero-poster.webp" fetchpriority="high">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- подложка: размытие и затемнение запечены в bg.webp, filter здесь не вешаем -->
+<div class="page-bg"></div>
+<div class="progress" id="progress"></div>
+
+<div class="page">
+
+<!-- ══ ХИРО: кадр целиком, играет один раз ══ -->
+<!-- object-fit: contain — кадр показывается целиком и прижат к низу.
+     Поля по бокам заполняет фон секции --bg, он же фон внутри видео,
+     поэтому стык не виден. loop не ставить: первый и последний кадры
+     не совпадают. autoplay не ставить: запуск делает скрипт ниже,
+     после того как выберет источник по плотности пикселей. -->
+<section class="hero" id="top">
+  <video class="hero__video" muted playsinline preload="auto"
+         poster="public/img/hero-poster.webp"
+         data-src-sd="public/video/hero-mobile.mp4"
+         data-src-hd="public/video/hero.mp4"></video>
+
+  <!-- Верхнее меню живёт ВНУТРИ карточки шапки: отдельной полосой над ней
+       оно разламывает подложку. Позиционирование — в .header. -->
+  <header class="header" id="header">
+    <a class="logo" href="#top">НАСТЯ<span>AI-креатор</span></a>
+    <nav class="nav">
+      <a href="#impossible">Невозможное</a>
+      <a href="#process">Процесс</a>
+      <a href="#pricing">Цены</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn btn--sm" href="#contact">Обсудить проект</a>
+    <button class="burger" id="burger" aria-label="Меню" aria-expanded="false"><span></span><span></span></button>
+  </header>
+
+  <!-- левая колонка в потоке: список, затем панель. Так они не могут
+       наложиться друг на друга при любой высоте карточки. -->
+  <div class="hero__content">
+  <nav class="hero__nav" aria-label="Направления">
+    <a href="#ai">AI-визуализация</a>
+    <a href="#brands">Фото и видео для брендов</a>
+    <a href="#ads">Реклама</a>
+    <a href="#reels">Reels</a>
+    <a href="#shorts">Shorts</a>
+    <a href="#tiktok">Tiktok</a>
+  </nav>
+
+  <div class="hero__panel">
+    <span class="hero__glass" aria-hidden="true"></span>
+    <div class="hero__copy">
+      <h1 class="hero__title">СОЗДАЮ<br>НЕВОЗМОЖНОЕ</h1>
+      <p class="hero__sub">AI-визуал и видео для брендов</p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#works">Смотреть работы</a>
+        <a class="btn btn--ghost"   href="#contact">Обсудить проект</a>
+      </div>
+    </div>
+  </div>
+  </div><!-- /.hero__content -->
+</section>
+
+<!-- Источник выбирается по ФИЗИЧЕСКИМ пикселям: 1440 CSS при dpr 2 — это
+     2880 реальных, такому экрану нужен hero.mp4. Скрипт стоит сразу за
+     секцией, а не в конце body и не в DOMContentLoaded: иначе постер
+     сменится рывком. Обёрнут в IIFE, чтобы hero/video/px не утекали
+     в глобальную область — на поведение это не влияет. -->
+<script>
+  (function () {
+    const hero  = document.querySelector('.hero');
+    const video = document.querySelector('.hero__video');
+
+    if (video && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const px = window.innerWidth * (window.devicePixelRatio || 1);
+      video.src = video.dataset[px > 1400 ? 'srcHd' : 'srcSd'];
+      video.play().catch(() => {});
+
+      hero.addEventListener('mouseenter', () => {
+        if (!video.paused) return;
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      });
+    }
+  })();
+</script>
+
+<!-- ══ БЕГУЩАЯ СТРОКА ══ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <span>невозможно снять · негде снять · слишком дорого снять · </span>
+    <span>невозможно снять · негде снять · слишком дорого снять · </span>
+  </div>
+</div>
+
+<!-- ══ ОБО МНЕ ══ -->
+<section class="section section--teal" id="about">
+  <div class="shell about">
+    <img class="about__media reveal" src="public/img/about.webp"
+         width="900" height="1600" loading="lazy" decoding="async"
+         alt="Девушка-великанша сидит на жилом доме, съёмка с нижней точки">
+    <div class="about__text">
+      <p class="tag reveal">Обо мне</p>
+      <h2 class="section__title reveal">Я делаю миры,<br>в которые нельзя поехать</h2>
+      <p class="reveal">Здесь 2–3 абзаца от первого лица: как пришла в AI-визуализацию, что было до, почему сюрреализм и нереальные фактуры, чем твой взгляд отличается от «просто генерации по промпту».</p>
+      <p class="reveal">Второй абзац — про подход к работе: как читаешь бриф, что делаешь с рефересами клиента, где заканчивается генерация и начинается ручная сборка кадра.</p>
+      <ul class="chips reveal">
+        <li>сюрреализм</li><li>fashion-визуал</li><li>предметка</li><li>клипы и ролики</li><li>арт-дирекшн</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══ НАПРАВЛЕНИЯ (раскрывающиеся строки) ══ -->
+<section class="section section--blue" id="directions">
+  <div class="shell">
+    <div class="dirs__head">
+      <div>
+        <p class="tag reveal">Направления</p>
+        <h2 class="section__title reveal">Что я<br>снимаю</h2>
+      </div>
+      <div class="dirs__tools reveal">
+        <button class="linkbtn" id="expandAll">Раскрыть все</button>
+        <button class="linkbtn" id="collapseAll">Свернуть все</button>
+      </div>
+    </div>
+
+    <div class="dirs" id="dirs">
+      <div class="drow is-peek" data-key="photo">
+        <button class="drow__bar" aria-expanded="false" aria-controls="panel-photo">
+          <span class="drow__no">01</span>
+          <span class="drow__name">Фото</span>
+          <span class="drow__count">21 работ</span>
+          <span class="drow__icon" aria-hidden="true"></span>
+        </button>
+        <div class="drow__panel" id="panel-photo" role="region">
+          <div class="drow__inner">
+            <p class="drow__desc">Кампейны, портреты, fashion, лукбуки. Съёмка без съёмочной группы, локации и кастинга.</p>
+            <div class="dstrip">
+              <div class="dgrid">
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-brand="KNOT" data-meta="Одежда (трикотаж) · Кампейн, вид сверху · 9:16" data-about="Рыжая модель в свитере спит среди огромных клубков пряжи. Пара к видео-кейсу 08_KNOT.">
+                    <img class="work__img" src="public/img/cases/ph-18-knot.webp" alt="KNOT — Кампейн, вид сверху"
+                         width="600" height="900" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>KNOT</b><small>Кампейн, вид сверху</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-brand="NIGHTSHIFT" data-meta="Стритвир · Ночной кампейн · 9:16" data-about="Прыжок на фоне огромной луны над ночным городом, вспышка в лоб.">
+                    <img class="work__img" src="public/img/cases/ph-08-nightshift.webp" alt="NIGHTSHIFT — Ночной кампейн"
+                         width="600" height="900" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>NIGHTSHIFT</b><small>Ночной кампейн</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-brand="HEX" data-meta="Бижутерия · Key visual · 9:16" data-about="Дерзкий кастинг, массивные кольца с синими жеодами на красном фоне. Пара к видео-кейсу 02_HEX.">
+                    <img class="work__img" src="public/img/cases/ph-03-hex.webp" alt="HEX — Key visual"
+                         width="600" height="800" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>HEX</b><small>Key visual</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-brand="ДЕРЗКО" data-meta="Косметика · Бьюти-кампейн · 9:16" data-about="Два лица крупным планом, логотип ДЕРЗКО вдавлен в кожу как тиснение.">
+                    <img class="work__img" src="public/img/cases/ph-02.webp" alt="ДЕРЗКО — Бьюти-кампейн"
+                         width="600" height="800" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>ДЕРЗКО</b><small>Бьюти-кампейн</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-brand="CREMA CLUB" data-meta="Кофейня · Флаер открытия · 9:16" data-about="Чашка капучино-бассейн с крошечными купальщиками, плитка, заголовок CREMA CLUB.">
+                    <img class="work__img" src="public/img/cases/ph-11-crema-club.webp" alt="CREMA CLUB — Флаер открытия"
+                         width="600" height="1067" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>CREMA CLUB</b><small>Флаер открытия</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-brand="SOIE" data-meta="Парфюм · Кадр кампании · 9:16" data-about="Девушка в розовой шубе с флаконом в дождливом мегаполисе. Пара к видео-кейсу 07_SOIE.">
+                    <img class="work__img" src="public/img/cases/ph-04-soie.webp" alt="SOIE — Кадр кампании"
+                         width="600" height="1067" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>SOIE</b><small>Кадр кампании</small></span>
+                  </button>
+                </article>
+                <article class="work work--wide">
+                  <button class="work__btn" type="button"
+                          data-brand="FIZZ" data-meta="Напитки (лимонад) · Key visual 16x9 · 16:9" data-about="Бутылка лимонада в бирюзовом море с цитрусами и брызгами. Пара к видео-кейсу 10_FIZZ.">
+                    <img class="work__img" src="public/img/cases/ph-01-fizz.webp" alt="FIZZ — Key visual 16x9"
+                         width="1200" height="675" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>FIZZ</b><small>Key visual 16x9</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-brand="PETALE" data-meta="Косметика (тушь) · Бьюти-макро · 9:16" data-about="Макро глаза: вместо ресниц на веке красные лепестки, лепестки падают на щёку.">
+                    <img class="work__img" src="public/img/cases/ph-05-petale.webp" alt="PETALE — Бьюти-макро"
+                         width="600" height="900" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>PETALE</b><small>Бьюти-макро</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-brand="AIRY" data-meta="Верхняя одежда (пуховики) · Сюр-кампейн · 9:16" data-about="Модель в лавандовом пуховике среди надувных мятных холмов, похожих на стёганую ткань.">
+                    <img class="work__img" src="public/img/cases/ph-06-airy.webp" alt="AIRY — Сюр-кампейн"
+                         width="600" height="1067" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>AIRY</b><small>Сюр-кампейн</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-brand="SOFT MATTER" data-meta="Выставка керамики · Постер · 9:16" data-about="Постер в швейцарском стиле: модель с керамическим воротником, вокруг парят черепки.">
+                    <img class="work__img" src="public/img/cases/ph-07-soft-matter.webp" alt="SOFT MATTER — Постер"
+                         width="600" height="800" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>SOFT MATTER</b><small>Постер</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-brand="AETHEL" data-meta="Уход за кожей (крем) · Предметка · 9:16" data-about="Баночка крема на мокром камне у окна, эвкалипт и полотенце, мягкий дневной свет.">
+                    <img class="work__img" src="public/img/cases/ph-09-aethel.webp" alt="AETHEL — Предметка"
+                         width="600" height="800" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>AETHEL</b><small>Предметка</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-brand="Hotter" data-meta="Предметка (термокружка) · Студийный пэкшот · 9:16" data-about="Термокружка на подиуме с паром, пастельный градиент. Пара к видео-кейсу 06_Hotter.">
+                    <img class="work__img" src="public/img/cases/ph-10-hotter.webp" alt="Hotter — Студийный пэкшот"
+                         width="600" height="800" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>Hotter</b><small>Студийный пэкшот</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-brand="LAIT" data-meta="Уход за кожей (сыворотка) · Key visual · 9:16" data-about="Лицо модели в розовом молоке, рядом флакон сыворотки, круги на поверхности.">
+                    <img class="work__img" src="public/img/cases/ph-12-lait.webp" alt="LAIT — Key visual"
+                         width="600" height="900" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>LAIT</b><small>Key visual</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-brand="OVERSIZE" data-meta="Одежда (трикотаж) · Сюр-гигантизм · 9:16" data-about="Великанша в свитере лежит на улице и играет машинками. Пара к видео-кейсу 14_OVERSIZE.">
+                    <img class="work__img" src="public/img/cases/ph-13-oversize.webp" alt="OVERSIZE — Сюр-гигантизм"
+                         width="600" height="800" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>OVERSIZE</b><small>Сюр-гигантизм</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-brand="CLOUD LAUNDRY" data-meta="Сюр-имидж · Fashion-редакционная · 9:16" data-about="Ретро-прачечная с облаками в барабанах. Пара к видео-кейсу 13_CLOUD_LAUNDRY.">
+                    <img class="work__img" src="public/img/cases/ph-14-cloud-laundry.webp" alt="CLOUD LAUNDRY — Fashion-редакционная"
+                         width="600" height="1067" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>CLOUD LAUNDRY</b><small>Fashion-редакционная</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-brand="NUAGE" data-meta="Бытовая химия (кондиционер для белья) · Сюр-имидж · 9:16" data-about="Девушка на крыше развешивает облака на бельевой верёвке. Название бренда рабочее.">
+                    <img class="work__img" src="public/img/cases/ph-15-nuage.webp" alt="NUAGE — Сюр-имидж"
+                         width="600" height="1067" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>NUAGE</b><small>Сюр-имидж</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-brand="STRAND" data-meta="Украшения ручной работы (бисер) · Кампейн · 9:16" data-about="Модель с косами из бисера и многорядными бусами на лавандовом фоне.">
+                    <img class="work__img" src="public/img/cases/ph-16-strand.webp" alt="STRAND — Кампейн"
+                         width="600" height="900" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>STRAND</b><small>Кампейн</small></span>
+                  </button>
+                </article>
+                <article class="work work--wide">
+                  <button class="work__btn" type="button"
+                          data-brand="GLIDE" data-meta="Бытовая техника (утюг) · Сюр key visual 16x9 · 16:9" data-about="Женщина гладит утюгом морскую волну на пляже. Название бренда рабочее.">
+                    <img class="work__img" src="public/img/cases/ph-17-glide.webp" alt="GLIDE — Сюр key visual 16x9"
+                         width="1200" height="675" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>GLIDE</b><small>Сюр key visual 16x9</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-brand="PLUMA" data-meta="Постельное бельё (подушки) · Сюр-кампейн · 9:16" data-about="Барочный зал, модель на горе белых подушек, вокруг гуси и летящий пух.">
+                    <img class="work__img" src="public/img/cases/ph-19-pluma.webp" alt="PLUMA — Сюр-кампейн"
+                         width="600" height="800" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>PLUMA</b><small>Сюр-кампейн</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-brand="SUCRE" data-meta="Fashion (сладкая коллекция) · Сюр-кампейн · 9:16" data-about="Модель в розовом сидит на гигантском фисташковом макаруне среди взбитых сливок и малины.">
+                    <img class="work__img" src="public/img/cases/ph-20-sucre.webp" alt="SUCRE — Сюр-кампейн"
+                         width="600" height="1067" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>SUCRE</b><small>Сюр-кампейн</small></span>
+                  </button>
+                </article>
+                <article class="work work--wide">
+                  <button class="work__btn" type="button"
+                          data-brand="NACRE" data-meta="Купальники · Hero для сайта 16x9 · 16:9" data-about="Модель в купальнике у гигантской перламутровой раковины в розовом море на закате.">
+                    <img class="work__img" src="public/img/cases/ph-21-nacre.webp" alt="NACRE — Hero для сайта 16x9"
+                         width="1200" height="675" loading="lazy" decoding="async">
+                    <span class="work__cap"><b>NACRE</b><small>Hero для сайта 16x9</small></span>
+                  </button>
+                </article>
+              </div>
+            </div>
+            <button class="drow__all linkbtn" type="button">Показать все 21</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="drow is-peek" data-key="video">
+        <button class="drow__bar" aria-expanded="false" aria-controls="panel-video">
+          <span class="drow__no">02</span>
+          <span class="drow__name">Видео</span>
+          <span class="drow__count">6 работ</span>
+          <span class="drow__icon" aria-hidden="true"></span>
+        </button>
+        <div class="drow__panel" id="panel-video" role="region">
+          <div class="drow__inner">
+            <p class="drow__desc">Ролики, клипы, движение, зацикленные сцены. От раскадровки до монтажа со звуком.</p>
+            <div class="dstrip">
+              <div class="dgrid">
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-src="public/video/cases/02-hex.mp4"
+                          data-brand="HEX" data-meta="Бижутерия · Fashion-ролик · 9:16 · 13 с" data-about="Дерзкий кастинг, массивные кольца с синими жеодами, красный фон, макро.">
+                    <img class="work__img" src="public/img/cases/02-hex.webp" alt="HEX — Fashion-ролик"
+                         width="600" height="800" loading="lazy" decoding="async">
+                    <span class="work__play" aria-hidden="true"></span><span class="work__cap"><b>HEX</b><small>Fashion-ролик</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-src="public/video/cases/05-orbit.mp4"
+                          data-brand="ORBIT" data-meta="Аксессуары (сумка) · Сюрреалистичный fashion-ролик · 9:16 · 11.4 с" data-about="Пастельный городок свёрнут в крошечную планету, модель с бархатной сумкой-звездой, финал — созвездие планет.">
+                    <img class="work__img" src="public/img/cases/05-orbit.webp" alt="ORBIT — Сюрреалистичный fashion-ролик"
+                         width="600" height="1067" loading="lazy" decoding="async">
+                    <span class="work__play" aria-hidden="true"></span><span class="work__cap"><b>ORBIT</b><small>Сюрреалистичный fashion-ролик</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-src="public/video/cases/01-molt.mp4"
+                          data-brand="MOLT" data-meta="Украшения · Fashion-ролик · 9:16 · 13.7 с" data-about="Жидкий хром на коже застывает в кольцо-купол, цепь-браслет и серьги-звёзды. Кобальтовая студия, кинематографичный свет.">
+                    <img class="work__img" src="public/img/cases/01-molt.webp" alt="MOLT — Fashion-ролик"
+                         width="600" height="1067" loading="lazy" decoding="async">
+                    <span class="work__play" aria-hidden="true"></span><span class="work__cap"><b>MOLT</b><small>Fashion-ролик</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-src="public/video/cases/14-oversize.mp4"
+                          data-brand="OVERSIZE" data-meta="Одежда (трикотаж) · Сюр-гигантизм, fashion-ролик · 9:16 · 13.7 с" data-about="Девушка-великанша в оверсайз-свитере лежит на улице города, играет машинками, финал — заглядывает в окно. Название бренда рабочее.">
+                    <img class="work__img" src="public/img/cases/14-oversize.webp" alt="OVERSIZE — Сюр-гигантизм, fashion-ролик"
+                         width="600" height="800" loading="lazy" decoding="async">
+                    <span class="work__play" aria-hidden="true"></span><span class="work__cap"><b>OVERSIZE</b><small>Сюр-гигантизм, fashion-ролик</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-src="public/video/cases/03-orbe.mp4"
+                          data-brand="ORBE" data-meta="Украшения (жемчуг) · Beauty-портрет · 9:16 · 11.6 с" data-about="Портрет в профиль на чёрном фоне, жемчуг парит вокруг, контровой свет.">
+                    <img class="work__img" src="public/img/cases/03-orbe.webp" alt="ORBE — Beauty-портрет"
+                         width="600" height="1067" loading="lazy" decoding="async">
+                    <span class="work__play" aria-hidden="true"></span><span class="work__cap"><b>ORBE</b><small>Beauty-портрет</small></span>
+                  </button>
+                </article>
+                <article class="work work--wide">
+                  <button class="work__btn" type="button"
+                          data-src="public/video/cases/08-knot.mp4"
+                          data-brand="KNOT" data-meta="Одежда (трикотаж) · Имиджевый бренд-фильм · 16:9 · 14.8 с" data-about="Долина из вязаных холмов и деревьев, герой в свитере на закате.">
+                    <img class="work__img" src="public/img/cases/08-knot.webp" alt="KNOT — Имиджевый бренд-фильм"
+                         width="1200" height="675" loading="lazy" decoding="async">
+                    <span class="work__play" aria-hidden="true"></span><span class="work__cap"><b>KNOT</b><small>Имиджевый бренд-фильм</small></span>
+                  </button>
+                </article>
+              </div>
+            </div>
+            <button class="drow__all linkbtn" type="button">Показать все 6</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="drow is-peek" data-key="product">
+        <button class="drow__bar" aria-expanded="false" aria-controls="panel-product">
+          <span class="drow__no">03</span>
+          <span class="drow__name">Продукты</span>
+          <span class="drow__count">5 работ</span>
+          <span class="drow__icon" aria-hidden="true"></span>
+        </button>
+        <div class="drow__panel" id="panel-product" role="region">
+          <div class="drow__inner">
+            <p class="drow__desc">Предметка, упаковка, реклама товара. Товар в среде, которую невозможно построить в студии.</p>
+            <div class="dstrip">
+              <div class="dgrid">
+                <article class="work work--wide">
+                  <button class="work__btn" type="button"
+                          data-src="public/video/cases/10-fizz.mp4"
+                          data-brand="FIZZ" data-meta="Напитки (лимонад) · Продуктовый рекламный ролик · 16:9 · 15.1 с" data-about="Бутылка лимонада в бирюзовом море с цитрусами и брызгами.">
+                    <img class="work__img" src="public/img/cases/10-fizz.webp" alt="FIZZ — Продуктовый рекламный ролик"
+                         width="1200" height="675" loading="lazy" decoding="async">
+                    <span class="work__play" aria-hidden="true"></span><span class="work__cap"><b>FIZZ</b><small>Продуктовый рекламный ролик</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-src="public/video/cases/07-soie.mp4"
+                          data-brand="SOIE" data-meta="Парфюм · Хук для Reels (3 с) · 9:16 · 3 с" data-about="Девушка в розовой шубе в дождливом мегаполисе брызгает духами.">
+                    <img class="work__img" src="public/img/cases/07-soie.webp" alt="SOIE — Хук для Reels (3 с)"
+                         width="600" height="1067" loading="lazy" decoding="async">
+                    <span class="work__play" aria-hidden="true"></span><span class="work__cap"><b>SOIE</b><small>Хук для Reels (3 с)</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-src="public/video/cases/04-glaze.mp4"
+                          data-brand="GLAZE" data-meta="Косметика (блеск для губ) · Макро бьюти-ролик · 9:16 · 14 с" data-about="Экстремальное макро губ, капля блеска, перламутровый вихрь.">
+                    <img class="work__img" src="public/img/cases/04-glaze.webp" alt="GLAZE — Макро бьюти-ролик"
+                         width="600" height="1067" loading="lazy" decoding="async">
+                    <span class="work__play" aria-hidden="true"></span><span class="work__cap"><b>GLAZE</b><small>Макро бьюти-ролик</small></span>
+                  </button>
+                </article>
+                <article class="work work--wide">
+                  <button class="work__btn" type="button"
+                          data-src="public/video/cases/06-hotter.mp4"
+                          data-brand="Hotter" data-meta="Предметка (термокружка) · Продуктовый рекламный ролик · 16:9 · 9.9 с" data-about="Термокружка на льду замёрзшего озера, пар из горлышка.">
+                    <img class="work__img" src="public/img/cases/06-hotter.webp" alt="Hotter — Продуктовый рекламный ролик"
+                         width="1200" height="675" loading="lazy" decoding="async">
+                    <span class="work__play" aria-hidden="true"></span><span class="work__cap"><b>Hotter</b><small>Продуктовый рекламный ролик</small></span>
+                  </button>
+                </article>
+                <article class="work work--wide">
+                  <button class="work__btn" type="button"
+                          data-src="public/video/cases/11-lume.mp4"
+                          data-brand="LUME" data-meta="Товары для дома (свечи) · Баннер-луп · 16:9 · 6.6 с" data-about="Свечи на камне в мху, солнечные лучи. Бесшовный луп, логотип висит постоянно.">
+                    <img class="work__img" src="public/img/cases/11-lume.webp" alt="LUME — Баннер-луп"
+                         width="1200" height="675" loading="lazy" decoding="async">
+                    <span class="work__play" aria-hidden="true"></span><span class="work__cap"><b>LUME</b><small>Баннер-луп</small></span>
+                  </button>
+                </article>
+              </div>
+            </div>
+            <button class="drow__all linkbtn" type="button">Показать все 5</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="drow is-open" data-key="ads">
+        <button class="drow__bar" aria-expanded="true" aria-controls="panel-ads">
+          <span class="drow__no">04</span>
+          <span class="drow__name">Реклама</span>
+          <span class="drow__count">2 работы</span>
+          <span class="drow__icon" aria-hidden="true"></span>
+        </button>
+        <div class="drow__panel" id="panel-ads" role="region">
+          <div class="drow__inner">
+            <p class="drow__desc">Готовые креативы под площадки: вертикаль, горизонталь, статика и движение в одном мире.</p>
+            <div class="dstrip">
+              <div class="dgrid">
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-src="public/video/cases/09-paper-moon-fair.mp4"
+                          data-brand="PAPER MOON FAIR" data-meta="Событие, ярмарка · Анимированный постер · 9:16 · 10.1 с" data-about="Бумажный коллаж: девочка на луне, волны. Афиша ярмарки арт-книг.">
+                    <img class="work__img" src="public/img/cases/09-paper-moon-fair.webp" alt="PAPER MOON FAIR — Анимированный постер"
+                         width="600" height="1067" loading="lazy" decoding="async">
+                    <span class="work__play" aria-hidden="true"></span><span class="work__cap"><b>PAPER MOON FAIR</b><small>Анимированный постер</small></span>
+                  </button>
+                </article>
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-src="public/video/cases/12-loop.mp4"
+                          data-brand="LOOP" data-meta="Обувь (кроссовки) · Бесшовный луп · 9:16 · 6.6 с" data-about="Гигантский кроссовок на пастельном холме, крошечный человек рядом. Логотип только на стыке лупа.">
+                    <img class="work__img" src="public/img/cases/12-loop.webp" alt="LOOP — Бесшовный луп"
+                         width="600" height="1067" loading="lazy" decoding="async">
+                    <span class="work__play" aria-hidden="true"></span><span class="work__cap"><b>LOOP</b><small>Бесшовный луп</small></span>
+                  </button>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="drow is-open" data-key="heroes">
+        <button class="drow__bar" aria-expanded="true" aria-controls="panel-heroes">
+          <span class="drow__no">05</span>
+          <span class="drow__name">Персонажи</span>
+          <span class="drow__count">скоро</span>
+          <span class="drow__icon" aria-hidden="true"></span>
+        </button>
+        <div class="drow__panel" id="panel-heroes" role="region">
+          <div class="drow__inner">
+            <p class="drow__desc">Аватары, амбассадоры, консистентные герои: один персонаж в любом количестве кадров и сцен.</p>
+            <p class="drow__empty">Работы этого направления скоро появятся.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="drow is-open" data-key="worlds">
+        <button class="drow__bar" aria-expanded="true" aria-controls="panel-worlds">
+          <span class="drow__no">06</span>
+          <span class="drow__name">Миры и локации</span>
+          <span class="drow__count">скоро</span>
+          <span class="drow__icon" aria-hidden="true"></span>
+        </button>
+        <div class="drow__panel" id="panel-worlds" role="region">
+          <div class="drow__inner">
+            <p class="drow__desc">Сеттинги и окружения: роща, интерьер, планета. Место, куда потом можно поместить что угодно.</p>
+            <p class="drow__empty">Работы этого направления скоро появятся.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="drow is-open" data-key="assets">
+        <button class="drow__bar" aria-expanded="true" aria-controls="panel-assets">
+          <span class="drow__no">07</span>
+          <span class="drow__name">Дизайн-ассеты</span>
+          <span class="drow__count">скоро</span>
+          <span class="drow__icon" aria-hidden="true"></span>
+        </button>
+        <div class="drow__panel" id="panel-assets" role="region">
+          <div class="drow__inner">
+            <p class="drow__desc">Объекты на прозрачном фоне, текстуры, паттерны, элементы для вёрстки и упаковки.</p>
+            <p class="drow__empty">Работы этого направления скоро появятся.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="drow is-open" data-key="lab">
+        <button class="drow__bar" aria-expanded="true" aria-controls="panel-lab">
+          <span class="drow__no">08</span>
+          <span class="drow__name">Эксперименты</span>
+          <span class="drow__count">1 работа</span>
+          <span class="drow__icon" aria-hidden="true"></span>
+        </button>
+        <div class="drow__panel" id="panel-lab" role="region">
+          <div class="drow__inner">
+            <p class="drow__desc">Личные серии без брифа: то, ради чего всё и затевалось. Здесь рождаются приёмы для клиентских задач.</p>
+            <div class="dstrip">
+              <div class="dgrid">
+                <article class="work">
+                  <button class="work__btn" type="button"
+                          data-src="public/video/cases/13-cloud-laundry.mp4"
+                          data-brand="CLOUD LAUNDRY" data-meta="Сюр-имидж (стиль) · Арт-ролик · 9:16 · 15 с" data-about="Ретро-прачечная, в барабанах стиральных машин облака. В видео текста нет, на обложке рабочее название CLOUD laundry.">
+                    <img class="work__img" src="public/img/cases/13-cloud-laundry.webp" alt="CLOUD LAUNDRY — Арт-ролик"
+                         width="600" height="1067" loading="lazy" decoding="async">
+                    <span class="work__play" aria-hidden="true"></span><span class="work__cap"><b>CLOUD LAUNDRY</b><small>Арт-ролик</small></span>
+                  </button>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ НЕВОЗМОЖНОЕ ══ -->
+<section class="section section--teal" id="impossible">
+  <div class="shell imp">
+    <div class="imp__text">
+      <p class="tag reveal">Невозможное</p>
+      <h2 class="section__title reveal">Сколько бы<br>это стоило</h2>
+      <p class="reveal">Один кадр из последней серии: герберы в человеческий рост, модель-альбинос в розовом тюле, съёмка с нижней точки — камера лежит во мху, небо без единого облака. Ниже — смета настоящей съёмки такого кадра. Каждая строка отпадает, потому что снимать ничего не нужно.</p>
+      <img class="imp__media reveal" src="public/img/impossible.webp"
+           width="1400" height="788" loading="lazy" decoding="async"
+           alt="Модель-альбинос в розовом тюле среди гигантских гербер, съёмка с нижней точки">
+    </div>
+
+    <div class="invoice reveal">
+      <div class="invoice__row"><span>Локация: холм, 3 съёмочных дня</span><b>620 000 ₽</b></div>
+      <div class="invoice__row"><span>Модель-альбинос + агентство</span><b>310 000 ₽</b></div>
+      <div class="invoice__row"><span>Реквизит: герберы 3 м, бутафорский мох</span><b>480 000 ₽</b></div>
+      <div class="invoice__row"><span>Свет, группа, логистика</span><b>390 000 ₽</b></div>
+      <div class="invoice__row"><span>Постпродакшн и ретушь</span><b>180 000 ₽</b></div>
+      <div class="invoice__total">
+        <span>Итого у меня</span>
+        <b>1 кадр · 6 часов</b>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ПРОЦЕСС ══ -->
+<section class="section section--blue" id="process">
+  <div class="shell">
+    <p class="tag reveal">Как работаю</p>
+    <h2 class="section__title reveal">Четыре шага<br>до кадра</h2>
+    <ol class="steps">
+      <li class="step reveal"><span class="step__no">01</span><h3>Бриф</h3><p>Что нужно получить, где будет жить кадр, какие ограничения по бренду. Здесь же — сроки и бюджет.</p></li>
+      <li class="step reveal"><span class="step__no">02</span><h3>Мудборд</h3><p>Собираю визуальное направление: свет, палитра, фактуры, ракурсы. Утверждаем до генерации.</p></li>
+      <li class="step reveal"><span class="step__no">03</span><h3>Генерация</h3><p>Серия вариантов, отбор, доводка деталей. Показываю не одну картинку, а выбор из нескольких сцен.</p></li>
+      <li class="step reveal"><span class="step__no">04</span><h3>Сборка</h3><p>Апскейл, цвет, монтаж и звук для видео, адаптация под форматы площадок. Отдаю исходники.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ══ ИНСТРУМЕНТЫ ══ -->
+<section class="section section--teal" id="tools">
+  <div class="shell">
+    <p class="tag reveal">Инструменты</p>
+    <h2 class="section__title reveal">На чём<br>собираю</h2>
+    <p class="lead reveal">Сюда список моделей и софта, который реально используешь — по группам.</p>
+    <div class="tools">
+      <div class="tools__col reveal"><h3>Изображение</h3><ul><li>Midjourney</li><li>Flux</li><li>Nano Banana</li><li>Stable Diffusion</li></ul></div>
+      <div class="tools__col reveal"><h3>Видео</h3><ul><li>Kling</li><li>Veo</li><li>Runway</li><li>Sora</li></ul></div>
+      <div class="tools__col reveal"><h3>Сборка</h3><ul><li>Photoshop</li><li>After Effects</li><li>Premiere</li><li>Topaz</li></ul></div>
+      <div class="tools__col reveal"><h3>Звук</h3><ul><li>Suno</li><li>ElevenLabs</li><li>библиотеки</li></ul></div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /.page -->
+
+<!-- ══ СКРОЛЛ-ВСТАВКА: гигантская героиня ══ -->
+<!-- Секция намеренно НЕ карточка: во всю ширину, без --gap и без скругления.
+     На этом разрыве ритма и держится эффект. Поэтому она вынесена за .page,
+     у которой боковые поля. Пути относительные: ведущий слэш здесь сломал бы
+     загрузку — сайт живёт не в корне домена и может открываться по file://. -->
+<section class="giant" aria-label="AI-визуализация: гигантская героиня в городе">
+  <div class="giant__stage">
+    <video class="giant__video"
+           poster="public/img/giant-poster.webp"
+           muted playsinline preload="auto"
+           data-src-hd="public/video/giant.mp4"
+           data-src-sd="public/video/giant-mobile.mp4"></video>
+  </div>
+</section>
+
+<div class="page">
+<!-- ══ ЦИФРЫ ══ -->
+<section class="section section--blue" id="numbers">
+  <div class="shell nums">
+    <div class="nums__it reveal"><span class="num" data-count="120">0</span><small>работ в архиве</small></div>
+    <div class="nums__it reveal"><span class="num" data-count="24">0</span><small>проекта для брендов</small></div>
+    <div class="nums__it reveal"><span class="num" data-count="6">0</span><small>часов до первого варианта</small></div>
+    <div class="nums__it reveal"><span class="num" data-count="3">0</span><small>года в визуале</small></div>
+  </div>
+</section>
+
+<!-- ══ ЦЕНЫ ══ -->
+<section class="section section--ink" id="pricing">
+  <div class="shell">
+    <p class="tag reveal">Форматы и цены</p>
+    <h2 class="section__title reveal">Понятные<br>пакеты</h2>
+    <div class="plans">
+      <div class="plan reveal">
+        <h3>Кадр</h3>
+        <p class="plan__price">от 15 000 ₽</p>
+        <ul><li>1 сцена, 3 варианта</li><li>2 круга правок</li><li>исходник 4K</li><li>срок: 1–2 дня</li></ul>
+        <a class="btn btn--ghost" href="#contact">Обсудить</a>
+      </div>
+      <div class="plan plan--hl reveal">
+        <span class="plan__badge">чаще всего берут</span>
+        <h3>Серия</h3>
+        <p class="plan__price">от 60 000 ₽</p>
+        <ul><li>5–8 кадров в одном мире</li><li>мудборд и арт-дирекшн</li><li>адаптации под площадки</li><li>срок: 4–7 дней</li></ul>
+        <a class="btn" href="#contact">Обсудить</a>
+      </div>
+      <div class="plan reveal">
+        <h3>Ролик</h3>
+        <p class="plan__price">от 90 000 ₽</p>
+        <ul><li>до 30 секунд</li><li>раскадровка, монтаж, звук</li><li>вертикаль + горизонталь</li><li>срок: 7–14 дней</li></ul>
+        <a class="btn btn--ghost" href="#contact">Обсудить</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FAQ ══ -->
+<section class="section section--teal" id="faq">
+  <div class="shell faq">
+    <div>
+      <p class="tag reveal">FAQ</p>
+      <h2 class="section__title reveal">Вопросы,<br>которые задают</h2>
+    </div>
+    <div class="acc" id="acc">
+      <div class="acc__it reveal"><button class="acc__q">Чем это лучше обычной съёмки?<i></i></button><div class="acc__a"><p>Ответ: про сроки, бюджет и то, что часть кадров вообще нельзя снять.</p></div></div>
+      <div class="acc__it reveal"><button class="acc__q">Можно ли повторить один и тот же персонаж?<i></i></button><div class="acc__a"><p>Ответ: про консистентность героя между кадрами и сериями.</p></div></div>
+      <div class="acc__it reveal"><button class="acc__q">Кому принадлежат права на результат?<i></i></button><div class="acc__a"><p>Ответ: что передаёшь клиенту, что остаётся в портфолио.</p></div></div>
+      <div class="acc__it reveal"><button class="acc__q">Сколько правок входит в стоимость?<i></i></button><div class="acc__a"><p>Ответ: сколько кругов, что считается новой сценой.</p></div></div>
+      <div class="acc__it reveal"><button class="acc__q">Работаешь ли по брендбуку?<i></i></button><div class="acc__a"><p>Ответ: как встраиваешься в фирменный стиль и палитру клиента.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ КОНТАКТЫ ══ -->
+<section class="section section--blue sec--cta" id="contact">
+  <div class="shell cta">
+    <h2 class="section__title cta__title reveal">Давай сделаем<br>то, чего не было</h2>
+    <p class="reveal">Напиши, что нужно снять — отвечу в течение дня и покажу похожие работы.</p>
+    <div class="cta__links reveal">
+      <a class="btn" href="mailto:hello@example.com">hello@example.com</a>
+      <a class="btn btn--ghost" href="https://t.me/username" target="_blank" rel="noopener">Telegram</a>
+      <a class="btn btn--ghost" href="https://instagram.com/username" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="shell footer__in">
+    <span>© 2026 Настя · AI-визуализация</span>
+    <a href="#top">Наверх ↑</a>
+  </div>
+</footer>
+</div><!-- /.page -->
+
+
+
+<!-- Просмотр кейса. Видео грузится только при открытии: файлы тяжёлые,
+     сервер отдаёт их диапазонами, поэтому качается лишь просмотренное. -->
+<div class="lb" id="lb" hidden>
+  <div class="lb__backdrop" data-close></div>
+  <div class="lb__box" role="dialog" aria-modal="true" aria-labelledby="lbBrand">
+    <button class="lb__close" id="lbClose" type="button" aria-label="Закрыть">×</button>
+    <div class="lb__stage">
+      <video class="lb__video" id="lbVideo" playsinline controls preload="none" hidden></video>
+      <img class="lb__img" id="lbImage" alt="" hidden>
+    </div>
+    <div class="lb__info">
+      <h3 class="lb__brand" id="lbBrand"></h3>
+      <p class="lb__tags" id="lbTags"></p>
+      <p class="lb__about" id="lbAbout"></p>
+    </div>
+  </div>
+</div>
+<script src="js/main.js"></script>
+</body>
+</html>
