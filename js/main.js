@@ -143,12 +143,13 @@
         if (strip.scrollWidth <= strip.clientWidth + 1) return;
         down = true; moved = 0;
         startX = e.clientX; startLeft = strip.scrollLeft;
-        strip.classList.add('is-drag');
       });
       strip.addEventListener('pointermove', function (e) {
         if (!down) return;
         var dx = e.clientX - startX;
         moved = Math.max(moved, Math.abs(dx));
+        if (moved <= 6) return;
+        strip.classList.add('is-drag');
         strip.scrollLeft = startLeft - dx;
       });
       function endDrag() { down = false; strip.classList.remove('is-drag'); }
