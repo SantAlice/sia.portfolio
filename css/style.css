@@ -1,0 +1,430 @@
+/* ============================================================
+   Настя — AI-креатор. Каркас сайта.
+   Палитра задана клиентом:
+     #3d84a8 — фон, #e0aab9 — текст/акцент.
+   Производные оттенки нужны для читаемости мелкого текста:
+   #e0aab9 на #3d84a8 даёт контраст 2.1:1 — это работает
+   только на крупном кегле. Мелкий текст живёт на --blue-deep.
+   ============================================================ */
+
+:root{
+  /* заданные цвета */
+  --blue:        #3d84a8;
+  --pink:        #e0aab9;
+  --hero-bg:     var(--blue);  /* фон видео v7 перекрашен ровно в этот цвет */
+
+  /* производные */
+  --blue-deep:   #1E4E66;
+  --blue-dark:   #123543;
+  --blue-line:   #5A9BBB;
+  --pink-soft:   #F0D3DB;
+  --pink-deep:   #C98598;
+  --cream:       #FBF6F1;
+  --ink:         #04121A;
+
+  --f-display: "Golos Text", "Arial Narrow", sans-serif;
+  --f-body:    "Onest", -apple-system, "Segoe UI", sans-serif;
+  --f-script:  "Marck Script", cursive;
+  --f-mono:    "JetBrains Mono", ui-monospace, monospace;
+
+  --shell: 1440px;
+  --pad: 32px;
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--blue);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img,video{max-width:100%; display:block}
+a{color:inherit; text-decoration:none}
+button{font:inherit; color:inherit; background:none; border:0; cursor:pointer}
+ul,ol{margin:0; padding:0; list-style:none}
+
+.shell{max-width:var(--shell); margin:0 auto; padding:0 var(--pad)}
+
+/* ── типографика ───────────────────────────────── */
+.display{
+  font-family:var(--f-display); font-weight:900; text-transform:uppercase;
+  letter-spacing:-.025em; line-height:.88; margin:0;
+  font-size:clamp(34px,6.4vw,92px);
+  color:var(--pink);
+}
+.script{
+  font-family:var(--f-script); font-style:normal; text-transform:none;
+  letter-spacing:0; font-size:.92em;
+}
+.tag{
+  display:inline-block; margin:0 0 18px;
+  background:var(--pink); color:var(--blue-dark);
+  font-family:var(--f-mono); font-size:11px; font-weight:500;
+  letter-spacing:.16em; text-transform:uppercase; padding:5px 10px;
+}
+.lead{max-width:44em; margin:22px 0 0}
+h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; letter-spacing:-.02em; margin:0}
+
+/* ── прогресс-полоса ───────────────────────────── */
+.progress{
+  position:fixed; top:0; left:0; height:3px; width:0;
+  background:var(--pink); z-index:60; transition:width .1s linear;
+}
+
+/* ── шапка ─────────────────────────────────────── */
+.header{
+  position:fixed; top:0; left:0; right:0; z-index:50;
+  transition:background .35s var(--ease), border-color .35s var(--ease);
+  border-bottom:1px solid transparent;
+}
+.header.is-stuck{background:rgba(18,53,67,.92); backdrop-filter:blur(10px); border-bottom-color:var(--blue-deep)}
+.header__in{display:flex; align-items:center; gap:28px; height:76px}
+.logo{
+  font-family:var(--f-display); font-weight:900; text-transform:uppercase;
+  letter-spacing:-.02em; font-size:19px; color:var(--pink); line-height:1;
+}
+.logo span{
+  display:block; font-family:var(--f-mono); font-weight:400; font-size:9px;
+  letter-spacing:.2em; color:var(--cream); margin-top:4px; text-transform:uppercase;
+}
+/* пока шапка висит над светлым хиро — контрастный тёмный текст */
+.header:not(.is-stuck) .logo,
+.header:not(.is-stuck) .logo span,
+.header:not(.is-stuck) .nav a{color:var(--ink)}
+.header:not(.is-stuck) .nav a::after{background:var(--ink)}
+.header:not(.is-stuck) .burger span{background:var(--ink)}
+.nav{display:flex; gap:26px; margin-left:auto}
+.nav a{
+  font-size:14.5px; color:var(--cream); position:relative; padding:4px 0;
+}
+.nav a::after{
+  content:""; position:absolute; left:0; bottom:0; height:1px; width:0;
+  background:var(--pink); transition:width .3s var(--ease);
+}
+.nav a:hover::after, .nav a:focus-visible::after{width:100%}
+
+.btn{
+  display:inline-block; background:var(--pink); color:var(--blue-dark);
+  font-family:var(--f-display); font-weight:900; text-transform:uppercase;
+  letter-spacing:.01em; font-size:14px; padding:14px 22px;
+  transition:background .25s var(--ease), transform .25s var(--ease);
+}
+.btn:hover{background:var(--pink-soft); transform:translateY(-2px)}
+.btn--sm{padding:10px 16px; font-size:12.5px}
+.btn--ghost{background:transparent; color:var(--pink); box-shadow:inset 0 0 0 1px var(--pink)}
+.btn--ghost:hover{background:var(--pink); color:var(--blue-dark)}
+
+.burger{display:none; width:34px; height:34px; flex-direction:column; justify-content:center; gap:6px}
+.burger span{display:block; height:2px; background:var(--pink); transition:transform .3s var(--ease), opacity .3s}
+.burger[aria-expanded="true"] span:first-child{transform:translateY(4px) rotate(45deg)}
+.burger[aria-expanded="true"] span:last-child{transform:translateY(-4px) rotate(-45deg)}
+
+/* ── хиро с аватаром ───────────────────────────── */
+/* Фон обязан совпадать с фоном видео, иначе будет виден шов.
+   Никаких градиентов и оверлеев под аватаром. */
+.hero{
+  background:var(--hero-bg);
+  display:grid;
+  /* аватар справа: колонка равна его ширине, иначе на 900–1100px
+     рядом с ним остаётся пустое место, а текст зажимается */
+  grid-template-columns:minmax(0,1fr) minmax(0,clamp(320px,38vw,620px));
+  gap:clamp(24px,4vw,56px);
+  align-items:center;
+  max-width:var(--shell);
+  margin:0 auto;
+  padding-inline:clamp(20px,5vw,80px);
+  /* сверху с запасом под фиксированную шапку сайта */
+  padding-top:clamp(104px,13vh,150px);
+  /* низ секции без отступа: нижний край видео прилипает к границе блока,
+     поэтому гриб уходит прямо в бегущую строку. Отступ снизу остаётся
+     только у текстовой колонки */
+  padding-bottom:0;
+}
+.hero__text{padding-bottom:clamp(40px,8vh,96px)}
+.hero__avatar{
+  width:100%;
+  max-width:clamp(320px,38vw,620px);
+  aspect-ratio:720 / 1076;
+  pointer-events:none;
+  justify-self:center;
+  align-self:end;          /* прижат к низу секции */
+  margin-bottom:0;
+}
+.hero__avatar video{width:100%; height:100%; object-fit:contain; display:block}
+
+.hero__text{min-width:0}
+.eyebrow{
+  font-family:var(--f-mono); font-size:11.5px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--ink); margin:0 0 22px;
+}
+.hero__title{
+  font-family:var(--f-display); font-weight:900; text-transform:uppercase;
+  letter-spacing:-.03em; line-height:.86; margin:0;
+  font-size:clamp(46px,8.6vw,132px); color:var(--ink);
+}
+.hero__title .line{display:block; overflow:hidden}
+.hero__title em.script{color:var(--pink); text-shadow:0 2px 0 rgba(4,18,26,.14)}
+.hero__lead{margin:26px 0 0; color:var(--ink); max-width:34em; font-size:18px}
+.hero__lead b{font-weight:500}
+.hero__meta{display:flex; gap:40px; margin-top:32px}
+.hero__meta div{border-top:2px solid var(--ink); padding-top:12px}
+.num{
+  display:block; font-family:var(--f-display); font-weight:900;
+  font-size:clamp(34px,4vw,54px); line-height:1; color:var(--ink);
+  font-variant-numeric:tabular-nums; letter-spacing:-.03em;
+}
+.hero__meta small{font-family:var(--f-mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink)}
+.hero__cta{display:flex; gap:12px; flex-wrap:wrap; margin-top:36px}
+.hero__cta .btn--ghost{color:var(--ink); box-shadow:inset 0 0 0 1px var(--ink)}
+.hero__cta .btn--ghost:hover{background:var(--ink); color:var(--pink)}
+
+/* ── плейсхолдеры под медиа ────────────────────── */
+.ph{
+  position:relative; display:flex; align-items:center; justify-content:center;
+  background:
+    repeating-linear-gradient(135deg, rgba(224,170,185,.10) 0 12px, rgba(224,170,185,0) 12px 24px),
+    var(--blue-deep);
+  box-shadow:inset 0 0 0 1px var(--blue-line);
+  overflow:hidden;
+}
+.ph span{
+  font-family:var(--f-mono); font-size:11px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--pink); text-align:center; padding:12px;
+}
+.ph::after{
+  content:""; position:absolute; top:0; bottom:0; width:35%;
+  background:linear-gradient(90deg,rgba(224,170,185,0),rgba(224,170,185,.14),rgba(224,170,185,0));
+  animation:shine 4.5s linear infinite;
+}
+@keyframes shine{0%{transform:translateX(-150%)}100%{transform:translateX(420%)}}
+.ph--portrait{aspect-ratio:3/4}
+.ph--wide{aspect-ratio:16/9}
+
+/* ── бегущая строка ────────────────────────────── */
+.marquee{
+  overflow:hidden; background:var(--pink); color:var(--blue-dark);
+  padding:14px 0; border-top:1px solid var(--blue-dark); border-bottom:1px solid var(--blue-dark);
+}
+.marquee__track{display:flex; width:max-content; animation:marquee 26s linear infinite}
+.marquee__track span{
+  font-family:var(--f-display); font-weight:900; text-transform:uppercase;
+  font-size:clamp(18px,2.4vw,30px); letter-spacing:-.02em; padding-right:14px; white-space:nowrap;
+}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+/* ── секции ────────────────────────────────────── */
+.sec{padding:clamp(70px,9vw,132px) 0; position:relative}
+.sec--deep{background:var(--blue-deep); color:var(--cream)}
+.sec--deep .tag{background:var(--pink); color:var(--blue-dark)}
+.sec--deep p{color:rgba(251,246,241,.78)}
+.sec--pinkline{border-top:2px solid var(--pink); border-bottom:2px solid var(--pink)}
+
+/* обо мне */
+.about{display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); gap:clamp(30px,5vw,80px); align-items:start}
+.about__text p{margin:22px 0 0; max-width:38em}
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:28px}
+.chips li{
+  font-family:var(--f-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+  padding:6px 11px; box-shadow:inset 0 0 0 1px var(--pink); color:var(--pink);
+}
+
+/* направления: раскрывающиеся строки */
+.dirs__head{display:flex; justify-content:space-between; align-items:flex-end; gap:30px; flex-wrap:wrap; margin-bottom:44px}
+.dirs__tools{display:flex; gap:18px}
+.linkbtn{
+  font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--pink); padding:6px 0; border-bottom:1px solid transparent; transition:border-color .25s var(--ease);
+}
+.linkbtn:hover{border-bottom-color:var(--pink)}
+
+.dirs{border-top:1px solid rgba(224,170,185,.45)}
+.drow{border-bottom:1px solid rgba(224,170,185,.45)}
+.drow__bar{
+  width:100%; display:grid; grid-template-columns:auto minmax(0,1fr) auto auto;
+  align-items:center; gap:clamp(14px,2.2vw,32px); text-align:left;
+  padding:clamp(16px,2.1vw,26px) 0;
+  transition:padding .35s var(--ease), background .35s var(--ease);
+}
+.drow__bar:hover{background:rgba(224,170,185,.07); padding-left:16px; padding-right:16px}
+.drow__no{font-family:var(--f-mono); font-size:11px; letter-spacing:.16em; color:rgba(251,246,241,.55)}
+.drow__name{
+  font-family:var(--f-display); font-weight:900; text-transform:uppercase;
+  font-size:clamp(24px,4.6vw,64px); line-height:.92; letter-spacing:-.035em; color:var(--pink);
+}
+.drow__count{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:rgba(251,246,241,.55); white-space:nowrap}
+.drow__icon{position:relative; width:18px; height:18px; flex:0 0 18px}
+.drow__icon::before,.drow__icon::after{content:""; position:absolute; background:var(--pink); transition:transform .35s var(--ease)}
+.drow__icon::before{left:0; right:0; top:8px; height:2px}
+.drow__icon::after{top:0; bottom:0; left:8px; width:2px}
+.drow.is-open .drow__icon::after{transform:scaleY(0)}
+.drow.is-open .drow__bar{background:rgba(224,170,185,.07); padding-left:16px; padding-right:16px}
+.drow.is-open .drow__count{color:var(--pink)}
+
+.drow__panel{max-height:0; overflow:hidden; transition:max-height .55s var(--ease)}
+.drow__inner{display:flex; flex-direction:column; gap:24px; padding:6px 16px 42px}
+.drow__desc{margin:0; max-width:46em}
+.drow__all{align-self:flex-start}
+
+.dgrid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px}
+.drow.is-open .tile{animation:pop .5s var(--ease) both}
+.drow.is-open .tile:nth-child(2){animation-delay:.07s}
+.drow.is-open .tile:nth-child(3){animation-delay:.14s}
+.drow.is-open .tile:nth-child(4){animation-delay:.21s}
+.drow.is-open .tile:nth-child(5){animation-delay:.28s}
+.drow.is-open .tile:nth-child(6){animation-delay:.35s}
+
+/* работы: плитки внутри направлений */
+.tile{position:relative}
+.tile .ph{aspect-ratio:1}
+.ph[data-ratio="3:4"]{aspect-ratio:3/4}
+.ph[data-ratio="1:1"]{aspect-ratio:1}
+.ph[data-ratio="16:9"]{aspect-ratio:16/9}
+.ph[data-ratio="9:16"]{aspect-ratio:9/16}
+.ph[data-ratio="21:9"]{aspect-ratio:21/9}
+@keyframes pop{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
+.tile__cap{display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:11px 2px 0}
+.tile__cap b{font-family:var(--f-display); font-weight:900; text-transform:uppercase; font-size:12.5px; letter-spacing:-.01em; color:var(--pink)}
+.tile__cap small{font-family:var(--f-mono); font-size:10px; letter-spacing:.1em; color:rgba(251,246,241,.6); white-space:nowrap}
+.tile:hover .ph{box-shadow:inset 0 0 0 2px var(--pink)}
+
+/* невозможное */
+.imp{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.9fr); gap:clamp(30px,5vw,72px); align-items:start}
+.imp__text p{max-width:34em; margin:22px 0 0}
+.imp__media{aspect-ratio:16/9; margin-top:34px}
+.invoice{background:var(--blue-dark); color:var(--cream); padding:clamp(24px,3vw,40px)}
+.invoice__row{
+  display:flex; justify-content:space-between; gap:20px; align-items:baseline;
+  padding:15px 0; border-bottom:1px solid rgba(251,246,241,.16); position:relative;
+  font-size:15px;
+}
+.invoice__row b{font-family:var(--f-mono); font-weight:500; font-variant-numeric:tabular-nums; white-space:nowrap}
+.invoice__row::after{
+  content:""; position:absolute; left:0; top:52%; height:2px; width:0; background:var(--pink);
+  transition:width .7s var(--ease);
+}
+.invoice.is-on .invoice__row::after{width:100%}
+.invoice.is-on .invoice__row:nth-child(2)::after{transition-delay:.15s}
+.invoice.is-on .invoice__row:nth-child(3)::after{transition-delay:.3s}
+.invoice.is-on .invoice__row:nth-child(4)::after{transition-delay:.45s}
+.invoice.is-on .invoice__row:nth-child(5)::after{transition-delay:.6s}
+.invoice__total{display:flex; justify-content:space-between; align-items:baseline; gap:20px; padding-top:22px}
+.invoice__total span{font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--pink)}
+.invoice__total b{font-family:var(--f-display); font-weight:900; text-transform:uppercase; font-size:clamp(20px,2.4vw,30px); color:var(--pink); letter-spacing:-.02em}
+
+/* процесс */
+.steps{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:rgba(251,246,241,.2); margin-top:52px}
+.step{background:var(--blue-deep); padding:28px 24px 32px}
+.step__no{font-family:var(--f-mono); font-size:11px; letter-spacing:.16em; color:var(--pink)}
+.step h3{font-size:clamp(20px,2.2vw,30px); color:var(--pink); margin:14px 0 10px}
+.step p{margin:0; font-size:15px}
+
+/* инструменты */
+.tools{display:grid; grid-template-columns:repeat(4,1fr); gap:26px; margin-top:48px}
+.tools__col h3{font-size:16px; color:var(--ink); padding-bottom:10px; border-bottom:2px solid var(--blue-dark)}
+.tools__col li{padding:9px 0; border-bottom:1px solid rgba(11,31,41,.16); font-size:15px}
+
+/* цифры */
+.nums{display:grid; grid-template-columns:repeat(4,1fr); gap:26px}
+.nums__it{border-top:2px solid var(--pink); padding-top:16px}
+.nums__it .num{color:var(--pink); font-size:clamp(40px,5.4vw,76px)}
+.nums__it small{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:rgba(251,246,241,.7)}
+
+/* цены */
+.plans{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:52px}
+.plan{background:var(--blue-deep); color:var(--cream); padding:34px 28px 30px; display:flex; flex-direction:column; gap:16px; position:relative}
+.plan--hl{background:var(--pink); color:var(--blue-dark)}
+.plan__badge{
+  position:absolute; top:-11px; left:28px; background:var(--blue-dark); color:var(--pink);
+  font-family:var(--f-mono); font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; padding:5px 10px;
+}
+.plan h3{font-size:26px; color:var(--pink)}
+.plan--hl h3{color:var(--blue-dark)}
+.plan__price{font-family:var(--f-mono); font-size:15px; margin:0; color:inherit}
+.plan ul{flex:1}
+.plan li{padding:8px 0; border-bottom:1px solid currentColor; font-size:14.5px; opacity:.85}
+.plan .btn{align-self:flex-start; margin-top:6px}
+.plan--hl .btn{background:var(--blue-dark); color:var(--pink)}
+
+/* faq */
+.faq{display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:clamp(30px,5vw,80px); align-items:start}
+.acc__it{border-bottom:1px solid rgba(251,246,241,.22)}
+.acc__q{
+  width:100%; display:flex; justify-content:space-between; align-items:center; gap:20px;
+  padding:22px 0; text-align:left; font-size:17px; color:var(--cream);
+  transition:color .25s var(--ease);
+}
+.acc__q:hover{color:var(--pink)}
+.acc__q i{position:relative; width:14px; height:14px; flex:0 0 14px}
+.acc__q i::before,.acc__q i::after{
+  content:""; position:absolute; background:var(--pink); transition:transform .3s var(--ease);
+}
+.acc__q i::before{left:0; right:0; top:6px; height:2px}
+.acc__q i::after{top:0; bottom:0; left:6px; width:2px}
+.acc__it.is-open .acc__q i::after{transform:scaleY(0)}
+.acc__a{max-height:0; overflow:hidden; transition:max-height .4s var(--ease)}
+.acc__a p{margin:0 0 22px; max-width:44em}
+
+/* cta */
+.sec--cta{background:var(--blue-dark); color:var(--cream); text-align:center}
+.cta__title{font-size:clamp(34px,7vw,110px)}
+.cta__title em{color:var(--cream)}
+.cta p{max-width:34em; margin:26px auto 0; color:rgba(251,246,241,.78)}
+.cta__links{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:36px}
+
+.footer{background:var(--blue-dark); color:rgba(251,246,241,.6); border-top:1px solid rgba(251,246,241,.16)}
+.footer__in{display:flex; justify-content:space-between; gap:20px; padding-top:26px; padding-bottom:26px; font-family:var(--f-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase}
+.footer a:hover{color:var(--pink)}
+
+/* ── анимации появления ────────────────────────── */
+.load{opacity:0; transform:translateY(28px)}
+.load.is-in{opacity:1; transform:none; transition:opacity .8s var(--ease), transform .8s var(--ease)}
+.reveal{opacity:0; transform:translateY(24px)}
+.reveal.is-in{opacity:1; transform:none; transition:opacity .7s var(--ease), transform .7s var(--ease)}
+
+:focus-visible{outline:2px solid var(--pink); outline-offset:3px}
+
+/* ── адаптив ───────────────────────────────────── */
+@media (max-width:1100px){
+  .dgrid{grid-template-columns:repeat(2,1fr)}
+  .steps,.tools,.nums{grid-template-columns:repeat(2,1fr)}
+  .plans{grid-template-columns:1fr}
+}
+@media (max-width:860px){
+  :root{--pad:20px}
+  .nav{display:none}
+  .header .btn--sm{margin-left:auto}
+  .burger{display:flex}
+  .nav.is-open{
+    display:flex; flex-direction:column; gap:0; position:fixed; inset:76px 0 auto;
+    background:var(--blue-dark); padding:8px 20px 24px;
+  }
+  .nav.is-open a{padding:14px 0; border-bottom:1px solid rgba(251,246,241,.14)}
+  .hero{grid-template-columns:1fr; justify-items:center; text-align:center; gap:30px;
+        padding-bottom:0}
+  /* в стопке аватар сверху, поэтому к низу прижимается текст, а не он */
+  .hero__text{padding-bottom:clamp(40px,8vh,96px)}
+  .hero__avatar{max-width:min(78vw,420px); order:-1; align-self:auto}
+  .hero__lead{margin-left:auto; margin-right:auto}
+  .hero__meta,.hero__cta{justify-content:center; gap:24px}
+  .about,.imp,.faq{grid-template-columns:1fr; gap:34px}
+}
+@media (max-width:560px){
+  .dgrid{grid-template-columns:repeat(2,1fr); gap:10px}
+  .steps,.tools,.nums{grid-template-columns:1fr}
+  .drow__bar{grid-template-columns:auto minmax(0,1fr) auto; gap:12px}
+  .drow__count{display:none}
+  .drow__inner{padding-left:0; padding-right:0}
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none !important; transition:none !important}
+  .load,.reveal{opacity:1; transform:none}
+}

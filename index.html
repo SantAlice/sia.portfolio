@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Настя — AI-визуализация</title>
+<meta name="description" content="AI-визуализация: кадры, которые невозможно, негде или слишком дорого снять в реальности. Фото, видео, продукты и миры под ключ.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;900&family=Onest:wght@300;400;500&family=Marck+Script&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<!-- ══ ШАПКА ══ -->
+<header class="header" id="header">
+  <div class="shell header__in">
+    <a class="logo" href="#top">НАСТЯ<span>AI-креатор</span></a>
+    <nav class="nav">
+      <a href="#directions">Направления</a>
+      <a href="#impossible">Невозможное</a>
+      <a href="#process">Процесс</a>
+      <a href="#pricing">Цены</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn btn--sm" href="#contact">Обсудить проект</a>
+    <button class="burger" id="burger" aria-label="Меню" aria-expanded="false"><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- ══ ХИРО: аватар следит за курсором ══ -->
+<!-- Фон секции — --hero-bg, он же --blue #3D84A8. Фон внутри avatar-orbit-v7.mp4
+     подогнан именно под этот цвет с поправкой на YUV-декодирование, поэтому
+     прямоугольник видео не виден. Градиенты под аватаром не ставим. -->
+<section class="hero" id="top">
+  <div class="hero__text">
+    <p class="eyebrow load" data-load="1">AI-визуализация · фото · видео · продукты</p>
+
+    <h1 class="hero__title">
+      <span class="line"><span class="load" data-load="2">Снять то,</span></span>
+      <span class="line"><span class="load" data-load="3">чего <em class="script">нет</em></span></span>
+    </h1>
+
+    <p class="hero__lead load" data-load="4">
+      Модель-альбинос, роща розовых грибов в человеческий рост, свет, которого не бывает.
+      <b>Искать — долго, строить — не из чего, снимать — негде.</b>
+      Я собираю такие кадры за дни, а не за месяцы съёмочного цикла.
+    </p>
+
+    <div class="hero__meta load" data-load="5">
+      <div><span class="num" data-count="120">0</span><small>работ в архиве</small></div>
+      <div><span class="num" data-count="48">0</span><small>часа на первый вариант</small></div>
+    </div>
+
+    <div class="hero__cta load" data-load="6">
+      <a class="btn" href="#directions">Смотреть работы</a>
+      <a class="btn btn--ghost" href="#contact">Обсудить проект</a>
+    </div>
+  </div>
+
+  <div class="hero__avatar" id="avatarBox">
+    <video
+      id="avatarVideo"
+      src="public/avatar-orbit-v7.mp4"
+      poster="public/avatar-poster-v7.jpg"
+      muted
+      playsinline
+      preload="auto"
+      disablepictureinpicture
+    ></video>
+  </div>
+</section>
+
+<!-- ══ БЕГУЩАЯ СТРОКА ══ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <span>невозможно снять · негде снять · слишком дорого снять · </span>
+    <span>невозможно снять · негде снять · слишком дорого снять · </span>
+  </div>
+</div>
+
+<!-- ══ ОБО МНЕ ══ -->
+<section class="sec sec--deep" id="about">
+  <div class="shell about">
+    <div class="about__media ph ph--portrait reveal" data-slot="assets/photo/portrait.jpg"><span>портрет · 3:4</span></div>
+    <div class="about__text">
+      <p class="tag reveal">Обо мне</p>
+      <h2 class="display reveal">Я делаю миры,<br>в которые <em class="script">нельзя</em> поехать</h2>
+      <p class="reveal">Здесь 2–3 абзаца от первого лица: как пришла в AI-визуализацию, что было до, почему сюрреализм и нереальные фактуры, чем твой взгляд отличается от «просто генерации по промпту».</p>
+      <p class="reveal">Второй абзац — про подход к работе: как читаешь бриф, что делаешь с рефересами клиента, где заканчивается генерация и начинается ручная сборка кадра.</p>
+      <ul class="chips reveal">
+        <li>сюрреализм</li><li>fashion-визуал</li><li>предметка</li><li>клипы и ролики</li><li>арт-дирекшн</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══ НАПРАВЛЕНИЯ (раскрывающиеся строки) ══ -->
+<section class="sec sec--deep" id="directions">
+  <div class="shell">
+    <div class="dirs__head">
+      <div>
+        <p class="tag reveal">Направления</p>
+        <h2 class="display reveal">Что я<br>снимаю</h2>
+      </div>
+      <div class="dirs__tools reveal">
+        <button class="linkbtn" id="expandAll">Раскрыть все</button>
+        <button class="linkbtn" id="collapseAll">Свернуть все</button>
+      </div>
+    </div>
+
+    <div class="dirs" id="dirs">
+      <div class="drow" data-key="photo">
+        <button class="drow__bar" aria-expanded="false" aria-controls="panel-photo">
+          <span class="drow__no">01</span>
+          <span class="drow__name">Фото</span>
+          <span class="drow__count">24 работы</span>
+          <span class="drow__icon" aria-hidden="true"></span>
+        </button>
+        <div class="drow__panel" id="panel-photo" role="region">
+          <div class="drow__inner">
+            <p class="drow__desc">Кампейны, портреты, fashion, лукбуки. Съёмка без съёмочной группы, локации и кастинга.</p>
+            <div class="dgrid">
+          <article class="tile">
+            <div class="ph" data-ratio="3:4" data-slot="assets/photo/01.jpg"><span>3:4</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="1:1" data-slot="assets/photo/02.jpg"><span>1:1</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="1:1" data-slot="assets/photo/03.jpg"><span>1:1</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="3:4" data-slot="assets/photo/04.jpg"><span>3:4</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+            </div>
+            <a class="btn btn--ghost drow__all" href="#contact">Все работы направления</a>
+          </div>
+        </div>
+      </div>
+      <div class="drow" data-key="video">
+        <button class="drow__bar" aria-expanded="false" aria-controls="panel-video">
+          <span class="drow__no">02</span>
+          <span class="drow__name">Видео</span>
+          <span class="drow__count">12 роликов</span>
+          <span class="drow__icon" aria-hidden="true"></span>
+        </button>
+        <div class="drow__panel" id="panel-video" role="region">
+          <div class="drow__inner">
+            <p class="drow__desc">Ролики, клипы, движение, зацикленные сцены. От раскадровки до монтажа со звуком.</p>
+            <div class="dgrid">
+          <article class="tile">
+            <div class="ph" data-ratio="16:9" data-slot="assets/video/01.mp4"><span>16:9</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="9:16" data-slot="assets/video/02.mp4"><span>9:16</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="16:9" data-slot="assets/video/03.mp4"><span>16:9</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="9:16" data-slot="assets/video/04.mp4"><span>9:16</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+            </div>
+            <a class="btn btn--ghost drow__all" href="#contact">Все работы направления</a>
+          </div>
+        </div>
+      </div>
+      <div class="drow" data-key="product">
+        <button class="drow__bar" aria-expanded="false" aria-controls="panel-product">
+          <span class="drow__no">03</span>
+          <span class="drow__name">Продукты</span>
+          <span class="drow__count">18 работ</span>
+          <span class="drow__icon" aria-hidden="true"></span>
+        </button>
+        <div class="drow__panel" id="panel-product" role="region">
+          <div class="drow__inner">
+            <p class="drow__desc">Предметка, упаковка, реклама товара. Товар в среде, которую невозможно построить в студии.</p>
+            <div class="dgrid">
+          <article class="tile">
+            <div class="ph" data-ratio="1:1" data-slot="assets/products/01.jpg"><span>1:1</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="1:1" data-slot="assets/products/02.jpg"><span>1:1</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="3:4" data-slot="assets/products/03.jpg"><span>3:4</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="1:1" data-slot="assets/products/04.jpg"><span>1:1</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+            </div>
+            <a class="btn btn--ghost drow__all" href="#contact">Все работы направления</a>
+          </div>
+        </div>
+      </div>
+      <div class="drow" data-key="ads">
+        <button class="drow__bar" aria-expanded="false" aria-controls="panel-ads">
+          <span class="drow__no">04</span>
+          <span class="drow__name">Реклама</span>
+          <span class="drow__count">9 кампейнов</span>
+          <span class="drow__icon" aria-hidden="true"></span>
+        </button>
+        <div class="drow__panel" id="panel-ads" role="region">
+          <div class="drow__inner">
+            <p class="drow__desc">Готовые креативы под площадки: вертикаль, горизонталь, статика и движение в одном мире.</p>
+            <div class="dgrid">
+          <article class="tile">
+            <div class="ph" data-ratio="9:16" data-slot="assets/other/01.jpg"><span>9:16</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="1:1" data-slot="assets/other/02.jpg"><span>1:1</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="16:9" data-slot="assets/other/03.jpg"><span>16:9</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="1:1" data-slot="assets/other/04.jpg"><span>1:1</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+            </div>
+            <a class="btn btn--ghost drow__all" href="#contact">Все работы направления</a>
+          </div>
+        </div>
+      </div>
+      <div class="drow" data-key="heroes">
+        <button class="drow__bar" aria-expanded="false" aria-controls="panel-heroes">
+          <span class="drow__no">05</span>
+          <span class="drow__name">Персонажи</span>
+          <span class="drow__count">15 героев</span>
+          <span class="drow__icon" aria-hidden="true"></span>
+        </button>
+        <div class="drow__panel" id="panel-heroes" role="region">
+          <div class="drow__inner">
+            <p class="drow__desc">Аватары, амбассадоры, консистентные герои: один персонаж в любом количестве кадров и сцен.</p>
+            <div class="dgrid">
+          <article class="tile">
+            <div class="ph" data-ratio="3:4" data-slot="assets/other/01.jpg"><span>3:4</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="3:4" data-slot="assets/other/02.jpg"><span>3:4</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="1:1" data-slot="assets/other/03.jpg"><span>1:1</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="3:4" data-slot="assets/other/04.jpg"><span>3:4</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+            </div>
+            <a class="btn btn--ghost drow__all" href="#contact">Все работы направления</a>
+          </div>
+        </div>
+      </div>
+      <div class="drow" data-key="worlds">
+        <button class="drow__bar" aria-expanded="false" aria-controls="panel-worlds">
+          <span class="drow__no">06</span>
+          <span class="drow__name">Миры и локации</span>
+          <span class="drow__count">11 сцен</span>
+          <span class="drow__icon" aria-hidden="true"></span>
+        </button>
+        <div class="drow__panel" id="panel-worlds" role="region">
+          <div class="drow__inner">
+            <p class="drow__desc">Сеттинги и окружения: роща, интерьер, планета. Место, куда потом можно поместить что угодно.</p>
+            <div class="dgrid">
+          <article class="tile">
+            <div class="ph" data-ratio="16:9" data-slot="assets/other/01.jpg"><span>16:9</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="16:9" data-slot="assets/other/02.jpg"><span>16:9</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="1:1" data-slot="assets/other/03.jpg"><span>1:1</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="16:9" data-slot="assets/other/04.jpg"><span>16:9</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+            </div>
+            <a class="btn btn--ghost drow__all" href="#contact">Все работы направления</a>
+          </div>
+        </div>
+      </div>
+      <div class="drow" data-key="assets">
+        <button class="drow__bar" aria-expanded="false" aria-controls="panel-assets">
+          <span class="drow__no">07</span>
+          <span class="drow__name">Дизайн-ассеты</span>
+          <span class="drow__count">30+ файлов</span>
+          <span class="drow__icon" aria-hidden="true"></span>
+        </button>
+        <div class="drow__panel" id="panel-assets" role="region">
+          <div class="drow__inner">
+            <p class="drow__desc">Объекты на прозрачном фоне, текстуры, паттерны, элементы для вёрстки и упаковки.</p>
+            <div class="dgrid">
+          <article class="tile">
+            <div class="ph" data-ratio="1:1" data-slot="assets/objects/01.jpg"><span>1:1</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="1:1" data-slot="assets/objects/02.jpg"><span>1:1</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="1:1" data-slot="assets/objects/03.jpg"><span>1:1</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="1:1" data-slot="assets/objects/04.jpg"><span>1:1</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+            </div>
+            <a class="btn btn--ghost drow__all" href="#contact">Все работы направления</a>
+          </div>
+        </div>
+      </div>
+      <div class="drow" data-key="lab">
+        <button class="drow__bar" aria-expanded="false" aria-controls="panel-lab">
+          <span class="drow__no">08</span>
+          <span class="drow__name">Эксперименты</span>
+          <span class="drow__count">личное</span>
+          <span class="drow__icon" aria-hidden="true"></span>
+        </button>
+        <div class="drow__panel" id="panel-lab" role="region">
+          <div class="drow__inner">
+            <p class="drow__desc">Личные серии без брифа: то, ради чего всё и затевалось. Здесь рождаются приёмы для клиентских задач.</p>
+            <div class="dgrid">
+          <article class="tile">
+            <div class="ph" data-ratio="3:4" data-slot="assets/other/01.jpg"><span>3:4</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="1:1" data-slot="assets/other/02.jpg"><span>1:1</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="3:4" data-slot="assets/other/03.jpg"><span>3:4</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+          <article class="tile">
+            <div class="ph" data-ratio="1:1" data-slot="assets/other/04.jpg"><span>1:1</span></div>
+            <div class="tile__cap"><b>Название работы</b><small>Клиент · 2026</small></div>
+          </article>
+            </div>
+            <a class="btn btn--ghost drow__all" href="#contact">Все работы направления</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ НЕВОЗМОЖНОЕ ══ -->
+<section class="sec sec--pinkline" id="impossible">
+  <div class="shell imp">
+    <div class="imp__text">
+      <p class="tag reveal">Невозможное</p>
+      <h2 class="display reveal">Сколько бы<br>это <em class="script">стоило</em></h2>
+      <p class="reveal">Один кадр из последней серии: роща розовых грибов в человеческий рост, модель-альбинос, полуденное солнце. Ниже — смета настоящей съёмки такого кадра. Каждая строка отпадает, потому что снимать ничего не нужно.</p>
+      <div class="imp__media ph reveal" data-slot="assets/photo/impossible.jpg"><span>кадр-герой · 16:9</span></div>
+    </div>
+
+    <div class="invoice reveal">
+      <div class="invoice__row"><span>Локация: плато, 3 съёмочных дня</span><b>620 000 ₽</b></div>
+      <div class="invoice__row"><span>Модель-альбинос + агентство</span><b>310 000 ₽</b></div>
+      <div class="invoice__row"><span>Реквизит: грибы 4 м, бутафория</span><b>480 000 ₽</b></div>
+      <div class="invoice__row"><span>Свет, группа, логистика</span><b>390 000 ₽</b></div>
+      <div class="invoice__row"><span>Постпродакшн и ретушь</span><b>180 000 ₽</b></div>
+      <div class="invoice__total">
+        <span>Итого у меня</span>
+        <b>1 кадр · 6 часов</b>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ПРОЦЕСС ══ -->
+<section class="sec sec--deep" id="process">
+  <div class="shell">
+    <p class="tag reveal">Как работаю</p>
+    <h2 class="display reveal">Четыре шага<br>до кадра</h2>
+    <ol class="steps">
+      <li class="step reveal"><span class="step__no">01</span><h3>Бриф</h3><p>Что нужно получить, где будет жить кадр, какие ограничения по бренду. Здесь же — сроки и бюджет.</p></li>
+      <li class="step reveal"><span class="step__no">02</span><h3>Мудборд</h3><p>Собираю визуальное направление: свет, палитра, фактуры, ракурсы. Утверждаем до генерации.</p></li>
+      <li class="step reveal"><span class="step__no">03</span><h3>Генерация</h3><p>Серия вариантов, отбор, доводка деталей. Показываю не одну картинку, а выбор из нескольких сцен.</p></li>
+      <li class="step reveal"><span class="step__no">04</span><h3>Сборка</h3><p>Апскейл, цвет, монтаж и звук для видео, адаптация под форматы площадок. Отдаю исходники.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ══ ИНСТРУМЕНТЫ ══ -->
+<section class="sec" id="tools">
+  <div class="shell">
+    <p class="tag reveal">Инструменты</p>
+    <h2 class="display reveal">На чём<br>собираю</h2>
+    <p class="lead reveal">Сюда список моделей и софта, который реально используешь — по группам.</p>
+    <div class="tools">
+      <div class="tools__col reveal"><h3>Изображение</h3><ul><li>Midjourney</li><li>Flux</li><li>Nano Banana</li><li>Stable Diffusion</li></ul></div>
+      <div class="tools__col reveal"><h3>Видео</h3><ul><li>Kling</li><li>Veo</li><li>Runway</li><li>Sora</li></ul></div>
+      <div class="tools__col reveal"><h3>Сборка</h3><ul><li>Photoshop</li><li>After Effects</li><li>Premiere</li><li>Topaz</li></ul></div>
+      <div class="tools__col reveal"><h3>Звук</h3><ul><li>Suno</li><li>ElevenLabs</li><li>библиотеки</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ЦИФРЫ ══ -->
+<section class="sec sec--deep" id="numbers">
+  <div class="shell nums">
+    <div class="nums__it reveal"><span class="num" data-count="120">0</span><small>работ в архиве</small></div>
+    <div class="nums__it reveal"><span class="num" data-count="24">0</span><small>проекта для брендов</small></div>
+    <div class="nums__it reveal"><span class="num" data-count="6">0</span><small>часов до первого варианта</small></div>
+    <div class="nums__it reveal"><span class="num" data-count="3">0</span><small>года в визуале</small></div>
+  </div>
+</section>
+
+<!-- ══ ЦЕНЫ ══ -->
+<section class="sec" id="pricing">
+  <div class="shell">
+    <p class="tag reveal">Форматы и цены</p>
+    <h2 class="display reveal">Понятные<br>пакеты</h2>
+    <div class="plans">
+      <div class="plan reveal">
+        <h3>Кадр</h3>
+        <p class="plan__price">от 15 000 ₽</p>
+        <ul><li>1 сцена, 3 варианта</li><li>2 круга правок</li><li>исходник 4K</li><li>срок: 1–2 дня</li></ul>
+        <a class="btn btn--ghost" href="#contact">Обсудить</a>
+      </div>
+      <div class="plan plan--hl reveal">
+        <span class="plan__badge">чаще всего берут</span>
+        <h3>Серия</h3>
+        <p class="plan__price">от 60 000 ₽</p>
+        <ul><li>5–8 кадров в одном мире</li><li>мудборд и арт-дирекшн</li><li>адаптации под площадки</li><li>срок: 4–7 дней</li></ul>
+        <a class="btn" href="#contact">Обсудить</a>
+      </div>
+      <div class="plan reveal">
+        <h3>Ролик</h3>
+        <p class="plan__price">от 90 000 ₽</p>
+        <ul><li>до 30 секунд</li><li>раскадровка, монтаж, звук</li><li>вертикаль + горизонталь</li><li>срок: 7–14 дней</li></ul>
+        <a class="btn btn--ghost" href="#contact">Обсудить</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FAQ ══ -->
+<section class="sec sec--deep" id="faq">
+  <div class="shell faq">
+    <div>
+      <p class="tag reveal">FAQ</p>
+      <h2 class="display reveal">Вопросы,<br>которые задают</h2>
+    </div>
+    <div class="acc" id="acc">
+      <div class="acc__it reveal"><button class="acc__q">Чем это лучше обычной съёмки?<i></i></button><div class="acc__a"><p>Ответ: про сроки, бюджет и то, что часть кадров вообще нельзя снять.</p></div></div>
+      <div class="acc__it reveal"><button class="acc__q">Можно ли повторить один и тот же персонаж?<i></i></button><div class="acc__a"><p>Ответ: про консистентность героя между кадрами и сериями.</p></div></div>
+      <div class="acc__it reveal"><button class="acc__q">Кому принадлежат права на результат?<i></i></button><div class="acc__a"><p>Ответ: что передаёшь клиенту, что остаётся в портфолио.</p></div></div>
+      <div class="acc__it reveal"><button class="acc__q">Сколько правок входит в стоимость?<i></i></button><div class="acc__a"><p>Ответ: сколько кругов, что считается новой сценой.</p></div></div>
+      <div class="acc__it reveal"><button class="acc__q">Работаешь ли по брендбуку?<i></i></button><div class="acc__a"><p>Ответ: как встраиваешься в фирменный стиль и палитру клиента.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ КОНТАКТЫ ══ -->
+<section class="sec sec--cta" id="contact">
+  <div class="shell cta">
+    <h2 class="display cta__title reveal">Давай сделаем<br>то, чего <em class="script">не было</em></h2>
+    <p class="reveal">Напиши, что нужно снять — отвечу в течение дня и покажу похожие работы.</p>
+    <div class="cta__links reveal">
+      <a class="btn" href="mailto:hello@example.com">hello@example.com</a>
+      <a class="btn btn--ghost" href="https://t.me/username" target="_blank" rel="noopener">Telegram</a>
+      <a class="btn btn--ghost" href="https://instagram.com/username" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="shell footer__in">
+    <span>© 2026 Настя · AI-визуализация</span>
+    <a href="#top">Наверх ↑</a>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
