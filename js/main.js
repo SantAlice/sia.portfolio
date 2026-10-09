@@ -498,14 +498,12 @@
     const still   = document.getElementById('lbImage');
     const elBrand = document.getElementById('lbBrand');
     const elTags  = document.getElementById('lbTags');
-    const elAbout = document.getElementById('lbAbout');
     let lastFocus = null;
 
     function open(btn) {
       const d = btn.dataset;
       elBrand.textContent = d.brand || '';
-      elTags.textContent  = d.meta || '';
-      elAbout.textContent = d.about || '';
+      elTags.textContent  = d.type || '';
 
       if (d.src) {                       // видеокейс
         still.hidden = true;
