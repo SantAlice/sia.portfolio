@@ -821,3 +821,33 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 .drow.is-peek .dgrid{cursor:grab}
 .drow.is-peek .dgrid.is-drag{cursor:grabbing; scroll-behavior:auto}
 .drow.is-peek .dgrid.is-drag .work__btn{pointer-events:none}
+
+/* Chrome accents occupy their own space, keeping text and controls clear. */
+.decor{display:block; height:auto; max-width:100%; pointer-events:none; user-select:none}
+.decor-end{display:flex; justify-content:flex-end; margin-top:24px; pointer-events:none}
+.decor--flower{width:260px}
+.decor--flytrap{width:240px}
+.decor-heading{display:flex; align-items:center; justify-content:space-between; gap:32px; flex-wrap:wrap}
+.decor--eye{width:190px; flex-shrink:0}
+.decor-faq{margin-top:24px; pointer-events:none}
+.decor--tooth{width:180px; transform:rotate(-12deg)}
+.decor-stars{display:flex; justify-content:space-between; align-items:center; max-width:920px; margin:-24px auto 12px; pointer-events:none}
+.decor--star{width:160px}
+.decor--star-small{width:110px; transform:rotate(18deg)}
+@media (max-width:860px){
+  .decor--flower{width:180px}
+  .decor--flytrap{width:180px}
+  .decor--eye{width:140px}
+  .decor--tooth{width:130px}
+  .decor-faq{display:flex; justify-content:flex-end; margin-top:24px}
+}
+@media (max-width:560px){
+  .decor-heading{gap:16px}
+  .decor--eye{width:100px; margin-left:auto}
+  .decor-end{margin-top:12px}
+  .decor--flower,.decor--flytrap{width:150px}
+  .decor--tooth{width:110px}
+  .decor--star{width:110px}
+  .decor--star-small{width:80px}
+  .decor-stars{margin-top:-16px; margin-bottom:16px}
+}
