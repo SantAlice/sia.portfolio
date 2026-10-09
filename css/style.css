@@ -7,11 +7,57 @@
    только на крупном кегле. Мелкий текст живёт на --blue-deep.
    ============================================================ */
 
+/* ── шрифты: только локально, без ссылки на fonts.googleapis.com ──
+   Пути отсчитываются от css/style.css, поэтому "../public/...".
+   На сайте ровно два шрифта: Soledago только на h1, Manrope на всём
+   остальном, включая логотип. Manrope с Google Fonts отдаётся порезанным
+   по subset'ам — одного файла на вес с латиницей и кириллицей там нет,
+   отсюда unicode-range. */
+@font-face {
+  font-family: "Soledago";
+  src: url("../public/fonts/Soledago.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("../public/fonts/Manrope-Regular-cyrillic.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("../public/fonts/Manrope-Regular.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+                 U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+                 U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("../public/fonts/Manrope-SemiBold-cyrillic.woff2") format("woff2");
+  font-weight: 600; font-style: normal; font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("../public/fonts/Manrope-SemiBold.woff2") format("woff2");
+  font-weight: 600; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+                 U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+                 U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root{
-  /* заданные цвета */
-  --blue:        #3d84a8;
-  --pink:        #e0aab9;
-  --hero-bg:     var(--blue);  /* фон видео v7 перекрашен ровно в этот цвет */
+  /* ── палитра дизайн-системы (СИСТЕМА.md) ── */
+  --ground:      #0E2634;   /* фон страницы под карточками */
+  --teal:        #184860;   /* тёмная карточка */
+  --blue:        #286284;   /* светлая карточка: #3880A8 не давал контраста тексту */
+  --ink:         #103040;   /* карточки цен и сметы */
+  --cream:       #F7F1DF;
+  --pink:        #E0A8B8;
+  --gap:         28px;
+  --radius:      32px;
+  --col:         1240px;    /* ширина колонки контента внутри карточки */
 
   /* производные */
   --blue-deep:   #1E4E66;
@@ -19,24 +65,39 @@
   --blue-line:   #5A9BBB;
   --pink-soft:   #F0D3DB;
   --pink-deep:   #C98598;
-  --cream:       #FBF6F1;
-  --ink:         #04121A;
 
-  --f-display: "Golos Text", "Arial Narrow", sans-serif;
-  --f-body:    "Onest", -apple-system, "Segoe UI", sans-serif;
-  --f-script:  "Marck Script", cursive;
-  --f-mono:    "JetBrains Mono", ui-monospace, monospace;
+  /* Шрифтов на сайте ровно два: Soledago — только h1 и .section__title,
+     Manrope — всё остальное. Прежние Golos Text / Marck Script /
+     JetBrains Mono убраны вместе со ссылкой на fonts.googleapis.com. */
+  --f-display: "Manrope", system-ui, sans-serif;
+  --f-body:    "Manrope", -apple-system, "Segoe UI", sans-serif;
+  --f-script:  "Manrope", system-ui, sans-serif;
+  --f-mono:    "Manrope", ui-monospace, monospace;
 
-  --shell: 1440px;
   --pad: 32px;
   --ease: cubic-bezier(.22,.61,.36,1);
 }
 
+/* Подложка: картинка уже размыта и затемнена в файле.
+   filter: blur() на всю площадь экрана здесь не вешаем — дорого,
+   а результат тот же. Путь от css/style.css идёт через ../public/. */
+.page-bg{
+  position:fixed; inset:0; z-index:-2;
+  background:var(--ground) url("../public/img/bg.webp") center / cover no-repeat;
+}
+.page-bg::after{                      /* зерно */
+  content:""; position:absolute; inset:0;
+  background:url("../public/img/grain.png") repeat;
+  opacity:.07; mix-blend-mode:overlay;
+  pointer-events:none;
+}
+/* внешние поля страницы — чтобы подложки было видно больше */
+.page{ padding: var(--gap) clamp(var(--gap), 3.2vw, 56px) }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
   margin:0;
-  background:var(--blue);
+  background:var(--ground);
   color:var(--ink);
   font-family:var(--f-body);
   font-weight:300;
@@ -50,24 +111,26 @@ a{color:inherit; text-decoration:none}
 button{font:inherit; color:inherit; background:none; border:0; cursor:pointer}
 ul,ol{margin:0; padding:0; list-style:none}
 
-.shell{max-width:var(--shell); margin:0 auto; padding:0 var(--pad)}
+.shell,
+.section__inner{width:min(var(--col), 100% - 96px); margin-inline:auto; padding:0}
 
 /* ── типографика ───────────────────────────────── */
-.display{
-  font-family:var(--f-display); font-weight:900; text-transform:uppercase;
-  letter-spacing:-.025em; line-height:.88; margin:0;
-  font-size:clamp(34px,6.4vw,92px);
-  color:var(--pink);
+/* Заголовки секций — Soledago, кремовые. Розовый на заголовках давал
+   контраст 2.17:1 на --blue при пороге 3:1; кремовый даёт 3.86:1. */
+h1, .section__title{
+  font-family:"Soledago", "Manrope", system-ui, sans-serif;
+  color:var(--cream);
+  line-height:.96;
+  letter-spacing:0;
 }
-.script{
-  font-family:var(--f-script); font-style:normal; text-transform:none;
-  letter-spacing:0; font-size:.92em;
-}
-.tag{
+.section__title{ font-size:clamp(2.2rem, 4.2vw, 68px); margin:0; text-transform:uppercase }
+.tag,
+.section__label{
   display:inline-block; margin:0 0 18px;
-  background:var(--pink); color:var(--blue-dark);
-  font-family:var(--f-mono); font-size:11px; font-weight:500;
-  letter-spacing:.16em; text-transform:uppercase; padding:5px 10px;
+  padding:6px 12px; border-radius:4px;
+  background:var(--pink); color:var(--ink);
+  font-family:"Manrope", system-ui, sans-serif;
+  font-weight:600; font-size:11px; letter-spacing:.14em; text-transform:uppercase;
 }
 .lead{max-width:44em; margin:22px 0 0}
 h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; letter-spacing:-.02em; margin:0}
@@ -79,28 +142,40 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 }
 
 /* ── шапка ─────────────────────────────────────── */
+/* ── верхнее меню: живёт ВНУТРИ карточки шапки ───────────────────
+   Отдельной фиксированной полосой над карточкой оно разламывало
+   подложку. Позиционирование абсолютное относительно .hero.
+   Логотип набран тем же Manrope — третьего шрифта на сайте нет. */
 .header{
-  position:fixed; top:0; left:0; right:0; z-index:50;
-  transition:background .35s var(--ease), border-color .35s var(--ease);
-  border-bottom:1px solid transparent;
+  position:absolute; inset:0 0 auto 0; z-index:5;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:26px 40px;
 }
-.header.is-stuck{background:rgba(18,53,67,.92); backdrop-filter:blur(10px); border-bottom-color:var(--blue-deep)}
-.header__in{display:flex; align-items:center; gap:28px; height:76px}
+.header::before{                       /* мягкое затемнение, без резкой границы */
+  content:""; position:absolute; inset:0 0 auto 0; height:150px;
+  background:linear-gradient(180deg, rgba(6,32,48,.38), rgba(6,32,48,0));
+  pointer-events:none;
+}
+/* тень несущая: под надписями проходит светлая ладонь. Не удалять. */
+.header a, .header .logo{
+  color:var(--cream);
+  text-shadow:0 2px 12px rgba(4,26,40,.5);
+}
+.header .nav a::after{background:var(--cream)}
+.header .burger span{background:var(--cream)}
+/* розовая кнопка читается сама — цвет текста ей не переопределяем */
+.header .btn--sm{color:var(--blue-dark); text-shadow:none}
+
 .logo{
-  font-family:var(--f-display); font-weight:900; text-transform:uppercase;
-  letter-spacing:-.02em; font-size:19px; color:var(--pink); line-height:1;
+  position:relative;
+  font-family:"Manrope", system-ui, sans-serif; font-weight:600;
+  font-size:20px; letter-spacing:0; line-height:1; text-transform:uppercase;
 }
 .logo span{
-  display:block; font-family:var(--f-mono); font-weight:400; font-size:9px;
-  letter-spacing:.2em; color:var(--cream); margin-top:4px; text-transform:uppercase;
+  display:block; font-family:"Manrope", system-ui, sans-serif; font-weight:400;
+  font-size:11px; letter-spacing:.12em; margin-top:5px; text-transform:uppercase;
 }
-/* пока шапка висит над светлым хиро — контрастный тёмный текст */
-.header:not(.is-stuck) .logo,
-.header:not(.is-stuck) .logo span,
-.header:not(.is-stuck) .nav a{color:var(--ink)}
-.header:not(.is-stuck) .nav a::after{background:var(--ink)}
-.header:not(.is-stuck) .burger span{background:var(--ink)}
-.nav{display:flex; gap:26px; margin-left:auto}
+.nav{display:flex; gap:26px}   /* margin-left:auto убран: раскладку задаёт space-between у .header */
 .nav a{
   font-size:14.5px; color:var(--cream); position:relative; padding:4px 0;
 }
@@ -118,99 +193,195 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 }
 .btn:hover{background:var(--pink-soft); transform:translateY(-2px)}
 .btn--sm{padding:10px 16px; font-size:12.5px}
-.btn--ghost{background:transparent; color:var(--pink); box-shadow:inset 0 0 0 1px var(--pink)}
-.btn--ghost:hover{background:var(--pink); color:var(--blue-dark)}
+/* кремовая, а не розовая: розовый текст на синей карточке давал 2.85:1 */
+.btn--ghost{background:transparent; color:var(--cream); box-shadow:inset 0 0 0 1px rgba(247,241,223,.6)}
+.btn--ghost:hover{background:rgba(247,241,223,.12); color:var(--cream); box-shadow:inset 0 0 0 1px var(--cream)}
 
 .burger{display:none; width:34px; height:34px; flex-direction:column; justify-content:center; gap:6px}
 .burger span{display:block; height:2px; background:var(--pink); transition:transform .3s var(--ease), opacity .3s}
 .burger[aria-expanded="true"] span:first-child{transform:translateY(4px) rotate(45deg)}
 .burger[aria-expanded="true"] span:last-child{transform:translateY(-4px) rotate(-45deg)}
 
-/* ── хиро с аватаром ───────────────────────────── */
-/* Фон обязан совпадать с фоном видео, иначе будет виден шов.
-   Никаких градиентов и оверлеев под аватаром. */
-.hero{
-  background:var(--hero-bg);
-  display:grid;
-  /* аватар справа: колонка равна его ширине, иначе на 900–1100px
-     рядом с ним остаётся пустое место, а текст зажимается */
-  grid-template-columns:minmax(0,1fr) minmax(0,clamp(320px,38vw,620px));
-  gap:clamp(24px,4vw,56px);
-  align-items:center;
-  max-width:var(--shell);
-  margin:0 auto;
-  padding-inline:clamp(20px,5vw,80px);
-  /* сверху с запасом под фиксированную шапку сайта */
-  padding-top:clamp(104px,13vh,150px);
-  /* низ секции без отступа: нижний край видео прилипает к границе блока,
-     поэтому гриб уходит прямо в бегущую строку. Отступ снизу остаётся
-     только у текстовой колонки */
-  padding-bottom:0;
+/* ── хиро: карточка на подложке ──────────────────────────────────
+   Переменные заданы на .hero, а не на :root: в проекте свои
+   --pink/--ink/--cream другого оттенка, глобальная подмена
+   перекрасила бы остальные секции. --ground/--gap/--radius — новые
+   имена, они на :root и коллизий не дают.
+   Высота 88svh, а не 100: снизу должен выглядывать край следующей
+   карточки — это подсказывает скролл и уменьшает шапку. */
+.hero {
+  --bg:    #3D84A8;
+  --cream: #F7F1DF;
+  --ink:   #0F1720;
+  --pink:  #F4A9BE;
+  position: relative;
+  margin-bottom: var(--gap);
+  height: calc(82svh - var(--gap));   /* было 88svh: персонаж занимал пол-экрана */
+  min-height: 620px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg);
 }
-.hero__text{padding-bottom:clamp(40px,8vh,96px)}
-.hero__avatar{
-  width:100%;
-  max-width:clamp(320px,38vw,620px);
-  aspect-ratio:720 / 1076;
-  pointer-events:none;
-  justify-self:center;
-  align-self:end;          /* прижат к низу секции */
-  margin-bottom:0;
-}
-.hero__avatar video{width:100%; height:100%; object-fit:contain; display:block}
 
-.hero__text{min-width:0}
-.eyebrow{
-  font-family:var(--f-mono); font-size:11.5px; letter-spacing:.2em;
-  text-transform:uppercase; color:var(--ink); margin:0 0 22px;
+/* Кадр показывается ЦЕЛИКОМ и прижат к низу. Поля по бокам заполняет
+   фон карточки — он совпадает с фоном видео, поэтому стык не виден.
+   contain на cover не менять: cover режет верх и низ. */
+.hero__video {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: contain;
+  object-position: 50% 100%;
+  transform: scale(1.004);        /* убирает волосок передискретизации по кромке */
+  transform-origin: bottom center;
 }
-.hero__title{
-  font-family:var(--f-display); font-weight:900; text-transform:uppercase;
-  letter-spacing:-.03em; line-height:.86; margin:0;
-  font-size:clamp(46px,8.6vw,132px); color:var(--ink);
+
+/* ── список направлений: без подложки, прижат к текстовой панели ── */
+/* ПРАВКИ_1 п.4: колонка в потоке. padding-top отводит место под шапку,
+   margin-top у панели даёт пустое поле между списком и заголовком.
+   При любой высоте карточки список и панель не наложатся. */
+.hero__content {
+  position: absolute; inset: 0 52px 28px 52px; z-index: 3;
+  display: flex; flex-direction: column;
+  padding-top: clamp(104px, 12vh, 170px);   /* 15vh не оставляло места: на 1440x900 зазор до панели падал до 2px */
 }
-.hero__title .line{display:block; overflow:hidden}
-.hero__title em.script{color:var(--pink); text-shadow:0 2px 0 rgba(4,18,26,.14)}
-.hero__lead{margin:26px 0 0; color:var(--ink); max-width:34em; font-size:18px}
-.hero__lead b{font-weight:500}
-.hero__meta{display:flex; gap:40px; margin-top:32px}
-.hero__meta div{border-top:2px solid var(--ink); padding-top:12px}
+.hero__nav { margin: 0 }
+.hero__nav a {
+  display: block;
+  font-family: "Manrope", system-ui, sans-serif;
+  font-weight: 600;
+  font-size: clamp(24px, 1.9vw, 34px);
+  line-height: 1.28;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  color: rgba(247,241,223,.82);
+  text-decoration: none;
+  /* тень несущая: под словами проходит светлая ладонь. Не удалять. */
+  text-shadow: 0 2px 12px rgba(4,26,40,.5);
+  transition: color .18s ease;
+}
+.hero__nav a:nth-child(-n+2) { color: var(--cream); }
+.hero__nav a:hover           { color: var(--cream); }
+
+/* ── стеклянная панель ───────────────────────────────────────────
+   closest-side принципиально: при радиусе в процентах растушёвка
+   уходит за пределы элемента, внутри маска остаётся сплошной,
+   и край рисует border-radius — получается чёткая рамка.
+   Ни border-radius, ни проценты сюда не возвращать. */
+.hero__panel {
+  position: relative;
+  /* auto, а не фикс: на низкой карточке фиксированный отступ выталкивал
+     панель за нижний край. Так зазор всегда положительный. */
+  margin-top: auto;
+  width: clamp(320px, 42vw, 730px);
+  padding: clamp(22px, 2.2vw, 34px);
+}
+.hero__glass {
+  position: absolute;
+  inset: -22% -12%;              /* слой шире панели — растушёвка уходит наружу */
+  border-radius: 0;              /* радиуса быть не должно: он и рисует контур */
+  background: radial-gradient(closest-side,
+      rgba(8,32,48,.62), rgba(8,32,48,.34) 55%, rgba(8,32,48,0) 100%);
+  backdrop-filter: blur(20px) saturate(112%);
+  -webkit-backdrop-filter: blur(20px) saturate(112%);
+  -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
+          mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
+}
+.hero__copy { position: relative; }
+
+@supports not (backdrop-filter: blur(1px)) {
+  .hero__glass { background: radial-gradient(closest-side,
+      rgba(8,32,48,.80), rgba(8,32,48,.50) 55%, rgba(8,32,48,0) 100%); }
+}
+
+/* ── типографика ─────────────────────────────────────────────────
+   Soledago приходит из общего правила h1. */
+.hero__title {
+  /* Soledago приходит из общего правила h1 — отдельного объявления
+     семейства здесь быть не должно (проверяется поиском по CSS) */
+  font-size: clamp(2.1rem, 5.5vw, 92px);
+  line-height: .96; letter-spacing: 0;
+  color: var(--cream); margin: 0;
+}
+.hero__sub {
+  font-family: "Manrope", system-ui, sans-serif;
+  font-size: clamp(.92rem, 1.15vw, 1.05rem);
+  line-height: 1.5; color: rgba(247,241,223,.92); margin: 1em 0 0;
+}
+.hero__actions { display: flex; gap: 14px; margin-top: 1.7em; flex-wrap: wrap; }
+
+/* кнопки скоуплены на .hero: глобальный .btn в проекте свой
+   и нужен остальным секциям */
+.hero .btn {
+  display: inline-block;
+  font-family: "Manrope", system-ui, sans-serif; font-weight: 600;
+  font-size: .84rem; letter-spacing: .05em; text-transform: uppercase;
+  padding: .95em 1.7em; border-radius: 8px; text-decoration: none;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.hero .btn--primary { background: var(--pink); color: var(--ink); border: none; box-shadow: none; }
+.hero .btn--primary:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(6,32,48,.34); }
+.hero .btn--ghost { background: transparent; color: var(--cream);
+              border: 1.5px solid rgba(247,241,223,.6); box-shadow: none; }
+.hero .btn--ghost:hover { border-color: var(--cream); background: rgba(247,241,223,.12); }
+.hero .btn:focus-visible, .hero__nav a:focus-visible {
+  outline: 2px solid var(--cream); outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__video { display: none; }
+  .hero { background: var(--bg) url("../public/img/hero-poster.webp") center bottom / contain no-repeat; }
+}
+
+@media (max-width: 720px) {
+  :root { --gap: 10px; --radius: 22px; }
+  .hero { height: calc(88svh - var(--gap)); }
+  .hero__video { object-fit: cover; object-position: 58% 18%; }
+  .header { padding: 18px 20px; }
+  /* на мобильном список возвращается наверх: кадр смещён, ладонь
+     в эту зону не заходит, а места под панель внизу мало */
+  .hero__content { left: 14px; right: 14px; padding-top: 84px; }
+  .hero__nav a { font-size: 16px; line-height: 1.75; letter-spacing: .06em; }
+  .hero__panel { width: auto; margin-top: 28px; padding: 20px; }
+  .hero__title { font-size: clamp(2rem, 11vw, 3.2rem); }
+  .hero__actions { flex-direction: column; align-items: stretch; }
+  .hero .btn { text-align: center; }
+}
+/* счётчики цифр — используются в секции «числа», к хиро отношения не имеют */
 .num{
   display:block; font-family:var(--f-display); font-weight:900;
   font-size:clamp(34px,4vw,54px); line-height:1; color:var(--ink);
   font-variant-numeric:tabular-nums; letter-spacing:-.03em;
 }
-.hero__meta small{font-family:var(--f-mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink)}
-.hero__cta{display:flex; gap:12px; flex-wrap:wrap; margin-top:36px}
-.hero__cta .btn--ghost{color:var(--ink); box-shadow:inset 0 0 0 1px var(--ink)}
-.hero__cta .btn--ghost:hover{background:var(--ink); color:var(--pink)}
 
 /* ── плейсхолдеры под медиа ────────────────────── */
+/* Пустые слоты под работы: сплошной --ink с надписью СКОРО.
+   Штриховка читалась как недоделка. */
 .ph{
   position:relative; display:flex; align-items:center; justify-content:center;
-  background:
-    repeating-linear-gradient(135deg, rgba(224,170,185,.10) 0 12px, rgba(224,170,185,0) 12px 24px),
-    var(--blue-deep);
-  box-shadow:inset 0 0 0 1px var(--blue-line);
+  background:var(--ink);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10);
   overflow:hidden;
 }
-.ph span{
-  font-family:var(--f-mono); font-size:11px; letter-spacing:.12em;
-  text-transform:uppercase; color:var(--pink); text-align:center; padding:12px;
+.ph::before{
+  content:"СКОРО";
+  font-family:"Manrope", system-ui, sans-serif;
+  font-weight:600; font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:rgba(247,241,223,.55);
+  border:1px solid rgba(247,241,223,.22);
+  padding:6px 12px; border-radius:4px;
 }
-.ph::after{
-  content:""; position:absolute; top:0; bottom:0; width:35%;
-  background:linear-gradient(90deg,rgba(224,170,185,0),rgba(224,170,185,.14),rgba(224,170,185,0));
-  animation:shine 4.5s linear infinite;
-}
-@keyframes shine{0%{transform:translateX(-150%)}100%{transform:translateX(420%)}}
+.ph span{display:none}   /* подпись слота остаётся в разметке как подсказка */
 .ph--portrait{aspect-ratio:3/4}
 .ph--wide{aspect-ratio:16/9}
 
 /* ── бегущая строка ────────────────────────────── */
+/* Следующая карточка на подложке: то же поле и то же скругление,
+   но кремовая — задаёт ритм чередования. Её край выглядывает
+   из-под шапки, потому что у .hero высота 88svh. */
 .marquee{
-  overflow:hidden; background:var(--pink); color:var(--blue-dark);
-  padding:14px 0; border-top:1px solid var(--blue-dark); border-bottom:1px solid var(--blue-dark);
+  overflow:hidden; background:#F2ECDC; color:var(--blue-dark);
+  margin:0 0 var(--gap);
+  border-radius:var(--radius);
+  padding:18px 0;
 }
 .marquee__track{display:flex; width:max-content; animation:marquee 26s linear infinite}
 .marquee__track span{
@@ -219,12 +390,36 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 }
 @keyframes marquee{to{transform:translateX(-50%)}}
 
-/* ── секции ────────────────────────────────────── */
-.sec{padding:clamp(70px,9vw,132px) 0; position:relative}
-.sec--deep{background:var(--blue-deep); color:var(--cream)}
-.sec--deep .tag{background:var(--pink); color:var(--blue-dark)}
-.sec--deep p{color:rgba(251,246,241,.78)}
-.sec--pinkline{border-top:2px solid var(--pink); border-bottom:2px solid var(--pink)}
+/* ── секции: каждая — отдельная карточка на подложке ──────────────
+   Полос во всю ширину нет. Между карточками ровно --gap.
+   Чередование teal → blue обязательно: две одинаковые подряд
+   читаются как один длинный блок. --ink только цены и смета. */
+.sec,
+.section{
+  margin-bottom: var(--gap);
+  border-radius: var(--radius);
+  padding: clamp(48px,5vw,96px) 0;
+  position: relative;
+  overflow: hidden;
+  color: var(--cream);
+  backdrop-filter: blur(26px) saturate(110%);
+  -webkit-backdrop-filter: blur(26px) saturate(110%);
+}
+/* волосковая линия по контуру — не украшение: когда цвет карточки
+   близок к фону, без неё края теряются */
+.sec::before,
+.section::before{
+  content:""; position:absolute; inset:0;
+  border-radius:inherit;
+  border:1px solid rgba(255,255,255,.13);
+  pointer-events:none;
+  z-index:1;
+}
+.section--teal{ background: rgba( 24, 72,  96, .66) }
+.section--blue{ background: rgba( 40, 98, 132, .62) }
+.section--ink { background: rgba( 16, 48,  64, .72) }
+
+.sec p, .section p{color:var(--cream)}   /* .92 над светлым участком подложки давало 4.29:1 */   /* .80 давало 3.88:1 на синей карточке */
 
 /* обо мне */
 .about{display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); gap:clamp(30px,5vw,80px); align-items:start}
@@ -232,7 +427,7 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:28px}
 .chips li{
   font-family:var(--f-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
-  padding:6px 11px; box-shadow:inset 0 0 0 1px var(--pink); color:var(--pink);
+  padding:6px 11px; box-shadow:inset 0 0 0 1px var(--pink); color:var(--cream);   /* розовым остаётся обводка: розовый текст давал 3.52:1 */
 }
 
 /* направления: раскрывающиеся строки */
@@ -240,9 +435,9 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 .dirs__tools{display:flex; gap:18px}
 .linkbtn{
   font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--pink); padding:6px 0; border-bottom:1px solid transparent; transition:border-color .25s var(--ease);
+  color:var(--cream); padding:6px 0; border-bottom:1px solid transparent; transition:border-color .25s var(--ease);
 }
-.linkbtn:hover{border-bottom-color:var(--pink)}
+.linkbtn:hover{border-bottom-color:var(--cream)}
 
 .dirs{border-top:1px solid rgba(224,170,185,.45)}
 .drow{border-bottom:1px solid rgba(224,170,185,.45)}
@@ -253,26 +448,64 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
   transition:padding .35s var(--ease), background .35s var(--ease);
 }
 .drow__bar:hover{background:rgba(224,170,185,.07); padding-left:16px; padding-right:16px}
-.drow__no{font-family:var(--f-mono); font-size:11px; letter-spacing:.16em; color:rgba(251,246,241,.55)}
+.drow__no{font-family:var(--f-mono); font-size:11px; letter-spacing:.16em; color:rgba(247,241,223,.94)}
 .drow__name{
   font-family:var(--f-display); font-weight:900; text-transform:uppercase;
-  font-size:clamp(24px,4.6vw,64px); line-height:.92; letter-spacing:-.035em; color:var(--pink);
+  font-size:clamp(24px,4.6vw,64px); line-height:.92; letter-spacing:-.035em; color:var(--cream);
 }
-.drow__count{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:rgba(251,246,241,.55); white-space:nowrap}
+.drow__count{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:rgba(247,241,223,.94); white-space:nowrap}
 .drow__icon{position:relative; width:18px; height:18px; flex:0 0 18px}
-.drow__icon::before,.drow__icon::after{content:""; position:absolute; background:var(--pink); transition:transform .35s var(--ease)}
+.drow__icon::before,.drow__icon::after{content:""; position:absolute; background:var(--cream); transition:transform .35s var(--ease)}
 .drow__icon::before{left:0; right:0; top:8px; height:2px}
 .drow__icon::after{top:0; bottom:0; left:8px; width:2px}
 .drow.is-open .drow__icon::after{transform:scaleY(0)}
 .drow.is-open .drow__bar{background:rgba(224,170,185,.07); padding-left:16px; padding-right:16px}
-.drow.is-open .drow__count{color:var(--pink)}
+.drow.is-open .drow__count{color:var(--cream)}
 
-.drow__panel{max-height:0; overflow:hidden; transition:max-height .55s var(--ease)}
+/* Панель больше не схлопывается в ноль: каждая рубрика по умолчанию
+   показывает ленту работ. Клик по строке переключает ленту на сетку. */
+.drow__panel{overflow:visible}
 .drow__inner{display:flex; flex-direction:column; gap:24px; padding:6px 16px 42px}
 .drow__desc{margin:0; max-width:46em}
+.drow__empty{margin:0; color:rgba(247,241,223,.6); font-size:14px}
 .drow__all{align-self:flex-start}
 
-.dgrid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px}
+/* ── две раскладки работ внутри рубрики ──────────────────────────
+   is-peek — лента в одну строку, прокручивается колесом, хвост уходит
+   под полупрозрачную подложку. is-open — полная сетка-кладка. */
+.dstrip{position:relative; min-width:0}
+.dgrid{display:grid; gap:14px}
+
+.drow.is-peek .dgrid{
+  display:flex; align-items:flex-start;
+  overflow-x:auto; overflow-y:hidden;
+  scrollbar-width:none; padding-bottom:4px;
+}
+.drow.is-peek .dgrid::-webkit-scrollbar{display:none}
+.drow.is-peek .work{
+  flex:0 0 auto; height:clamp(210px, 23vw, 330px);
+}
+.drow.is-peek .work__btn{height:100%}
+.drow.is-peek .work__img{height:100%; width:auto; max-width:none}
+/* подложка на хвосте ленты: видно, что справа есть ещё */
+.drow.is-peek .dstrip::after{
+  content:""; position:absolute; inset:0 0 0 auto; width:clamp(60px,12%,140px);
+  background:linear-gradient(90deg, rgba(24,72,96,0), rgba(16,52,72,.92));
+  pointer-events:none; border-radius:0 14px 14px 0;
+}
+.drow.is-peek.is-end .dstrip::after{opacity:0; transition:opacity .25s var(--ease)}
+
+/* Обычная сетка, без кладки на JS: прежний вариант считал высоту плиток
+   после загрузки картинок, а при lazy-загрузке не успевал — плитки
+   вылезали на соседние рубрики. Высоту строки задаёт самая высокая
+   плитка, картинка внутри вписывается целиком и не кадрируется. */
+.drow.is-open .dgrid{
+  grid-template-columns:repeat(auto-fill, minmax(190px, 1fr));
+  align-items:start;
+}
+.drow.is-open .work--wide{grid-column:span 2}
+.drow.is-open .work__btn{height:100%}
+.drow.is-open .work__img{width:100%; height:auto}
 .drow.is-open .tile{animation:pop .5s var(--ease) both}
 .drow.is-open .tile:nth-child(2){animation-delay:.07s}
 .drow.is-open .tile:nth-child(3){animation-delay:.14s}
@@ -290,14 +523,17 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 .ph[data-ratio="21:9"]{aspect-ratio:21/9}
 @keyframes pop{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
 .tile__cap{display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:11px 2px 0}
-.tile__cap b{font-family:var(--f-display); font-weight:900; text-transform:uppercase; font-size:12.5px; letter-spacing:-.01em; color:var(--pink)}
-.tile__cap small{font-family:var(--f-mono); font-size:10px; letter-spacing:.1em; color:rgba(251,246,241,.6); white-space:nowrap}
-.tile:hover .ph{box-shadow:inset 0 0 0 2px var(--pink)}
+.tile__cap b{font-family:var(--f-display); font-weight:900; text-transform:uppercase; font-size:12.5px; letter-spacing:-.01em; color:var(--cream)}
+.tile__cap small{font-family:var(--f-mono); font-size:10px; letter-spacing:.1em; color:rgba(247,241,223,.94); white-space:nowrap}
+.tile:hover .ph{box-shadow:inset 0 0 0 2px rgba(247,241,223,.45)}
 
 /* невозможное */
 .imp{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.9fr); gap:clamp(30px,5vw,72px); align-items:start}
 .imp__text p{max-width:34em; margin:22px 0 0}
-.imp__media{aspect-ratio:16/9; margin-top:34px}
+/* оба кадра теперь настоящие картинки, а не плейсхолдеры:
+   пропорцию задаёт сам файл, поэтому aspect-ratio не нужен */
+.imp__media{display:block; width:100%; height:auto; margin-top:34px; border-radius:16px}
+.about__media{display:block; width:100%; height:auto; border-radius:16px}
 .invoice{background:var(--blue-dark); color:var(--cream); padding:clamp(24px,3vw,40px)}
 .invoice__row{
   display:flex; justify-content:space-between; gap:20px; align-items:baseline;
@@ -306,7 +542,7 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 }
 .invoice__row b{font-family:var(--f-mono); font-weight:500; font-variant-numeric:tabular-nums; white-space:nowrap}
 .invoice__row::after{
-  content:""; position:absolute; left:0; top:52%; height:2px; width:0; background:var(--pink);
+  content:""; position:absolute; left:0; top:52%; height:2px; width:0; background:rgba(247,241,223,.65);
   transition:width .7s var(--ease);
 }
 .invoice.is-on .invoice__row::after{width:100%}
@@ -315,14 +551,14 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 .invoice.is-on .invoice__row:nth-child(4)::after{transition-delay:.45s}
 .invoice.is-on .invoice__row:nth-child(5)::after{transition-delay:.6s}
 .invoice__total{display:flex; justify-content:space-between; align-items:baseline; gap:20px; padding-top:22px}
-.invoice__total span{font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--pink)}
+.invoice__total span{font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:rgba(247,241,223,.72)}
 .invoice__total b{font-family:var(--f-display); font-weight:900; text-transform:uppercase; font-size:clamp(20px,2.4vw,30px); color:var(--pink); letter-spacing:-.02em}
 
 /* процесс */
 .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:rgba(251,246,241,.2); margin-top:52px}
 .step{background:var(--blue-deep); padding:28px 24px 32px}
-.step__no{font-family:var(--f-mono); font-size:11px; letter-spacing:.16em; color:var(--pink)}
-.step h3{font-size:clamp(20px,2.2vw,30px); color:var(--pink); margin:14px 0 10px}
+.step__no{font-family:var(--f-mono); font-size:11px; letter-spacing:.16em; color:var(--cream)}   /* синяя карточка: розовый даёт 2.85:1 */
+.step h3{font-size:clamp(20px,2.2vw,30px); color:var(--cream); margin:14px 0 10px}
 .step p{margin:0; font-size:15px}
 
 /* инструменты */
@@ -332,8 +568,8 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 
 /* цифры */
 .nums{display:grid; grid-template-columns:repeat(4,1fr); gap:26px}
-.nums__it{border-top:2px solid var(--pink); padding-top:16px}
-.nums__it .num{color:var(--pink); font-size:clamp(40px,5.4vw,76px)}
+.nums__it{border-top:2px solid rgba(247,241,223,.35); padding-top:16px}
+.nums__it .num{color:var(--cream); font-size:clamp(40px,5.4vw,76px)}
 .nums__it small{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:rgba(251,246,241,.7)}
 
 /* цены */
@@ -341,10 +577,10 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 .plan{background:var(--blue-deep); color:var(--cream); padding:34px 28px 30px; display:flex; flex-direction:column; gap:16px; position:relative}
 .plan--hl{background:var(--pink); color:var(--blue-dark)}
 .plan__badge{
-  position:absolute; top:-11px; left:28px; background:var(--blue-dark); color:var(--pink);
+  position:absolute; top:-11px; left:28px; background:var(--blue-dark); color:var(--cream);
   font-family:var(--f-mono); font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; padding:5px 10px;
 }
-.plan h3{font-size:26px; color:var(--pink)}
+.plan h3{font-size:26px; color:var(--cream)}
 .plan--hl h3{color:var(--blue-dark)}
 .plan__price{font-family:var(--f-mono); font-size:15px; margin:0; color:inherit}
 .plan ul{flex:1}
@@ -360,7 +596,7 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
   padding:22px 0; text-align:left; font-size:17px; color:var(--cream);
   transition:color .25s var(--ease);
 }
-.acc__q:hover{color:var(--pink)}
+.acc__q:hover{color:var(--cream)}
 .acc__q i{position:relative; width:14px; height:14px; flex:0 0 14px}
 .acc__q i::before,.acc__q i::after{
   content:""; position:absolute; background:var(--pink); transition:transform .3s var(--ease);
@@ -372,13 +608,13 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 .acc__a p{margin:0 0 22px; max-width:44em}
 
 /* cta */
-.sec--cta{background:var(--blue-dark); color:var(--cream); text-align:center}
+.sec--cta{text-align:center}   /* фон задаёт класс карточки */
 .cta__title{font-size:clamp(34px,7vw,110px)}
-.cta__title em{color:var(--cream)}
-.cta p{max-width:34em; margin:26px auto 0; color:rgba(251,246,241,.78)}
+.cta p{max-width:34em; margin:26px auto 0; color:var(--cream)}
 .cta__links{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:36px}
 
-.footer{background:var(--blue-dark); color:rgba(251,246,241,.6); border-top:1px solid rgba(251,246,241,.16)}
+/* футер без фона: полос во всю ширину на подложке быть не должно */
+.footer{color:rgba(247,241,223,.72); padding-top:8px}
 .footer__in{display:flex; justify-content:space-between; gap:20px; padding-top:26px; padding-bottom:26px; font-family:var(--f-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase}
 .footer a:hover{color:var(--pink)}
 
@@ -392,7 +628,7 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 
 /* ── адаптив ───────────────────────────────────── */
 @media (max-width:1100px){
-  .dgrid{grid-template-columns:repeat(2,1fr)}
+  .drow.is-open .dgrid{grid-template-columns:repeat(2,1fr)}
   .steps,.tools,.nums{grid-template-columns:repeat(2,1fr)}
   .plans{grid-template-columns:1fr}
 }
@@ -406,17 +642,10 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
     background:var(--blue-dark); padding:8px 20px 24px;
   }
   .nav.is-open a{padding:14px 0; border-bottom:1px solid rgba(251,246,241,.14)}
-  .hero{grid-template-columns:1fr; justify-items:center; text-align:center; gap:30px;
-        padding-bottom:0}
-  /* в стопке аватар сверху, поэтому к низу прижимается текст, а не он */
-  .hero__text{padding-bottom:clamp(40px,8vh,96px)}
-  .hero__avatar{max-width:min(78vw,420px); order:-1; align-self:auto}
-  .hero__lead{margin-left:auto; margin-right:auto}
-  .hero__meta,.hero__cta{justify-content:center; gap:24px}
   .about,.imp,.faq{grid-template-columns:1fr; gap:34px}
 }
 @media (max-width:560px){
-  .dgrid{grid-template-columns:repeat(2,1fr); gap:10px}
+  .drow.is-open .dgrid{grid-template-columns:repeat(2,1fr); gap:10px}
   .steps,.tools,.nums{grid-template-columns:1fr}
   .drow__bar{grid-template-columns:auto minmax(0,1fr) auto; gap:12px}
   .drow__count{display:none}
@@ -428,3 +657,166 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
   *,*::before,*::after{animation:none !important; transition:none !important}
   .load,.reveal{opacity:1; transform:none}
 }
+
+/* ── скролл-вставка «гигантская девушка» ────────────────────────
+   Не карточка: во всю ширину, без --gap и без скругления. Секция
+   вынесена за .page, поэтому боковых полей у неё нет.
+   Пути к постеру — относительно css/style.css, то есть ../public/. */
+.giant{
+  position: relative;
+  height: 260vh;              /* длина проезда: больше — медленнее. Ниже 200vh не опускать */
+  margin: 0;
+  background: var(--ground);
+}
+.giant__stage{
+  position: sticky; top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+.giant__video{
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* на мобильных скролл-скраб работает плохо — там обычный луп */
+@media (max-width: 767px){
+  .giant{ height: 100svh }
+  .giant__stage{ height: 100svh }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .giant{ height: 100svh }
+  .giant__video{ display: none }
+  .giant__stage{
+    background: url("../public/img/giant-poster.webp") center / cover no-repeat;
+  }
+}
+
+/* ── превью работ: видно до раскрытия рубрик ────────────────────
+   Пропорции обложек разные (9:16, 3:4, 16:9), поэтому кладка:
+   горизонтальные занимают две колонки, высоту строки каждой плитке
+   считает скрипт. Так ничего не кадрируется. */
+.works{
+  list-style:none; margin:0 0 22px; padding:0;
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(190px, 1fr));
+  grid-auto-rows:4px;              /* единица кладки; span считает JS */
+  gap:14px;
+}
+.work{margin:0}
+.work--wide{grid-column:span 2}
+.work--extra{display:none}
+.works.is-all .work--extra{display:block}
+.work__btn{
+  display:block; width:100%; padding:0; border:0; background:none;
+  cursor:pointer; position:relative; border-radius:14px; overflow:hidden;
+  color:inherit; text-align:left;
+}
+.work__img{
+  display:block; width:100%; height:auto;
+  transition:transform .4s var(--ease), filter .3s var(--ease);
+}
+.work__btn::after{                  /* затемнение снизу: только под подписью, по наведению */
+  content:""; position:absolute; inset:auto 0 0 0; height:46%;
+  background:linear-gradient(180deg, rgba(6,24,34,0), rgba(6,24,34,.78));
+  opacity:0; transition:opacity .25s var(--ease); pointer-events:none;
+}
+.work__btn:hover::after, .work__btn:focus-visible::after{opacity:1}
+/* значок видео — чтобы плитка читалась как кликабельная */
+.work__play{
+  position:absolute; top:10px; right:10px; z-index:2;
+  width:26px; height:26px; border-radius:50%;
+  background:rgba(6,20,30,.55); backdrop-filter:blur(4px);
+  display:grid; place-items:center; pointer-events:none;
+}
+.work__play::before{
+  content:""; width:0; height:0; margin-left:2px;
+  border:5px solid transparent; border-left-color:var(--cream);
+}
+.work__cap{
+  position:absolute; left:12px; right:12px; bottom:10px; z-index:2;
+  display:flex; flex-direction:column; gap:1px;
+  opacity:0; transform:translateY(6px);
+  transition:opacity .25s var(--ease), transform .25s var(--ease);
+}
+.work__btn:hover .work__cap, .work__btn:focus-visible .work__cap{opacity:1; transform:none}
+/* бренды уже набраны на самих обложках — подписью их не дублируем */
+.work__cap b{
+  position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%);
+}
+.work__cap small{
+  font-size:11px; letter-spacing:.06em; color:rgba(247,241,223,.82);
+  text-shadow:0 2px 10px rgba(4,26,40,.6);
+}
+.work__btn:hover .work__img{transform:scale(1.04)}
+.work__btn:focus-visible{outline:2px solid var(--cream); outline-offset:3px}
+.works__more{margin:0 0 30px}
+
+/* ── просмотр кейса ────────────────────────────────────────────── */
+.lb[hidden]{display:none}
+.lb{position:fixed; inset:0; z-index:200; display:grid; place-items:center; padding:3vmin}
+.lb__backdrop{position:absolute; inset:0; background:rgba(6,20,30,.86); backdrop-filter:blur(8px)}
+.lb__box{
+  position:relative; z-index:1; display:grid; gap:0;
+  grid-template-columns:minmax(0,auto) minmax(260px,330px);
+  background:var(--teal); border-radius:20px; overflow:hidden;
+  box-shadow:0 30px 80px rgba(2,12,20,.6); max-width:min(1100px, 94vw);
+}
+.lb__stage{background:#06141c; display:grid; place-items:center; min-width:0}
+.lb__video,
+.lb__img{display:block; max-width:100%; max-height:84vh; width:auto; height:auto}
+.lb__video[hidden], .lb__img[hidden]{display:none}
+.lb__info{padding:26px 24px; align-self:start}
+.lb__brand{
+  font-family:var(--f-body); font-weight:600; font-size:22px;
+  letter-spacing:.04em; text-transform:uppercase; color:var(--cream); margin:0 0 8px;
+}
+.lb__tags{font-size:12.5px; letter-spacing:.04em; color:var(--pink); margin:0 0 14px}
+.lb__about{font-size:14.5px; line-height:1.6; color:rgba(247,241,223,.92); margin:0}
+.lb__close{
+  position:absolute; top:8px; right:12px; z-index:3;
+  width:38px; height:38px; font-size:26px; line-height:1;
+  color:var(--cream); background:rgba(6,20,30,.5); border-radius:50%;
+}
+.lb__close:hover{background:rgba(6,20,30,.8)}
+@media (max-width:860px){
+  .lb__box{grid-template-columns:1fr; max-height:92vh; overflow:auto}
+  .lb__video{max-height:58vh}
+  .lb__info{padding:18px 18px 24px}
+}
+@media (max-width:560px){
+  .works{grid-template-columns:repeat(2,1fr); gap:10px}
+  .work--wide{grid-column:span 2}
+}
+
+/* размытие выключается у карточек за экраном — см. блок 13 в main.js */
+.no-blur{backdrop-filter:none !important; -webkit-backdrop-filter:none !important}
+
+/* ── стрелки у ленты ─────────────────────────────────────────────
+   Колесо у страницы не отнимаем, поэтому мышью лента листается
+   стрелками или перетаскиванием. Тачпад и палец работают нативно. */
+.dnav{
+  position:absolute; top:50%; transform:translateY(-50%); z-index:3;
+  width:40px; height:40px; border-radius:50%;
+  background:rgba(8,32,48,.72); backdrop-filter:blur(6px);
+  display:none; place-items:center;
+  transition:opacity .2s var(--ease), background .2s var(--ease);
+}
+.dstrip.has-nav .dnav{display:grid}
+.dnav:hover{background:rgba(8,32,48,.9)}
+.dnav:disabled{opacity:0; pointer-events:none}
+.dnav--prev{left:6px}
+.dnav--next{right:6px}
+.dnav::before{
+  content:""; width:9px; height:9px;
+  border-top:2px solid var(--cream); border-right:2px solid var(--cream);
+}
+.dnav--prev::before{transform:rotate(-135deg); margin-left:3px}
+.dnav--next::before{transform:rotate(45deg); margin-right:3px}
+.dnav:focus-visible{outline:2px solid var(--cream); outline-offset:2px}
+
+/* перетаскивание мышью */
+.drow.is-peek .dgrid{cursor:grab}
+.drow.is-peek .dgrid.is-drag{cursor:grabbing; scroll-behavior:auto}
+.drow.is-peek .dgrid.is-drag .work__btn{pointer-events:none}

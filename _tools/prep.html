@@ -1,0 +1,105 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Подготовка обложек кейсов</title>
+<style>
+  body { font: 14px/1.5 system-ui, sans-serif; background:#0E2634; color:#F7F1DF; padding:24px; }
+  h1 { font-size:18px; margin:0 0 16px }
+  table { border-collapse:collapse; width:100%; max-width:900px }
+  td,th { text-align:left; padding:5px 10px; border-bottom:1px solid rgba(247,241,223,.15); font-variant-numeric:tabular-nums }
+  .ok { color:#8fd98f } .bad { color:#ff9a9a }
+  small { opacity:.65 }
+</style>
+<h1>Подготовка обложек кейсов → public/img/cases/</h1>
+<p><small>Служебная страница. Оригиналы не меняются: читаются с :8120, сжатая копия кладётся в проект.</small></p>
+<table id="t"><thead><tr><th>Кейс</th><th>Было</th><th>Стало</th><th>Размер</th><th></th></tr></thead><tbody></tbody></table>
+
+<script>
+const SRC = 'http://127.0.0.1:8120/';         // папка «Кейсы» как есть
+const tbody = document.querySelector('#t tbody');
+
+function row(cells) {
+  const tr = document.createElement('tr');
+  cells.forEach(c => { const td = document.createElement('td'); td.innerHTML = c; tr.appendChild(td); });
+  tbody.appendChild(tr);
+  return tr;
+}
+
+function loadImg(url) {
+  return new Promise((res, rej) => {
+    const im = new Image();
+    im.crossOrigin = 'anonymous';
+    im.onload = () => res(im);
+    im.onerror = () => rej(new Error('не загрузилось'));
+    im.src = url;
+  });
+}
+
+// Рисуем в canvas нужной ширины и кодируем в WebP.
+// Качество подбираем так, чтобы уложиться в бюджет по весу.
+async function encode(img, targetW, budgetKB) {
+  const scale = Math.min(1, targetW / img.naturalWidth);
+  const w = Math.round(img.naturalWidth * scale);
+  const h = Math.round(img.naturalHeight * scale);
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const g = c.getContext('2d');
+  g.imageSmoothingEnabled = true;
+  g.imageSmoothingQuality = 'high';
+  g.drawImage(img, 0, 0, w, h);
+  let blob = null;
+  for (const q of [0.86, 0.82, 0.78, 0.72, 0.66, 0.60]) {
+    blob = await new Promise(r => c.toBlob(r, 'image/webp', q));
+    if (!blob) break;
+    if (blob.size <= budgetKB * 1024) return { blob, w, h, q };
+  }
+  return { blob, w, h, q: 0.6 };
+}
+
+async function put(path, blob) {
+  const r = await fetch('/' + path, { method: 'PUT', body: blob });
+  if (!r.ok) throw new Error('PUT ' + r.status);
+  return r.text();
+}
+
+// Разовое сжатие одного файла: откуда, куда, до какой ширины и веса.
+window.prepOne = async function (src, dest, targetW, budgetKB) {
+  const img = await loadImg(src);
+  const { blob, w, h, q } = await encode(img, targetW, budgetKB);
+  await put(dest, blob);
+  const r = { dest, from: img.naturalWidth + 'x' + img.naturalHeight,
+              to: w + 'x' + h, kb: Math.round(blob.size / 1024), q };
+  row([dest.split('/').pop(), r.from, r.to + '  q' + q, r.kb + ' КБ', '<span class="ok">готово</span>']);
+  return r;
+};
+
+window.runPrep = async function () {
+  tbody.innerHTML = '';
+  const cases = await (await fetch('/_tools/cases.json')).json();
+  cases.sort((a, b) => a.order - b.order);
+  const report = [];
+  for (const c of cases) {
+    const url = SRC + encodeURIComponent(c.folder) + '/' + encodeURIComponent(c.cover);
+    const tr = row([c.brand, '…', '…', '…', '']);
+    try {
+      const img = await loadImg(url);
+      const vertical = img.naturalHeight >= img.naturalWidth;
+      const targetW = vertical ? 600 : 1200;
+      const budget  = vertical ? 80 : 150;
+      const { blob, w, h, q } = await encode(img, targetW, budget);
+      const name = c.slug + '.webp';
+      await put('public/img/cases/' + name, blob);
+      const kb = Math.round(blob.size / 1024);
+      tr.children[1].textContent = img.naturalWidth + '×' + img.naturalHeight;
+      tr.children[2].textContent = w + '×' + h + '  q' + q;
+      tr.children[3].textContent = kb + ' КБ';
+      tr.children[4].innerHTML = '<span class="ok">готово</span>';
+      report.push({ brand: c.brand, slug: c.slug, from: img.naturalWidth + 'x' + img.naturalHeight,
+                    to: w + 'x' + h, kb, q, ok: true });
+    } catch (e) {
+      tr.children[4].innerHTML = '<span class="bad">' + e.message + '</span>';
+      report.push({ brand: c.brand, slug: c.slug, ok: false, err: e.message });
+    }
+  }
+  return report;
+};
+</script>
