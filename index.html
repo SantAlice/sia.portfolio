@@ -7,7 +7,7 @@
 <meta name="description" content="AI-визуализация: кадры, которые невозможно, негде или слишком дорого снять в реальности. Фото, видео, продукты и миры под ключ.">
 
 <link rel="preload" as="image" href="public/img/hero-poster.webp" fetchpriority="high">
-<link rel="stylesheet" href="css/style.css?v=numbers-center-1">
+<link rel="stylesheet" href="css/style.css?v=pricing-currency-1">
 </head>
 <body>
 
@@ -694,27 +694,46 @@
 <section class="section section--ink" id="pricing">
   <div class="shell">
     <p class="tag reveal">Форматы и цены</p>
-    <h2 class="section__title reveal">Понятные<br>пакеты</h2>
+    <h2 class="section__title reveal">Стоимость</h2>
+    <p class="lead reveal">Простое изображение или полноценный рекламный проект — стоимость зависит от вашей задачи. Расскажите об идее, и я предложу подходящий вариант и назову точную цену до начала работы.</p>
+    <div class="currency-switch reveal" role="group" aria-label="Валюта цен">
+      <button class="currency-switch__btn" type="button" data-currency="rub" aria-pressed="true">₽ Рубли</button>
+      <button class="currency-switch__btn" type="button" data-currency="kzt" aria-pressed="false">₸ Тенге</button>
+      <button class="currency-switch__btn" type="button" data-currency="usd" aria-pressed="false">$ Доллары</button>
+    </div>
+    <p class="currency-status" role="status" aria-live="polite" aria-atomic="true">Цены в рублях</p>
     <div class="plans">
-      <div class="plan reveal">
-        <h3>Кадр</h3>
-        <p class="plan__price">от 15 000 ₽</p>
-        <ul><li>1 сцена, 3 варианта</li><li>правки — по отдельной смете</li><li>исходник 4K</li><li>срок: 1–2 дня</li></ul>
-        <a class="btn btn--ghost" href="https://t.me/cassiopeianse" target="_blank" rel="noopener noreferrer">Обсудить</a>
-      </div>
-      <div class="plan plan--hl reveal">
-        <span class="plan__badge">чаще всего берут</span>
-        <h3>Серия</h3>
-        <p class="plan__price">от 60 000 ₽</p>
-        <ul><li>5–8 кадров в одном мире</li><li>мудборд и арт-дирекшн</li><li>адаптации под площадки</li><li>срок: 4–7 дней</li></ul>
-        <a class="btn" href="https://t.me/cassiopeianse" target="_blank" rel="noopener noreferrer">Обсудить</a>
-      </div>
-      <div class="plan reveal">
-        <h3>Ролик</h3>
-        <p class="plan__price">от 90 000 ₽</p>
-        <ul><li>до 30 секунд</li><li>раскадровка, монтаж, звук</li><li>вертикаль + горизонталь</li><li>срок: 7–14 дней</li></ul>
-        <a class="btn btn--ghost" href="https://t.me/cassiopeianse" target="_blank" rel="noopener noreferrer">Обсудить</a>
-      </div>
+      <article class="plan reveal">
+        <h3>AI изображения</h3>
+        <p class="plan__price"><span data-price-rub="от 500 ₽" data-price-kzt="от 3 000 ₸" data-price-usd="от $6">от 500 ₽</span><small>за готовое изображение</small></p>
+        <div class="plan__description">
+          <p>Изображения для товаров, соцсетей, каталогов и рекламы. От простой сцены до сложного визуала с точным сохранением продукта, персонажа или маскота.</p>
+          <p>Можно заказать один кадр или серию в едином стиле.</p>
+          <p>Итоговая стоимость зависит от сложности идеи, требований к деталям, обработки и количества изображений. Для серии я назову общую цену за весь проект.</p>
+        </div>
+      </article>
+      <article class="plan plan--hl reveal">
+        <h3>Короткое AI видео</h3>
+        <p class="plan__price"><span data-price-rub="от 5 000 ₽" data-price-kzt="от 30 000 ₸" data-price-usd="от $60">от 5 000 ₽</span><small>за готовый ролик</small></p>
+        <div class="plan__description">
+          <p>Видео для Reels, TikTok, соцсетей и карточек товаров: подготовка кадров, анимация и монтаж.</p>
+          <p>Итоговая стоимость зависит от длительности, количества сцен и сложности анимации. Простое движение товара и сложная трансформация требуют разного объёма работы.</p>
+        </div>
+      </article>
+      <article class="plan reveal">
+        <h3>Рекламное и имиджевое видео</h3>
+        <p class="plan__price"><span data-price-rub="от 20 000 ₽" data-price-kzt="от 110 000 ₸" data-price-usd="от $250">от 20 000 ₽</span><small>за проект</small></p>
+        <div class="plan__description">
+          <p>Видео для рекламы, запусков продуктов и брендовых историй. Визуальная идея, подготовка кадров, анимация и монтаж.</p>
+          <p>Длительность — под вашу задачу. Итоговая стоимость зависит от сценария, количества сцен, сложности движений и необходимых форматов.</p>
+        </div>
+      </article>
+    </div>
+    <div class="pricing-summary reveal">
+      <h3>Понятная цена до начала работы</h3>
+      <p>После обсуждения задачи вы получите общую стоимость проекта и список того, что входит в работу.</p>
+      <p>Генерации, отбор вариантов и один раунд правок в рамках согласованной идеи включены в цену. Дополнительные работы выполняются только после согласования с вами.</p>
+      <a class="btn" href="https://t.me/cassiopeianse" target="_blank" rel="noopener noreferrer">Узнать стоимость моей идеи</a>
     </div>
   </div>
 </section>
@@ -731,7 +750,7 @@
       <div class="acc__it reveal"><button class="acc__q" type="button" aria-expanded="false" aria-controls="faq-answer-1">Когда стоит выбрать AI-визуал?<i aria-hidden="true"></i></button><div class="acc__a" id="faq-answer-1"><p>Когда нужны необычные локации, сложные декорации, смелые образы или несколько визуальных направлений без организации съёмки. AI особенно полезен для концепций, рекламы и контента. Если задача требует точной документальной фиксации реального объекта, заранее обсудим сочетание генерации с фотографией и ретушью.</p></div></div>
       <div class="acc__it reveal"><button class="acc__q" type="button" aria-expanded="false" aria-controls="faq-answer-2">Можно ли сохранить одного персонажа в серии?<i aria-hidden="true"></i></button><div class="acc__a" id="faq-answer-2"><p>Да: сначала согласуем образ и основные референсы, затем работаем с ними во всей серии. Внешность, одежду, свет и настроение контролирую на этапе отбора и доработки. Для узнаваемости конкретного человека понадобятся качественные фотографии; небольшие различия между кадрами могут потребовать дополнительной ретуши.</p></div></div>
       <div class="acc__it reveal"><button class="acc__q" type="button" aria-expanded="false" aria-controls="faq-answer-3">Как согласуются права и публикация работ?<i aria-hidden="true"></i></button><div class="acc__a" id="faq-answer-3"><p>До начала проекта согласуем коммерческое использование, состав передаваемых файлов и условия работы с исходными материалами. Возможность публикации результата в моём портфолио обсуждаем отдельно. Если проект конфиденциальный, фиксируем это заранее. Права на переданные фотографии, логотипы и другие материалы должны позволять их использование в проекте.</p></div></div>
-      <div class="acc__it reveal"><button class="acc__q" type="button" aria-expanded="false" aria-controls="faq-answer-4">Сколько правок входит в стоимость?<i aria-hidden="true"></i></button><div class="acc__a" id="faq-answer-4"><p>Правки рассчитываются и оплачиваются отдельно: их стоимость складывается из себестоимости генерации и стоимости моей работы. По вашему желанию правки можно заранее включить в смету проекта. Объём и стоимость изменений согласуем до их внесения.</p></div></div>
+      <div class="acc__it reveal"><button class="acc__q" type="button" aria-expanded="false" aria-controls="faq-answer-4">Сколько правок входит в стоимость?<i aria-hidden="true"></i></button><div class="acc__a" id="faq-answer-4"><p>Один раунд правок в рамках согласованной идеи включён в цену. Дополнительные правки рассчитываются отдельно: их стоимость складывается из себестоимости генерации и стоимости моей работы. По вашему желанию их можно заранее включить в смету проекта. Объём и стоимость дополнительных изменений согласуем до их внесения.</p></div></div>
       <div class="acc__it reveal"><button class="acc__q" type="button" aria-expanded="false" aria-controls="faq-answer-5">Работаешь ли по брендбуку и с реальным товаром?<i aria-hidden="true"></i></button><div class="acc__a" id="faq-answer-5"><p>Да. Пришлите брендбук, логотипы, палитру, примеры визуала и фотографии товара. Согласуем стиль и композицию до генерации. Надписи, логотипы и детали упаковки проверяю отдельно; когда нужна точная передача продукта, использую его фотографию в композиции и дорабатываю результат в редакторе.</p></div></div>
       <div class="acc__it reveal"><button class="acc__q" type="button" aria-expanded="false" aria-controls="faq-answer-6">Что нужно для старта и сколько времени займёт работа?<i aria-hidden="true"></i></button><div class="acc__a" id="faq-answer-6"><p>Напишите в Telegram, что хотите получить, для какой площадки и к какому сроку. Можно начать с идеи, пары референсов или короткого голосового сообщения. После обсуждения согласуем объём, стоимость, этапы и формат передачи файлов. Работа над простой серией может занять от одного дня; сложные сцены и видео требуют больше времени. Конкретный срок фиксируем до начала проекта.</p></div></div>
     </div>
@@ -779,6 +798,6 @@
     </div>
   </div>
 </div>
-<script src="js/main.js?v=portfolio-copy-1"></script>
+<script src="js/main.js?v=pricing-currency-1"></script>
 </body>
 </html>
