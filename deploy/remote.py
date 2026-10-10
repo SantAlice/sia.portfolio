@@ -14,9 +14,15 @@ if not password:
 
 client = paramiko.SSHClient()
 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-client.connect(HOST, username='root', password=password, port=22,
-               timeout=15, auth_timeout=15, banner_timeout=15,
-               allow_agent=False, look_for_keys=False)
+try:
+    client.connect(HOST, username='root', password=password, port=22,
+                   timeout=15, auth_timeout=15, banner_timeout=15,
+                   allow_agent=False, look_for_keys=False)
+except Exception as exc:
+    detail = str(exc).replace(password, '[redacted]').replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+    print(f'::error title=SSH connection failed::{type(exc).__name__}: {detail}', flush=True)
+    client.close()
+    raise SystemExit(1)
 commands = [
     ('System and capacity', 'uname -a; df -h /; free -m'),
     ('Listeners', 'ss -lntp'),
@@ -32,7 +38,10 @@ try:
     for label, command in commands:
         print('\n' + label + ':', flush=True)
         _, stdout, stderr = client.exec_command(command, timeout=30)
-        print(stdout.read().decode(errors='replace'), end='')
+        output = stdout.read().decode(errors='replace')
+        print(output, end='')
+        annotation = output.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+        print(f'::notice title={label}::{annotation}', flush=True)
         error = stderr.read().decode(errors='replace')
         if error:
             print(error, end='')
