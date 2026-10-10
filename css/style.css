@@ -822,32 +822,42 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 .drow.is-peek .dgrid.is-drag{cursor:grabbing; scroll-behavior:auto}
 .drow.is-peek .dgrid.is-drag .work__btn{pointer-events:none}
 
-/* Chrome accents occupy their own space, keeping text and controls clear. */
-.decor{display:block; height:auto; max-width:100%; pointer-events:none; user-select:none}
-.decor-end{display:flex; justify-content:flex-end; margin-top:24px; pointer-events:none}
-.decor--flower{width:260px}
-.decor--flytrap{width:240px}
-.decor-heading{display:flex; align-items:center; justify-content:space-between; gap:32px; flex-wrap:wrap}
-.decor--eye{width:190px; flex-shrink:0}
-.decor-faq{margin-top:24px; pointer-events:none}
-.decor--tooth{width:180px; transform:rotate(-12deg)}
-.decor-stars{display:flex; justify-content:space-between; align-items:center; max-width:920px; margin:-24px auto 12px; pointer-events:none}
-.decor--star{width:160px}
-.decor--star-small{width:110px; transform:rotate(18deg)}
+/* Corner ornaments intentionally cross the rounded card edges. Each section
+   reserves room for visible artwork; ornaments never receive pointer events. */
+.page{overflow-x:clip}
+.section--decor{overflow:visible; margin-bottom:clamp(44px,4vw,64px)}
+.decor{position:absolute; z-index:2; display:block; width:var(--decor-size); height:auto; max-width:none; pointer-events:none; user-select:none}
+.decor--flower{--decor-size:340px; right:calc(var(--decor-size) * -.188); bottom:calc(var(--decor-size) * -.218); transform:rotate(55deg)}
+.decor--flytrap{--decor-size:290px; right:calc(var(--decor-size) * -.114); bottom:calc(var(--decor-size) * -.176); transform:rotate(-12deg)}
+.decor--eye{--decor-size:190px; right:calc(var(--decor-size) * -.153); top:calc(var(--decor-size) * -.142); transform:rotate(-18deg)}
+.decor--tooth{--decor-size:230px; left:calc(var(--decor-size) * -.326); bottom:calc(var(--decor-size) * -.27); transform:rotate(24deg)}
+.decor--star{--decor-size:300px; left:calc(var(--decor-size) * -.303); top:calc(var(--decor-size) * -.113); transform:rotate(-18deg)}
+.decor--star-four{--decor-size:150px; right:-24px; bottom:-24px; transform:rotate(14deg)}
+#process .decor-heading{padding-right:160px}
+#faq.section--decor{padding-bottom:150px}
+#contact.section--decor{padding-top:140px; padding-bottom:110px}
 @media (max-width:860px){
-  .decor--flower{width:180px}
-  .decor--flytrap{width:180px}
-  .decor--eye{width:140px}
-  .decor--tooth{width:130px}
-  .decor-faq{display:flex; justify-content:flex-end; margin-top:24px}
+  .decor--flower{--decor-size:250px}
+  .decor--flytrap{--decor-size:230px}
+  .decor--eye{--decor-size:150px}
+  .decor--tooth{--decor-size:190px}
+  .decor--star{--decor-size:240px}
+  .decor--star-four{--decor-size:120px; right:-18px; bottom:-18px}
+  #about.section--decor{padding-bottom:180px}
+  #impossible.section--decor{padding-bottom:190px}
+  #process .decor-heading{padding-right:120px}
 }
 @media (max-width:560px){
-  .decor-heading{gap:16px}
-  .decor--eye{width:100px; margin-left:auto}
-  .decor-end{margin-top:12px}
-  .decor--flower,.decor--flytrap{width:150px}
-  .decor--tooth{width:110px}
-  .decor--star{width:110px}
-  .decor--star-small{width:80px}
-  .decor-stars{margin-top:-16px; margin-bottom:16px}
+  .decor--flower{--decor-size:210px; right:calc(var(--decor-size) * -.17)}
+  .decor--flytrap{--decor-size:195px; right:calc(var(--decor-size) * -.09)}
+  .decor--eye{--decor-size:120px}
+  .decor--tooth{--decor-size:170px; left:calc(var(--decor-size) * -.29)}
+  .decor--star{--decor-size:210px; left:calc(var(--decor-size) * -.29)}
+  .decor--star-four{--decor-size:100px; right:-14px; bottom:-16px}
+  #about.section--decor{padding-bottom:155px}
+  #impossible.section--decor{padding-bottom:175px}
+  #process.section--decor{padding-top:112px}
+  #process .decor-heading{padding-right:0}
+  #faq.section--decor{padding-bottom:140px}
+  #contact.section--decor{padding-top:105px; padding-bottom:100px}
 }
