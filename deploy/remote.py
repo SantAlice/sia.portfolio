@@ -233,9 +233,11 @@ try:
             run(f'ln -s {folder} {BASE}/current.next; mv -Tf {BASE}/current.next {BASE}/current')
             write(sftp, CONFIG, config(tls))
             run(f'ln -sf {CONFIG} {ENABLED}; nginx -t && systemctl reload nginx')
-            html = run('curl --fail --silent --show-error --max-time 20 -H "Host: anastasia.pics" http://127.0.0.1/')
+            scheme, port = ('https', 443) if tls else ('http', 80)
+            html = run(shlex.join(['curl', '--fail', '--silent', '--show-error', '--max-time', '20',
+                                  '--resolve', f'{DOMAIN}:{port}:127.0.0.1', f'{scheme}://{DOMAIN}/']))
             if 'Анастасия Куликова' not in html:
-                raise RuntimeError('New HTTP host does not serve the portfolio.')
+                raise RuntimeError('New host does not serve the portfolio.')
             if all(dns[host] == [HOST] for host in domains):
                 run(f'certbot certonly --webroot -w {BASE}/acme --cert-name {DOMAIN} -d {DOMAIN} -d www.{DOMAIN} --non-interactive --agree-tos --register-unsafely-without-email --keep-until-expiring', timeout=180)
                 write(sftp, CONFIG, config(True))
