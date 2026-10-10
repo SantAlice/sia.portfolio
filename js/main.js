@@ -424,15 +424,30 @@
     function loadSrc() {
       if (video.src) return;
       video.src = srcFor;
-      if (isMobile) { video.loop = true; video.play().catch(() => {}); }
+      if (isMobile) video.loop = true;
     }
 
-    // Мобильные: обычный луп, без перемотки
+    // Load nearby, but play only while the section and tab are visible.
     if (isMobile) {
+      let visible = false;
+      function syncPlayback() {
+        if (visible && !document.hidden) {
+          loadSrc();
+          video.play().catch(() => {});
+        } else video.pause();
+      }
       if ('IntersectionObserver' in window) {
         new IntersectionObserver(es => { if (es[0].isIntersecting) loadSrc(); },
                                  { rootMargin: '400px 0px' }).observe(section);
-      } else loadSrc();
+        new IntersectionObserver(es => {
+          visible = es[0].isIntersecting;
+          syncPlayback();
+        }).observe(section);
+      } else {
+        visible = true;
+        syncPlayback();
+      }
+      document.addEventListener('visibilitychange', syncPlayback);
       return;
     }
 
@@ -467,19 +482,24 @@
 
     function tick() {
       raf = null;
-      if (!ready || !near) return;
-      target = progress() * (video.duration || 0);
+      if (!ready || !near || document.hidden) return;
+      target = progress() * Math.max(0, (video.duration || 0) - 1 / 60);
       current += (target - current) * 0.12;           // сглаживание
       const done = Math.abs(target - current) <= 1 / 60;
       if (done) current = target;
       // Новую перемотку шлём, только когда предыдущая завершилась.
       // Иначе запросы копятся быстрее, чем декодер успевает отдавать
       // кадры, и картинка застревает — это и есть «виснет».
-      if (!video.seeking) video.currentTime = current;
+      // Setting the same time still starts a seek in some browsers. Stop
+      // once the displayed frame is close enough, including at the end.
+      if (!video.seeking && Math.abs(video.currentTime - current) >= 1 / 30) {
+        video.currentTime = current;
+      }
       if (!done || video.seeking) raf = requestAnimationFrame(tick);
     }
 
-    function kick() { if (near && !raf) raf = requestAnimationFrame(tick); }
+    function kick() { if (near && !document.hidden && !raf) raf = requestAnimationFrame(tick); }
+    document.addEventListener('visibilitychange', kick);
     addEventListener('scroll', kick, { passive: true });
     addEventListener('resize', kick, { passive: true });
   })();
