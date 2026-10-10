@@ -69,6 +69,9 @@ def verify_portfolio():
     base = f'{scheme}://{DOMAIN}'
     checks = [('/', 200), ('/robots.txt', 200), ('/sitemap.xml', 200),
               ('/analytics-config.json', 200),
+              ('/public/img/icons/favicon-64.png', 200),
+              ('/public/img/icons/favicon.ico', 200),
+              ('/public/img/icons/apple-touch-icon.png', 200),
               ('/public/img/chrome-flower-frames/frame-01.webp', 200),
               ('/public/img/chrome-flower-frames/frame-64.webp', 200),
               ('/public/video/hero.mp4', 206),

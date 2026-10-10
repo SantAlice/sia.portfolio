@@ -6,6 +6,9 @@
 <title>Анастасия Куликова — AI-креатор | Изображения и видео для брендов</title>
 <meta name="description" content="Анастасия Куликова — AI-креатор. Изображения для товаров, каталогов и рекламы, короткие ролики и имиджевое видео. Стоимость проекта согласуем до начала работы.">
 
+<link rel="icon" type="image/png" sizes="64x64" href="public/img/icons/favicon-64.png?v=star-1">
+<link rel="icon" type="image/x-icon" href="public/img/icons/favicon.ico?v=star-1">
+<link rel="apple-touch-icon" sizes="180x180" href="public/img/icons/apple-touch-icon.png?v=star-1">
 <link rel="canonical" href="https://anastasia.pics/">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#123543">
@@ -118,7 +121,7 @@
 }</script>
 
 <link rel="preload" as="image" href="public/img/hero-poster.webp" fetchpriority="high">
-<link rel="stylesheet" href="css/style.css?v=mobile-sequence-1">
+<link rel="stylesheet" href="css/style.css?v=hero-poster-star-1">
 </head>
 <body>
 
@@ -147,6 +150,7 @@
      не совпадают. autoplay не ставить: запуск делает скрипт ниже,
      после того как выберет источник по плотности пикселей. -->
 <section class="hero" id="top">
+  <img class="hero__poster" src="public/img/hero-poster.webp" alt="" fetchpriority="high" aria-hidden="true">
   <video class="hero__video" muted playsinline preload="auto"
          poster="public/img/hero-poster.webp"
          data-src-sd="public/video/hero-mobile.mp4"
@@ -213,7 +217,10 @@
         if (!ctx) return;
         ctx.drawImage(source, 0, 0, 16, 16, 0, 0, 1, 1);
         const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+        // A blank/black decoder frame must never replace the blue fallback.
+        if (b < 40 || g < 30 || b <= r) return false;
         hero.style.setProperty('--bg', `rgb(${r}, ${g}, ${b})`);
+        return true;
       } catch (_) {
         // Keep the poster-matched CSS fallback when pixel access is unavailable.
       }
@@ -221,9 +228,19 @@
 
     if (video) {
       const poster = new Image();
-      poster.onload = () => { if (video.readyState < 2) matchBackground(poster); };
+      poster.onload = () => { if (!hero.classList.contains('hero--video-ready')) matchBackground(poster); };
       poster.src = video.poster;
-      video.addEventListener('loadeddata', () => matchBackground(video), { once: true });
+      const revealVideo = () => {
+        if (hero.classList.contains('hero--video-ready') || video.readyState < 2 || video.paused) return;
+        if (matchBackground(video)) hero.classList.add('hero--video-ready');
+      };
+      video.addEventListener('loadeddata', revealVideo);
+      video.addEventListener('timeupdate', revealVideo);
+      video.addEventListener('playing', () => {
+        if (video.requestVideoFrameCallback) video.requestVideoFrameCallback(revealVideo);
+        else revealVideo();
+      });
+      video.addEventListener('error', () => hero.classList.remove('hero--video-ready'));
     }
 
     if (video && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
