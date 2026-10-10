@@ -548,15 +548,19 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
   font-size:15px;
 }
 .invoice__row b{font-family:var(--f-mono); font-weight:500; font-variant-numeric:tabular-nums; white-space:nowrap}
-.invoice__row::after{
-  content:""; position:absolute; left:0; top:52%; height:2px; width:0; background:rgba(247,241,223,.65);
-  transition:width .7s var(--ease);
+.invoice__row > span,.invoice__row > b{
+  text-decoration-line:line-through;
+  text-decoration-color:transparent;
+  text-decoration-thickness:2px;
+  transition:text-decoration-color .7s var(--ease);
+  transition-delay:var(--strike-delay,0s);
 }
-.invoice.is-on .invoice__row::after{width:100%}
-.invoice.is-on .invoice__row:nth-child(2)::after{transition-delay:.15s}
-.invoice.is-on .invoice__row:nth-child(3)::after{transition-delay:.3s}
-.invoice.is-on .invoice__row:nth-child(4)::after{transition-delay:.45s}
-.invoice.is-on .invoice__row:nth-child(5)::after{transition-delay:.6s}
+.invoice.is-on .invoice__row > span,.invoice.is-on .invoice__row > b{text-decoration-color:rgba(247,241,223,.65)}
+.invoice__row:nth-of-type(2){--strike-delay:.15s}
+.invoice__row:nth-of-type(3){--strike-delay:.3s}
+.invoice__row:nth-of-type(4){--strike-delay:.45s}
+.invoice__row:nth-of-type(5){--strike-delay:.6s}
+.invoice__row:nth-of-type(6){--strike-delay:.75s}
 .invoice__total{display:flex; justify-content:space-between; align-items:baseline; gap:20px; padding-top:22px}
 .invoice__total span{font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:rgba(247,241,223,.72)}
 .invoice__total b{font-family:var(--f-display); font-weight:900; text-transform:uppercase; font-size:clamp(20px,2.4vw,30px); color:var(--pink); letter-spacing:-.02em}
@@ -574,9 +578,9 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 .tools__col li{padding:9px 0; border-bottom:1px solid rgba(11,31,41,.16); font-size:15px}
 
 /* цифры */
-.nums{display:grid; grid-template-columns:repeat(4,1fr); gap:26px}
+.nums{display:grid; grid-template-columns:repeat(3,1fr); gap:26px}
 .nums__it{border-top:2px solid rgba(247,241,223,.35); padding-top:16px}
-.nums__it .num{color:var(--cream); font-size:clamp(40px,5.4vw,76px)}
+.nums__it .num{display:block; margin-bottom:12px; color:var(--cream); font-size:clamp(40px,5.4vw,76px)}
 .nums__it small{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:rgba(251,246,241,.7)}
 
 /* цены */
@@ -636,7 +640,7 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 /* ── адаптив ───────────────────────────────────── */
 @media (max-width:1100px){
   .drow.is-open .dgrid{grid-template-columns:repeat(2,1fr)}
-  .steps,.tools,.nums{grid-template-columns:repeat(2,1fr)}
+  .steps,.tools{grid-template-columns:repeat(2,1fr)}
   .plans{grid-template-columns:1fr}
 }
 @media (max-width:860px){
@@ -887,8 +891,6 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 .invoice__total span{display:block; margin-bottom:10px}
 .invoice__total b{display:block; font-size:clamp(20px,2.2vw,28px); line-height:1.2}
 .invoice__total p{margin:14px 0 0; font-size:15px; line-height:1.6}
-.invoice.is-on .invoice__row:nth-of-type(6)::after{transition-delay:.75s}
-.nums__value{display:block; margin-bottom:12px; font-size:clamp(28px,3vw,46px); font-weight:600; line-height:1.15; color:var(--cream)}
 .nums__it small{display:block; line-height:1.7}
 .hero{min-height:760px}
 @media (max-width:720px){.hero{min-height:850px}}
