@@ -517,8 +517,8 @@
         raf = null;
         if (!near || document.hidden) return;
         const top = section.getBoundingClientRect().top;
-        const travel = Math.max(1, section.offsetHeight - window.innerHeight);
-        target = Math.round(Math.max(0, Math.min(1, -top / travel)) * (count - 1));
+        const travel = Math.max(1, section.offsetHeight + window.innerHeight);
+        target = Math.round(Math.max(0, Math.min(1, (window.innerHeight - top) / travel)) * (count - 1));
         requestFrame(target);
         for (let distance = 1; distance <= 4; distance++) {
           requestFrame(target + distance);

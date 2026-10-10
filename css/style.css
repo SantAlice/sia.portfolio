@@ -970,3 +970,26 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
   .hero__video{position:absolute; top:104px; left:0; right:auto; bottom:auto}
 }
 @media(min-width:721px) and (max-width:1100px){.hero__poster{aspect-ratio:16 / 9; object-fit:contain}}
+
+.hero__play{position:absolute; right:24px; z-index:4; padding:9px 14px; border:1px solid rgba(247,241,223,.7); border-radius:24px; background:rgba(18,53,67,.88); color:#f7f1df; font:inherit; font-size:13px; cursor:pointer}
+.hero__play[hidden]{display:none}
+/* A mobile flower follows normal document flow, without a full-screen runway. */
+.giant--sequence{height:auto; padding:12px 0; margin:var(--gap) 0}
+.giant--sequence .giant__stage{position:relative; top:auto; height:auto; aspect-ratio:16 / 9; margin-inline:12px; display:block; border-radius:22px}
+.giant--sequence .giant__canvas{width:100%; height:100%; margin:0; border-radius:22px}
+.giant--sequence .giant__video{inset:0; top:0; transform:none; width:100%; height:100%; border-radius:22px}
+
+@media(max-width:1100px){
+  .giant{height:auto; padding:12px 0; margin:var(--gap) 0}
+  .giant__stage{position:relative; top:auto; height:auto; aspect-ratio:16 / 9; margin-inline:12px; display:block; border-radius:22px; background-color:transparent}
+  .giant__video{inset:0; top:0; transform:none; width:100%; height:100%; border-radius:22px}
+}
+
+/* Keep the authored palette in automatic dark-mode WebViews. */
+:root{color-scheme:only light}
+@media(max-width:1100px), (pointer:coarse){
+  .section,.sec{backdrop-filter:none; -webkit-backdrop-filter:none}
+  .section--teal{background:#31576a; background-image:linear-gradient(135deg,#31576a,#285666)}
+  .section--blue{background:#3b6480; background-image:linear-gradient(135deg,#3b6480,#32657c)}
+  .section--ink{background:#244655; background-image:linear-gradient(135deg,#244655,#204b60)}
+}
