@@ -27,8 +27,16 @@ def notice(title, message):
     message = str(message).replace(password, '[redacted]').replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
     print(f'::notice title={title}::{message}', flush=True)
 
+class PortfolioHostKeyPolicy(paramiko.MissingHostKeyPolicy):
+    def missing_host_key(self, client, hostname, key):
+        # Pinned from the first successful authorized inspection/deployment.
+        if key.get_fingerprint().hex() != 'd12bcf338fdef24e4a00a8008f7354e6':
+            raise paramiko.SSHException('Server SSH host key changed; inspect before continuing.')
+        client.get_host_keys().add(hostname, key.get_name(), key)
+
+
 client = paramiko.SSHClient()
-client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+client.set_missing_host_key_policy(PortfolioHostKeyPolicy())
 
 def run(command, timeout=60, required=True):
     _, out, err = client.exec_command('set -e\n' + command, timeout=timeout)
