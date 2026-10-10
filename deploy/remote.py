@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Inspect/deploy only anastasia.pics, preserving existing Nginx hosts."""
 import hashlib
+import json
 import os
 from pathlib import Path
+import re
 import shlex
 import socket
 import sys
@@ -93,6 +95,21 @@ def verify_portfolio():
             html = response.read().decode('utf-8')
             if response.status != 200 or 'Анастасия Куликова' not in html:
                 raise RuntimeError('Public HTTPS portfolio check failed.')
+        expected_config = json.loads(Path('analytics-config.json').read_text())
+        with urllib.request.urlopen(base + '/analytics-config.json', timeout=30) as response:
+            if json.load(response) != expected_config:
+                raise RuntimeError('Public analytics configuration differs from the release.')
+        local_html = Path('index.html').read_text()
+        for tag in re.findall(r'<meta name="(?:google-site-verification|yandex-verification)" content="[^"]*">', local_html):
+            if tag not in html:
+                raise RuntimeError('Public HTML is missing a site verification tag.')
+        for path in Path('.').glob('yandex_*.html'):
+            if not re.fullmatch(r'yandex_[0-9a-f]{16}\.html', path.name):
+                continue
+            with urllib.request.urlopen(base + '/' + path.name, timeout=30) as response:
+                if response.read().decode('utf-8') != path.read_text():
+                    raise RuntimeError('Public Yandex verification file differs from the release.')
+        notice('Analytics and verification files checked', 'Public analytics IDs, site-verification meta tags and Yandex HTML files match the release.')
         notice('Public HTTPS and redirects verified', 'Public domain serves the portfolio with a trusted certificate; HTTP and www redirect permanently to https://anastasia.pics/.')
         notice('Certificate details', run('openssl x509 -in /etc/letsencrypt/live/anastasia.pics/fullchain.pem -noout -dates -issuer -ext subjectAltName'))
         notice('Certificate renewal timers', run("systemctl list-timers --all --no-pager | grep -E 'certbot|acme' || true"))
