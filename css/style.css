@@ -993,3 +993,6 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
   .section--blue{background:#3b6480; background-image:linear-gradient(135deg,#3b6480,#32657c)}
   .section--ink{background:#244655; background-image:linear-gradient(135deg,#244655,#204b60)}
 }
+
+/* The fading video edge must blend with blue, never with another avatar frame. */
+.hero--video-ready .hero__poster{visibility:hidden}
