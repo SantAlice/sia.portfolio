@@ -477,7 +477,76 @@
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) return;
 
-    const isMobile = matchMedia('(max-width: 767px)').matches;
+    const isMobile = matchMedia('(max-width: 1100px)').matches || matchMedia('(pointer: coarse)').matches;
+    if (isMobile) {
+      const canvas = section.querySelector('.giant__canvas');
+      const context = canvas && canvas.getContext('2d', { alpha: false });
+      if (!context) return;
+      section.classList.add('giant--sequence');
+      const count = 64;
+      const frames = new Map();
+      const pending = new Map();
+      const failed = new Set();
+      let target = 0, near = false, raf = null;
+
+      function requestFrame(index) {
+        if (index < 0 || index >= count || frames.has(index) || pending.has(index) || failed.has(index)) return;
+        const image = new Image();
+        pending.set(index, image);
+        image.onload = function () {
+          pending.delete(index);
+          frames.set(index, image);
+          // Keep only nearby decoded images, rather than an entire film in memory.
+          while (frames.size > 16) {
+            let farthest = index, distance = -1;
+            frames.forEach(function (_, key) {
+              if (Math.abs(key - target) > distance) { farthest = key; distance = Math.abs(key - target); }
+            });
+            const old = frames.get(farthest);
+            frames.delete(farthest);
+            old.onload = old.onerror = null;
+            old.removeAttribute('src');
+          }
+          kick();
+        };
+        image.onerror = function () { pending.delete(index); failed.add(index); };
+        image.src = 'public/img/chrome-flower-frames/frame-' + String(index + 1).padStart(2, '0') + '.webp';
+      }
+
+      function tick() {
+        raf = null;
+        if (!near || document.hidden) return;
+        const top = section.getBoundingClientRect().top;
+        const travel = Math.max(1, section.offsetHeight - window.innerHeight);
+        target = Math.round(Math.max(0, Math.min(1, -top / travel)) * (count - 1));
+        requestFrame(target);
+        for (let distance = 1; distance <= 4; distance++) {
+          requestFrame(target + distance);
+          requestFrame(target - distance);
+        }
+        let chosen = null, distance = Infinity;
+        frames.forEach(function (_, index) {
+          if (Math.abs(index - target) < distance) { chosen = index; distance = Math.abs(index - target); }
+        });
+        if (chosen !== null && canvas.dataset.frame !== String(chosen)) {
+          context.drawImage(frames.get(chosen), 0, 0, canvas.width, canvas.height);
+          canvas.dataset.frame = String(chosen);
+          section.classList.add('giant--frame-ready');
+        }
+      }
+      function kick() { if (near && !document.hidden && !raf) raf = requestAnimationFrame(tick); }
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          near = entries[0].isIntersecting;
+          if (near) kick();
+        }, { rootMargin: '1000px 0px' }).observe(section);
+      } else { near = true; kick(); }
+      addEventListener('scroll', kick, { passive: true });
+      addEventListener('resize', kick, { passive: true });
+      document.addEventListener('visibilitychange', kick);
+      return;
+    }
+
     const light = window.innerWidth <= 1100 || (navigator.connection && navigator.connection.saveData);
     const srcFor = video.dataset[(isMobile || light) ? 'srcLow' : 'srcHd'];
 

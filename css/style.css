@@ -875,15 +875,27 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
   .header .nav{gap:18px}
 }
 
-/* Scroll-controlled video on phones, with the full horizontal frame visible. */
+/* Mobile scrub uses decoded frames instead of seeking a paused video. */
+.giant__canvas{display:none}
 @media (max-width:767px){
-  .giant{height:240svh}
-  .giant__stage{height:100svh; aspect-ratio:auto; background:#b994a1}
-  .giant__video{position:absolute; inset:0; object-fit:contain}
+  .giant{height:190svh; background:transparent}
+  .giant__stage{height:100svh; aspect-ratio:auto; background:transparent; display:grid; align-items:center}
+  .giant__video{position:absolute; inset:auto 12px; top:50%; transform:translateY(-50%); width:calc(100% - 24px); height:auto; aspect-ratio:16 / 9; object-fit:contain; border-radius:22px}
 }
+.giant--sequence{height:190svh; background:transparent}
+.giant--sequence .giant__stage{height:100svh; background:transparent; display:grid; align-items:center}
+.giant--sequence .giant__video{position:absolute; inset:auto 12px; top:50%; transform:translateY(-50%); width:calc(100% - 24px); height:auto; aspect-ratio:16 / 9; object-fit:contain; border-radius:22px}
+.giant--sequence .giant__canvas{display:block; visibility:hidden; width:min(calc(100% - 24px),calc(177.78svh - 85.33px)); height:auto; aspect-ratio:16 / 9; margin-inline:auto; border-radius:22px}
+.giant--frame-ready .giant__video{display:none}
+.giant--frame-ready .giant__canvas{visibility:visible}
 @media (prefers-reduced-motion:reduce){
   .giant{height:100svh}
+  .giant--sequence .giant__canvas{display:none}
   .giant__stage{height:100svh; background-image:url("../public/img/chrome-flower-poster.webp"); background-size:contain; background-position:center; background-repeat:no-repeat}
+}
+@media (max-width:767px) and (prefers-reduced-motion:reduce){
+  .giant{height:auto; padding:12px}
+  .giant__stage{height:auto; aspect-ratio:16 / 9; border-radius:22px; background-size:cover}
 }
 
 /* Content additions: legible estimates, benefits and responsive controls. */
