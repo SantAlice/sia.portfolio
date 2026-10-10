@@ -7,6 +7,28 @@
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Display the agreed price list; these are fixed prices, not exchange rates.
+  (function () {
+    var pricing = document.getElementById('pricing');
+    if (!pricing) return;
+    var buttons = pricing.querySelectorAll('[data-currency]');
+    var prices = pricing.querySelectorAll('[data-price-rub]');
+    var status = pricing.querySelector('.currency-status');
+    var labels = { rub: 'Цены в рублях', kzt: 'Цены в тенге', usd: 'Цены в долларах' };
+    buttons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        var currency = button.dataset.currency;
+        prices.forEach(function (price) {
+          price.textContent = price.getAttribute('data-price-' + currency);
+        });
+        buttons.forEach(function (item) {
+          item.setAttribute('aria-pressed', String(item === button));
+        });
+        status.textContent = labels[currency];
+      });
+    });
+  }());
+
   // Each identical half must be wider than the window, including after
   // font loading or resizing, so the loop never exposes an empty tail.
   (function () {

@@ -584,20 +584,25 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 .nums__it small{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:rgba(251,246,241,.7)}
 
 /* цены */
-.plans{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:52px}
-.plan{background:var(--blue-deep); color:var(--cream); padding:34px 28px 30px; display:flex; flex-direction:column; gap:16px; position:relative}
+.currency-switch{display:flex; flex-wrap:wrap; gap:8px; margin-top:30px}
+.currency-switch__btn{padding:10px 18px; border:1px solid rgba(247,241,223,.5); background:transparent; color:var(--cream); font:inherit; font-size:14px; cursor:pointer; border-radius:0}
+.currency-switch__btn[aria-pressed="true"]{background:var(--pink); border-color:var(--pink); color:var(--blue-dark)}
+.currency-switch__btn:focus-visible{outline:2px solid var(--cream); outline-offset:4px}
+.currency-status{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap}
+.plans{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin-top:30px}
+.plan{background:var(--blue-deep); color:var(--cream); padding:34px 28px 30px; display:flex; flex-direction:column; gap:22px; position:relative}
 .plan--hl{background:var(--pink); color:var(--blue-dark)}
-.plan__badge{
-  position:absolute; top:-11px; left:28px; background:var(--blue-dark); color:var(--cream);
-  font-family:var(--f-mono); font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; padding:5px 10px;
-}
-.plan h3{font-size:26px; color:var(--cream)}
-.plan--hl h3{color:var(--blue-dark)}
-.plan__price{font-family:var(--f-mono); font-size:15px; margin:0; color:inherit}
-.plan ul{flex:1}
-.plan li{padding:8px 0; border-bottom:1px solid currentColor; font-size:14.5px; opacity:.85}
-.plan .btn{align-self:flex-start; margin-top:6px}
-.plan--hl .btn{background:var(--blue-dark); color:var(--pink)}
+.plan h3{font-size:22px; line-height:1.3; min-height:2.6em; color:inherit}
+.plan__price{font-family:var(--f-mono); font-size:clamp(23px,2.2vw,30px); margin:0; color:inherit; line-height:1.4}
+.plan__price small{display:block; margin-top:5px; font-family:var(--f-body); font-size:14px; line-height:1.5}
+.plan__description{border-top:1px solid currentColor; padding-top:22px; font-size:15px; line-height:1.7}
+.plan p{color:inherit}
+.plan__description p{margin:0 0 16px}
+.plan__description p:last-child{margin-bottom:0}
+.pricing-summary{margin-top:36px; padding-top:30px; border-top:1px solid rgba(247,241,223,.3); max-width:64em}
+.pricing-summary h3{font-size:clamp(22px,3vw,30px); line-height:1.35}
+.pricing-summary p{max-width:54em; margin:16px 0; line-height:1.7}
+.pricing-summary .btn{margin-top:12px; max-width:100%; white-space:normal; text-align:center}
 
 /* faq */
 .faq{display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:clamp(30px,5vw,80px); align-items:start}
@@ -642,6 +647,7 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
   .drow.is-open .dgrid{grid-template-columns:repeat(2,1fr)}
   .steps,.tools{grid-template-columns:repeat(2,1fr)}
   .plans{grid-template-columns:1fr}
+  .plan h3{min-height:0}
 }
 @media (max-width:860px){
   :root{--pad:20px}
@@ -897,4 +903,9 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 @media (max-width:560px){
   .invoice__row{display:grid; grid-template-columns:minmax(0,1fr); gap:8px}
   .invoice__row b{justify-self:start}
+}
+
+@media (max-width:560px){
+  .currency-switch{flex-wrap:nowrap}
+  .currency-switch__btn{flex:1; min-width:0; padding:10px 4px; font-size:12px}
 }
