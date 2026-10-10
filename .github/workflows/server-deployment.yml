@@ -1,0 +1,31 @@
+name: Inspect and deploy anastasia.pics
+
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: Server operation
+        type: choice
+        options:
+          - inspect
+        default: inspect
+
+permissions:
+  contents: read
+
+concurrency:
+  group: anastasia-pics-server
+  cancel-in-progress: false
+
+jobs:
+  server:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install SSH client library
+        run: python3 -m pip install --quiet 'paramiko>=3.5,<4'
+      - name: Inspect server without changing existing sites
+        env:
+          ANASTASIA_DEPLOY_PASSWORD: ${{ secrets.ANASTASIA_DEPLOY_PASSWORD }}
+        run: python3 deploy/remote.py inspect

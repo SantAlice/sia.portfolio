@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /_source/
+Disallow: /_tools/
+
+Sitemap: https://anastasia.pics/sitemap.xml
