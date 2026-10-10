@@ -7,13 +7,25 @@
 <meta name="description" content="AI-визуализация: кадры, которые невозможно, негде или слишком дорого снять в реальности. Фото, видео, продукты и миры под ключ.">
 
 <link rel="preload" as="image" href="public/img/hero-poster.webp" fetchpriority="high">
-<link rel="stylesheet" href="css/style.css?v=flytrap-clearance-1">
+<link rel="stylesheet" href="css/style.css?v=adaptive-1">
 </head>
 <body>
 
 <!-- подложка: размытие и затемнение запечены в bg.webp, filter здесь не вешаем -->
 <div class="page-bg"></div>
-<div class="progress" id="progress"></div>
+<div class="progress-track" aria-hidden="true"><div class="progress" id="progress"></div></div>
+
+<dialog class="mobile-menu" id="mobileMenu" aria-labelledby="mobileMenuTitle">
+  <div class="mobile-menu__header"><p id="mobileMenuTitle">@prompt.by.sia</p><button class="mobile-menu__close" type="button" aria-label="Закрыть меню" autofocus>×</button></div>
+  <nav class="mobile-menu__nav" aria-label="Навигация по сайту">
+    <a href="#directions">Мои работы</a>
+    <a href="#impossible">Невозможное</a>
+    <a href="#process">Процесс</a>
+    <a href="#pricing">Стоимость</a>
+    <a href="#faq">Вопросы и ответы</a>
+  </nav>
+  <a class="btn" href="https://t.me/cassiopeianse" target="_blank" rel="noopener noreferrer">Обсудить проект</a>
+</dialog>
 
 <div class="page">
 
@@ -40,7 +52,7 @@
       <a href="#faq">FAQ</a>
     </nav>
     <a class="btn btn--sm" href="https://t.me/cassiopeianse" target="_blank" rel="noopener noreferrer">Обсудить проект</a>
-    <button class="burger" id="burger" aria-label="Меню" aria-expanded="false"><span></span><span></span></button>
+    <button class="burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu" aria-haspopup="dialog"><span></span><span></span></button>
   </header>
 
   <!-- левая колонка в потоке: список, затем панель. Так они не могут
@@ -798,6 +810,6 @@
     </div>
   </div>
 </div>
-<script src="js/main.js?v=pricing-currency-1"></script>
+<script src="js/main.js?v=adaptive-1"></script>
 </body>
 </html>

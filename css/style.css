@@ -145,10 +145,8 @@ h1, .section__title{
 h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; letter-spacing:-.02em; margin:0}
 
 /* ── прогресс-полоса ───────────────────────────── */
-.progress{
-  position:fixed; top:0; left:0; height:3px; width:0;
-  background:var(--pink); z-index:60; transition:width .1s linear;
-}
+.progress-track{position:fixed; inset:0 0 auto; height:4px; background:var(--ground); z-index:70; overflow:hidden; isolation:isolate; contain:paint; pointer-events:none; transform:translateZ(0)}
+.progress{height:100%; width:100%; background:var(--pink); transform:scaleX(0); transform-origin:left; transition:transform .1s linear}
 
 /* ── шапка ─────────────────────────────────────── */
 /* ── верхнее меню: живёт ВНУТРИ карточки шапки ───────────────────
@@ -458,7 +456,7 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 .drow__no{font-family:var(--f-mono); font-size:11px; letter-spacing:.16em; color:rgba(247,241,223,.94)}
 .drow__name{
   font-family:var(--f-display); font-weight:900; text-transform:uppercase;
-  font-size:clamp(24px,4.6vw,64px); line-height:.92; letter-spacing:-.035em; color:var(--cream);
+  font-size:clamp(24px,4.6vw,64px); line-height:1.15; letter-spacing:-.035em; color:var(--cream);
 }
 .drow__count{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:rgba(247,241,223,.94); white-space:nowrap}
 .drow__icon{position:relative; width:18px; height:18px; flex:0 0 18px}
@@ -696,12 +694,6 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
   display: block;
 }
 
-/* на мобильных скролл-скраб работает плохо — там обычный луп */
-@media (max-width: 767px){
-  .giant{ height: 100svh }
-  .giant__stage{ height: 100svh }
-}
-
 @media (prefers-reduced-motion: reduce){
   .giant{ height: 100svh }
   .giant__video{ display: none }
@@ -883,11 +875,15 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
   .header .nav{gap:18px}
 }
 
-/* Keep the whole horizontal flower composition visible on a phone. */
+/* Scroll-controlled video on phones, with the full horizontal frame visible. */
 @media (max-width:767px){
-  .giant{height:auto}
-  .giant__stage{height:auto; aspect-ratio:16 / 9}
+  .giant{height:240svh}
+  .giant__stage{height:100svh; aspect-ratio:auto; background:#b994a1}
   .giant__video{position:absolute; inset:0; object-fit:contain}
+}
+@media (prefers-reduced-motion:reduce){
+  .giant{height:100svh}
+  .giant__stage{height:100svh; background-image:url("../public/img/chrome-flower-poster.webp"); background-size:contain; background-position:center; background-repeat:no-repeat}
 }
 
 /* Content additions: legible estimates, benefits and responsive controls. */
@@ -909,4 +905,46 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 @media (max-width:560px){
   .currency-switch{flex-wrap:nowrap}
   .currency-switch__btn{flex:1; min-width:0; padding:10px 4px; font-size:12px}
+}
+
+/* Mobile navigation lives in the browser's top layer, outside hero clipping. */
+.mobile-menu{position:fixed; inset:0; width:100%; height:100dvh; max-width:none; max-height:none; margin:0; padding:max(24px,env(safe-area-inset-top)) 24px max(32px,env(safe-area-inset-bottom)); border:0; color:var(--cream); background:linear-gradient(145deg,#254f65,#123642); overflow:auto}
+.mobile-menu::backdrop{background:rgba(6,20,30,.7)}
+.mobile-menu__header{display:flex; align-items:center; justify-content:space-between; gap:20px; padding-bottom:24px; border-bottom:1px solid rgba(247,241,223,.3)}
+.mobile-menu__header p{margin:0; font-family:Fraunces,serif; font-size:24px}
+.mobile-menu__close{width:48px; height:48px; flex:none; font-size:38px; line-height:1; border:1px solid rgba(247,241,223,.4); border-radius:50%; color:var(--cream)}
+.mobile-menu__nav{display:flex; flex-direction:column; gap:18px; padding:36px 0}
+.mobile-menu__nav a{font-size:clamp(24px,5vw,40px); line-height:1.3; text-decoration:none}
+.mobile-menu a:focus-visible,.mobile-menu button:focus-visible{outline:2px solid var(--pink); outline-offset:6px}
+.mobile-menu .btn{max-width:100%; white-space:normal; text-align:center}
+@media (max-width:1100px){
+  .nav{display:none}
+  .burger{display:flex}
+  .header .btn--sm{display:none}
+  .header{padding:24px; gap:16px}
+  .burger{width:44px; height:44px; flex-shrink:0}
+}
+@media (max-width:1100px){
+  .hero{height:auto; min-height:0; padding-top:104px}
+  .hero__video{position:relative; inset:auto; width:100%; height:auto; aspect-ratio:4 / 3; object-fit:cover; object-position:85% 50%; transform:none; -webkit-mask-image:linear-gradient(to bottom,transparent,#000 28px,#000 calc(100% - 18px),transparent); mask-image:linear-gradient(to bottom,transparent,#000 28px,#000 calc(100% - 18px),transparent)}
+  .hero__content{position:relative; inset:auto; padding:24px 24px 32px; display:block}
+  .hero__nav{display:flex; flex-wrap:wrap; gap:8px 16px}
+  .hero__nav a{font-size:12px; line-height:1.6; letter-spacing:.02em; text-shadow:none}
+  .hero__panel{width:auto; margin-top:26px; padding:0}
+  .hero__glass{display:none}
+  .hero__title{font-size:clamp(1.5rem,8.5vw,3.2rem); line-height:1.1}
+  .hero__sub{margin-top:16px}
+  .hero__actions{margin-top:24px}
+  .hero .btn{padding-inline:12px; white-space:normal}
+  .drow__name{font-size:clamp(22px,6vw,38px); line-height:1.22; letter-spacing:-.02em; overflow-wrap:normal}
+}
+@media (max-width:1100px) and (prefers-reduced-motion:reduce){
+  .hero{background-image:none}
+  .hero__video{display:block}
+}
+@media (min-width:721px) and (max-width:1100px){
+  .hero__video{aspect-ratio:16 / 9; object-fit:contain}
+  .hero__nav a{font-size:15px}
+  .hero__actions{flex-direction:row}
+  .hero__content{padding-inline:36px}
 }

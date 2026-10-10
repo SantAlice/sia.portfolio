@@ -80,24 +80,32 @@
     var y = window.scrollY || document.documentElement.scrollTop;
     header.classList.toggle('is-stuck', y > 40);
     var h = document.documentElement.scrollHeight - window.innerHeight;
-    progress.style.width = (h > 0 ? (y / h) * 100 : 0) + '%';
+    progress.style.transform = 'scaleX(' + Math.max(0, Math.min(1, h > 0 ? y / h : 0)) + ')';
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
   /* ── 4. Мобильное меню ────────────────────────── */
   var burger = document.getElementById('burger');
-  var nav = document.querySelector('.nav');
-  if (burger) {
+  var menu = document.getElementById('mobileMenu');
+  if (burger && menu) {
+    function closeMenu() { if (menu.open) menu.close(); }
     burger.addEventListener('click', function () {
-      var open = nav.classList.toggle('is-open');
-      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      menu.showModal();
+      document.body.style.overflow = 'hidden';
+      burger.setAttribute('aria-expanded', 'true');
     });
-    nav.addEventListener('click', function (e) {
-      if (e.target.tagName === 'A') {
-        nav.classList.remove('is-open');
-        burger.setAttribute('aria-expanded', 'false');
-      }
+    menu.querySelector('.mobile-menu__close').addEventListener('click', closeMenu);
+    menu.addEventListener('click', function (event) {
+      if (event.target.closest('a')) closeMenu();
+    });
+    menu.addEventListener('close', function () {
+      document.body.style.overflow = '';
+      burger.setAttribute('aria-expanded', 'false');
+      burger.focus({ preventScroll: true });
+    });
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 1100) closeMenu();
     });
   }
 
@@ -459,9 +467,8 @@
 
   /* ── 11. Скролл-вставка «хромовый цветок» ─────────────────────
      Видео не играет само: currentTime привязан к прогрессу прокрутки
-     секции. Каждый кадр десктопного файла независим от предыдущего — без этого
-     перемотка дёргалась бы. На мобильных перемотки нет: в Safari
-     currentTime отдаёт кадр с задержкой, там честный луп. */
+     секции. Независимые кадры обеспечивают быструю перемотку.
+     На небольших экранах используем облегчённый файл с теми же кадрами. */
   (() => {
     const section = document.querySelector('.giant');
     const video   = document.querySelector('.giant__video');
@@ -472,38 +479,15 @@
 
     const isMobile = matchMedia('(max-width: 767px)').matches;
     const light = window.innerWidth <= 1100 || (navigator.connection && navigator.connection.saveData);
-    const srcFor = video.dataset[isMobile ? 'srcSd' : (light ? 'srcLow' : 'srcHd')];
+    const srcFor = video.dataset[(isMobile || light) ? 'srcLow' : 'srcHd'];
 
     // Источник подставляем не сразу: секция далеко внизу, а файл тяжёлый.
     // Пока он качался на старте, страница тормозила по всей высоте.
     function loadSrc() {
       if (video.src) return;
       video.src = srcFor;
-      if (isMobile) video.loop = true;
-    }
-
-    // Load nearby, but play only while the section and tab are visible.
-    if (isMobile) {
-      let visible = false;
-      function syncPlayback() {
-        if (visible && !document.hidden) {
-          loadSrc();
-          video.play().catch(() => {});
-        } else video.pause();
-      }
-      if ('IntersectionObserver' in window) {
-        new IntersectionObserver(es => { if (es[0].isIntersecting) loadSrc(); },
-                                 { rootMargin: '400px 0px' }).observe(section);
-        new IntersectionObserver(es => {
-          visible = es[0].isIntersecting;
-          syncPlayback();
-        }).observe(section);
-      } else {
-        visible = true;
-        syncPlayback();
-      }
-      document.addEventListener('visibilitychange', syncPlayback);
-      return;
+      video.loop = false;
+      video.pause();
     }
 
     let raf = null, ready = false, near = false;
