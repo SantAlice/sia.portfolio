@@ -7,6 +7,8 @@ import shlex
 import socket
 import sys
 import time
+import urllib.request
+from urllib.parse import urlparse
 
 import paramiko
 
@@ -79,6 +81,21 @@ def verify_portfolio():
         if status != str(expected):
             raise RuntimeError(f'{path}: expected HTTP {expected}, received {status}')
     notice('Portfolio checks passed', 'HTML, SEO files, analytics configuration, mobile frames and video Range requests passed over ' + scheme.upper())
+    if tls:
+        for source, port in [(f'http://{DOMAIN}', 80), (f'http://www.{DOMAIN}', 80),
+                             (f'https://www.{DOMAIN}', 443)]:
+            host = urlparse(source).hostname
+            headers = run(shlex.join(['curl', '--silent', '--show-error', '--max-time', '20',
+                                      '--resolve', f'{host}:{port}:127.0.0.1', '-I', source + '/']))
+            if ' 301 ' not in headers or 'location: https://anastasia.pics/' not in headers.lower():
+                raise RuntimeError('Canonical redirect failed: ' + source)
+        with urllib.request.urlopen(base + '/', timeout=30) as response:
+            html = response.read().decode('utf-8')
+            if response.status != 200 or 'Анастасия Куликова' not in html:
+                raise RuntimeError('Public HTTPS portfolio check failed.')
+        notice('Public HTTPS and redirects verified', 'Public domain serves the portfolio with a trusted certificate; HTTP and www redirect permanently to https://anastasia.pics/.')
+        notice('Certificate details', run('openssl x509 -in /etc/letsencrypt/live/anastasia.pics/fullchain.pem -noout -dates -issuer -ext subjectAltName'))
+        notice('Certificate renewal timers', run("systemctl list-timers --all --no-pager | grep -E 'certbot|acme' || true"))
 
 def config(tls=False):
     locations = '''
