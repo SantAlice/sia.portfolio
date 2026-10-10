@@ -672,7 +672,7 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
   .load,.reveal{opacity:1; transform:none}
 }
 
-/* ── скролл-вставка «гигантская девушка» ────────────────────────
+/* ── скролл-вставка «хромовый цветок» ────────────────────────
    Не карточка: во всю ширину, без --gap и без скругления. Секция
    вынесена за .page, поэтому боковых полей у неё нет.
    Пути к постеру — относительно css/style.css, то есть ../public/. */
@@ -703,7 +703,7 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
   .giant{ height: 100svh }
   .giant__video{ display: none }
   .giant__stage{
-    background: url("../public/img/giant-poster.webp") center / cover no-repeat;
+    background: url("../public/img/chrome-flower-poster.webp") center / cover no-repeat;
   }
 }
 
@@ -878,4 +878,11 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
   .logo .logo__name{font-size:26px}
   .logo .logo__role{font-size:25px; margin-top:-8px}
   .header .nav{gap:18px}
+}
+
+/* Keep the whole horizontal flower composition visible on a phone. */
+@media (max-width:767px){
+  .giant{height:auto}
+  .giant__stage{height:auto; aspect-ratio:16 / 9}
+  .giant__video{position:absolute; inset:0; object-fit:contain}
 }
