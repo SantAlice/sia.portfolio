@@ -9,8 +9,8 @@
 
 /* ── шрифты: только локально, без ссылки на fonts.googleapis.com ──
    Пути отсчитываются от css/style.css, поэтому "../public/...".
-   На сайте ровно два шрифта: Soledago только на h1, Manrope на всём
-   остальном, включая логотип. Manrope с Google Fonts отдаётся порезанным
+   Soledago — заголовки, Manrope — основной текст.
+   Fraunces и Marck Script используются только для надписи в шапке. Manrope с Google Fonts отдаётся порезанным
    по subset'ам — одного файла на вес с латиницей и кириллицей там нет,
    отсюда unicode-range. */
 @font-face {
@@ -47,6 +47,16 @@
                  U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+/* Small local subsets contain only the lettering used in the logo. */
+@font-face{
+  font-family:"Fraunces"; src:url("../public/fonts/Fraunces-logo.woff2") format("woff2");
+  font-weight:700; font-style:normal; font-display:swap;
+}
+@font-face{
+  font-family:"Marck Script"; src:url("../public/fonts/MarckScript-logo.woff2") format("woff2");
+  font-weight:400; font-style:normal; font-display:swap;
+}
+
 :root{
   /* ── палитра дизайн-системы (СИСТЕМА.md) ── */
   --ground:      #0E2634;   /* фон страницы под карточками */
@@ -66,9 +76,8 @@
   --pink-soft:   #F0D3DB;
   --pink-deep:   #C98598;
 
-  /* Шрифтов на сайте ровно два: Soledago — только h1 и .section__title,
-     Manrope — всё остальное. Прежние Golos Text / Marck Script /
-     JetBrains Mono убраны вместе со ссылкой на fonts.googleapis.com. */
+  /* Основные шрифты: Soledago — только h1 и .section__title,
+     Manrope — основной текст. У логотипа своя пара: Fraunces / Marck Script. */
   --f-display: "Manrope", system-ui, sans-serif;
   --f-body:    "Manrope", -apple-system, "Segoe UI", sans-serif;
   --f-script:  "Manrope", system-ui, sans-serif;
@@ -145,7 +154,7 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 /* ── верхнее меню: живёт ВНУТРИ карточки шапки ───────────────────
    Отдельной фиксированной полосой над карточкой оно разламывало
    подложку. Позиционирование абсолютное относительно .hero.
-   Логотип набран тем же Manrope — третьего шрифта на сайте нет. */
+   Для логотипа — отдельная пара с засечками и рукописной строкой. */
 .header{
   position:absolute; inset:0 0 auto 0; z-index:5;
   display:flex; align-items:center; justify-content:space-between;
@@ -158,22 +167,24 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 }
 /* тень несущая: под надписями проходит светлая ладонь. Не удалять. */
 .header a, .header .logo{
-  color:var(--cream);
-  text-shadow:0 2px 12px rgba(4,26,40,.5);
+  color:var(--cream); text-shadow:0 2px 12px rgba(4,26,40,.5);
 }
 .header .nav a::after{background:var(--cream)}
 .header .burger span{background:var(--cream)}
-/* розовая кнопка читается сама — цвет текста ей не переопределяем */
 .header .btn--sm{color:var(--blue-dark); text-shadow:none}
-
 .logo{
-  position:relative;
-  font-family:"Manrope", system-ui, sans-serif; font-weight:600;
-  font-size:20px; letter-spacing:0; line-height:1; text-transform:none;
+  position:relative; display:inline-flex; flex-direction:column; align-items:flex-end;
+  flex-shrink:0; white-space:nowrap; text-decoration:none; isolation:isolate;
 }
-.logo span{
-  display:block; font-family:"Manrope", system-ui, sans-serif; font-weight:400;
-  font-size:11px; letter-spacing:.12em; margin-top:5px; text-transform:uppercase;
+.logo .logo__name{
+  display:block; font-family:"Fraunces", Georgia, serif; font-weight:700;
+  font-size:32px; line-height:1.1; letter-spacing:-.045em; text-transform:none;
+}
+.logo .logo__role{
+  position:relative; z-index:1; display:block; margin:-9px 12px 0 0;
+  font-family:"Marck Script", cursive; font-size:29px; font-weight:400;
+  line-height:1; letter-spacing:0; text-transform:none; color:var(--pink);
+  transform:rotate(-6deg); transform-origin:center;
 }
 .nav{display:flex; gap:26px}   /* margin-left:auto убран: раскладку задаёт space-between у .header */
 .nav a{
@@ -336,7 +347,8 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
   .hero { height: calc(88svh - var(--gap)); min-height: 720px; }
   .hero__video { object-fit: cover; object-position: 58% 18%; }
   .header { padding: 24px; gap: 16px; }
-  .logo { font-size: 18px; }
+  .logo .logo__name { font-size:24px; }
+  .logo .logo__role { font-size:25px; margin-top:-8px; margin-right:6px; }
   .header .btn--sm { display: none; }
   /* на мобильном список возвращается наверх: кадр смещён, ладонь
      в эту зону не заходит, а места под панель внизу мало */
@@ -829,11 +841,11 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 .decor{position:absolute; z-index:2; display:block; width:var(--decor-size); height:auto; max-width:none; pointer-events:none; user-select:none}
 .decor--flower{--decor-size:340px; right:calc(var(--decor-size) * -.188); bottom:calc(var(--decor-size) * -.218); transform:rotate(55deg)}
 .decor--flytrap{--decor-size:290px; right:calc(var(--decor-size) * -.114); bottom:calc(var(--decor-size) * -.176); transform:rotate(-12deg)}
-.decor--eye{--decor-size:190px; right:calc(var(--decor-size) * -.153); top:calc(var(--decor-size) * -.142); transform:rotate(-18deg)}
+.decor--eye{--decor-size:190px; left:44%; top:calc(var(--decor-size) * -.142); transform:translateX(-50%) rotate(-18deg)}
 .decor--tooth{--decor-size:230px; left:calc(var(--decor-size) * -.326); bottom:calc(var(--decor-size) * -.27); transform:rotate(24deg)}
 .decor--star{--decor-size:300px; left:calc(var(--decor-size) * -.303); top:calc(var(--decor-size) * -.113); transform:rotate(-18deg)}
 .decor--star-four{--decor-size:150px; right:-24px; bottom:-24px; transform:rotate(14deg)}
-#process .decor-heading{padding-right:160px}
+#process .decor-heading{padding-top:68px; padding-right:0}
 #faq.section--decor{padding-bottom:150px}
 #contact.section--decor{padding-top:140px; padding-bottom:110px}
 @media (max-width:860px){
@@ -845,19 +857,25 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
   .decor--star-four{--decor-size:120px; right:-18px; bottom:-18px}
   #about.section--decor{padding-bottom:180px}
   #impossible.section--decor{padding-bottom:190px}
-  #process .decor-heading{padding-right:120px}
+  #process .decor-heading{padding-top:70px; padding-right:0}
 }
 @media (max-width:560px){
   .decor--flower{--decor-size:210px; right:calc(var(--decor-size) * -.17)}
   .decor--flytrap{--decor-size:195px; right:calc(var(--decor-size) * -.09)}
-  .decor--eye{--decor-size:120px}
+  .decor--eye{--decor-size:120px; left:38%}
   .decor--tooth{--decor-size:170px; left:calc(var(--decor-size) * -.29)}
   .decor--star{--decor-size:210px; left:calc(var(--decor-size) * -.29)}
   .decor--star-four{--decor-size:100px; right:-14px; bottom:-16px}
   #about.section--decor{padding-bottom:155px}
   #impossible.section--decor{padding-bottom:175px}
   #process.section--decor{padding-top:112px}
-  #process .decor-heading{padding-right:0}
+  #process .decor-heading{padding-top:0; padding-right:0}
   #faq.section--decor{padding-bottom:140px}
   #contact.section--decor{padding-top:105px; padding-bottom:100px}
+}
+
+@media (min-width:721px) and (max-width:1100px){
+  .logo .logo__name{font-size:26px}
+  .logo .logo__role{font-size:25px; margin-top:-8px}
+  .header .nav{gap:18px}
 }
