@@ -9,6 +9,7 @@ on:
         options:
           - inspect
           - deploy
+          - verify
         default: inspect
 
 permissions:

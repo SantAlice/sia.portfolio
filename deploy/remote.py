@@ -17,8 +17,8 @@ CONFIG = '/etc/nginx/sites-available/zz-anastasia.pics'
 ENABLED = '/etc/nginx/sites-enabled/zz-anastasia.pics'
 MARKER = '# Managed for anastasia.pics only'
 operation = sys.argv[1] if len(sys.argv) > 1 else ''
-if operation not in {'inspect', 'deploy'}:
-    raise SystemExit('Choose inspect or deploy.')
+if operation not in {'inspect', 'deploy', 'verify'}:
+    raise SystemExit('Choose inspect, deploy or verify.')
 password = os.environ.get('ANASTASIA_DEPLOY_PASSWORD')
 if not password:
     raise SystemExit('Missing encrypted deployment secret.')
@@ -31,7 +31,7 @@ client = paramiko.SSHClient()
 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
 def run(command, timeout=60, required=True):
-    _, out, err = client.exec_command(command, timeout=timeout)
+    _, out, err = client.exec_command('set -e\n' + command, timeout=timeout)
     output, error = out.read().decode(errors='replace'), err.read().decode(errors='replace')
     code = out.channel.recv_exit_status()
     if required and code:
@@ -50,6 +50,27 @@ def old_sites():
     for host in ['aaautomation.space', 'vancelot3d.space']:
         results[host] = run(shlex.join(['bash', '-o', 'pipefail', '-c', f'curl --silent --show-error --fail --max-time 20 --resolve {host}:443:127.0.0.1 https://{host}/ | sha256sum']))
     return results
+
+def verify_portfolio():
+    tls = run(f"grep -q 'listen 443 ssl;' {CONFIG} && echo yes || true").strip() == 'yes'
+    scheme, port = ('https', 443) if tls else ('http', 80)
+    base = f'{scheme}://{DOMAIN}'
+    checks = [('/', 200), ('/robots.txt', 200), ('/sitemap.xml', 200),
+              ('/analytics-config.json', 200),
+              ('/public/img/chrome-flower-frames/frame-01.webp', 200),
+              ('/public/img/chrome-flower-frames/frame-64.webp', 200),
+              ('/public/video/hero.mp4', 206),
+              ('/public/video/chrome-flower-scrub.mp4', 206)]
+    for path, expected in checks:
+        args = ['curl', '--silent', '--show-error', '--max-time', '20',
+                '--resolve', f'{DOMAIN}:{port}:127.0.0.1',
+                '-o', '/dev/null', '-w', '%{http_code}']
+        if expected == 206:
+            args.extend(['-H', 'Range: bytes=0-1023'])
+        status = run(shlex.join(args + [base + path])).strip()
+        if status != str(expected):
+            raise RuntimeError(f'{path}: expected HTTP {expected}, received {status}')
+    notice('Portfolio checks passed', 'HTML, SEO files, analytics configuration, mobile frames and video Range requests passed over ' + scheme.upper())
 
 def config(tls=False):
     locations = '''
@@ -106,6 +127,9 @@ try:
         ]
         for label, command in commands:
             notice(label, run(command, required=False))
+    elif operation == 'verify':
+        verify_portfolio()
+        notice('Existing sites respond', old_sites())
     else:
         release = Path(sys.argv[2])
         if not release.is_file():
@@ -178,6 +202,7 @@ try:
                 tls = True
             if snapshot() != before or old_sites() != sites_before:
                 raise RuntimeError('Existing host configuration or responses changed; reverting new host.')
+            verify_portfolio()
             notice('Existing sites verified', 'Both site responses and all pre-existing Nginx configuration files match the baseline.')
             notice('Deployment result', 'https://anastasia.pics/ is live' if tls else 'HTTP release installed. HTTPS awaits DNS A records for anastasia.pics and www.anastasia.pics pointing to 135.106.163.207.')
         except Exception:
