@@ -7,6 +7,29 @@
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Each identical half must be wider than the window, including after
+  // font loading or resizing, so the loop never exposes an empty tail.
+  (function () {
+    var box = document.querySelector('.marquee');
+    var track = box && box.querySelector('.marquee__track');
+    if (!track) return;
+    var unit = track.querySelector('span').cloneNode(true);
+    function fill() {
+      var group = document.createElement('div');
+      group.className = 'marquee__group';
+      group.appendChild(unit.cloneNode(true));
+      track.replaceChildren(group);
+      while (group.getBoundingClientRect().width < box.clientWidth + 1) {
+        group.appendChild(unit.cloneNode(true));
+      }
+      track.appendChild(group.cloneNode(true));
+    }
+    fill();
+    if (document.fonts) document.fonts.ready.then(fill);
+    if ('ResizeObserver' in window) new ResizeObserver(fill).observe(box);
+    else window.addEventListener('resize', fill, { passive:true });
+  })();
+
   /* ── 1. Появление хиро при загрузке ───────────── */
   var loadItems = document.querySelectorAll('.load');
   window.addEventListener('load', function () {
@@ -251,9 +274,19 @@
       var item = q.parentElement;
       var body = item.querySelector('.acc__a');
       var open = item.classList.toggle('is-open');
+      q.setAttribute('aria-expanded', String(open));
       body.style.maxHeight = open ? body.scrollHeight + 'px' : 0;
     });
   }
+
+  function fitFaq() {
+    if (!acc) return;
+    acc.querySelectorAll('.acc__it.is-open .acc__a').forEach(function (body) {
+      body.style.maxHeight = body.scrollHeight + 'px';
+    });
+  }
+  window.addEventListener('resize', fitFaq, { passive:true });
+  if (document.fonts) document.fonts.ready.then(fitFaq);
 
   /* ── 9. Аватар в шапке: взгляд следует за курсором (дорожка v8) ──
      Видео не проигрывается — currentTime вручную привязан к направлению

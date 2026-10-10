@@ -172,20 +172,13 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 .header .nav a::after{background:var(--cream)}
 .header .burger span{background:var(--cream)}
 .header .btn--sm{color:var(--blue-dark); text-shadow:none}
-.logo{
-  position:relative; display:inline-flex; flex-direction:column; align-items:flex-end;
-  flex-shrink:0; white-space:nowrap; text-decoration:none; isolation:isolate;
-}
-.logo .logo__name{
-  display:block; font-family:"Fraunces", Georgia, serif; font-weight:700;
-  font-size:32px; line-height:1.1; letter-spacing:-.045em; text-transform:none;
-}
-.logo .logo__role{
-  position:relative; z-index:1; display:block; margin:-9px 12px 0 0;
-  font-family:"Marck Script", cursive; font-size:29px; font-weight:400;
-  line-height:1; letter-spacing:0; text-transform:none; color:var(--pink);
-  transform:rotate(-6deg); transform-origin:center;
-}
+.logo{position:relative; display:block; flex-shrink:0; isolation:isolate}
+.logo__art{display:block; width:240px; height:60px; overflow:visible}
+.logo__art text{text-shadow:none}
+.logo .logo__name{font-family:"Fraunces", Georgia, serif; font-weight:700; font-size:32px; letter-spacing:-.045em; fill:var(--cream)}
+.logo .logo__role,.logo .logo__cutout{font-family:"Marck Script", cursive; font-weight:400; font-size:29px; letter-spacing:0}
+.logo .logo__role{fill:var(--pink)}
+.logo .logo__cutout{fill:black; stroke:black; stroke-width:5px; stroke-linejoin:round}
 .nav{display:flex; gap:26px}   /* margin-left:auto убран: раскладку задаёт space-between у .header */
 .nav a{
   font-size:14.5px; color:var(--cream); position:relative; padding:4px 0;
@@ -347,8 +340,7 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
   .hero { height: calc(88svh - var(--gap)); min-height: 720px; }
   .hero__video { object-fit: cover; object-position: 58% 18%; }
   .header { padding: 24px; gap: 16px; }
-  .logo .logo__name { font-size:24px; }
-  .logo .logo__role { font-size:25px; margin-top:-8px; margin-right:6px; }
+  .logo__art{width:190px; height:47.5px}
   .header .btn--sm { display: none; }
   /* на мобильном список возвращается наверх: кадр смещён, ладонь
      в эту зону не заходит, а места под панель внизу мало */
@@ -398,6 +390,7 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
   padding:18px 0;
 }
 .marquee__track{display:flex; width:max-content; animation:marquee 26s linear infinite}
+.marquee__group{display:flex; flex-shrink:0}
 .marquee__track span{
   font-family:var(--f-display); font-weight:900; text-transform:uppercase;
   font-size:clamp(18px,2.4vw,30px); letter-spacing:-.02em; padding-right:14px; white-space:nowrap;
@@ -875,8 +868,7 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 }
 
 @media (min-width:721px) and (max-width:1100px){
-  .logo .logo__name{font-size:26px}
-  .logo .logo__role{font-size:25px; margin-top:-8px}
+  .logo__art{width:208px; height:52px}
   .header .nav{gap:18px}
 }
 
@@ -885,4 +877,22 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
   .giant{height:auto}
   .giant__stage{height:auto; aspect-ratio:16 / 9}
   .giant__video{position:absolute; inset:0; object-fit:contain}
+}
+
+/* Content additions: legible estimates, benefits and responsive controls. */
+.invoice__note{margin:0 0 6px; font-size:12px; letter-spacing:.06em; text-transform:uppercase}
+.invoice__budget{margin:20px 0 0; font-size:14px}
+.invoice__budget strong{display:block; margin-top:6px; font-size:20px; color:var(--cream)}
+.invoice__total{display:block; margin-top:20px; border-top:1px solid rgba(247,241,223,.22)}
+.invoice__total span{display:block; margin-bottom:10px}
+.invoice__total b{display:block; font-size:clamp(20px,2.2vw,28px); line-height:1.2}
+.invoice__total p{margin:14px 0 0; font-size:15px; line-height:1.6}
+.invoice.is-on .invoice__row:nth-of-type(6)::after{transition-delay:.75s}
+.nums__value{display:block; margin-bottom:12px; font-size:clamp(28px,3vw,46px); font-weight:600; line-height:1.15; color:var(--cream)}
+.nums__it small{display:block; line-height:1.7}
+.hero{min-height:760px}
+@media (max-width:720px){.hero{min-height:850px}}
+@media (max-width:560px){
+  .invoice__row{display:grid; grid-template-columns:minmax(0,1fr); gap:8px}
+  .invoice__row b{justify-self:start}
 }

@@ -7,7 +7,7 @@
 <meta name="description" content="AI-визуализация: кадры, которые невозможно, негде или слишком дорого снять в реальности. Фото, видео, продукты и миры под ключ.">
 
 <link rel="preload" as="image" href="public/img/hero-poster.webp" fetchpriority="high">
-<link rel="stylesheet" href="css/style.css?v=chrome-flower-1">
+<link rel="stylesheet" href="css/style.css?v=portfolio-copy-1">
 </head>
 <body>
 
@@ -32,14 +32,14 @@
   <!-- Верхнее меню живёт ВНУТРИ карточки шапки: отдельной полосой над ней
        оно разламывает подложку. Позиционирование — в .header. -->
   <header class="header" id="header">
-    <a class="logo" href="https://www.instagram.com/prompt.by.sia/" target="_blank" rel="noopener noreferrer" aria-label="@prompt.by.sia — AI-креатор, Instagram"><span class="logo__name">@prompt.by.sia</span><span class="logo__role">AI-креатор</span></a>
+    <a class="logo" href="https://www.instagram.com/prompt.by.sia/" target="_blank" rel="noopener noreferrer" aria-label="@prompt.by.sia — AI-креатор, Instagram"><svg class="logo__art" viewBox="0 0 240 60" aria-hidden="true" focusable="false"><defs><mask id="logo-clearance" maskUnits="userSpaceOnUse" x="-5" y="-5" width="250" height="70" style="mask-type:luminance"><rect x="-5" y="-5" width="250" height="70" fill="white"/><text class="logo__cutout" x="78" y="44">AI-креатор</text></mask></defs><text class="logo__name" x="1" y="32" mask="url(#logo-clearance)">@prompt.by.sia</text><text class="logo__role" x="78" y="44">AI-креатор</text></svg></a>
     <nav class="nav">
       <a href="#impossible">Невозможное</a>
       <a href="#process">Процесс</a>
       <a href="#pricing">Цены</a>
       <a href="#faq">FAQ</a>
     </nav>
-    <a class="btn btn--sm" href="#contact">Обсудить проект</a>
+    <a class="btn btn--sm" href="https://t.me/cassiopeianse" target="_blank" rel="noopener noreferrer">Обсудить проект</a>
     <button class="burger" id="burger" aria-label="Меню" aria-expanded="false"><span></span><span></span></button>
   </header>
 
@@ -62,7 +62,8 @@
       <p class="hero__sub">AI-визуал и видео для брендов</p>
       <div class="hero__actions">
         <a class="btn btn--primary" href="#works">Смотреть работы</a>
-        <a class="btn btn--ghost"   href="#contact">Обсудить проект</a>
+        <a class="btn btn--ghost"   href="https://t.me/cassiopeianse" target="_blank" rel="noopener noreferrer">Обсудить проект</a>
+        <a class="btn btn--ghost btn--channel" href="https://t.me/aaautomation" target="_blank" rel="noopener noreferrer">Телеграм канал</a>
       </div>
     </div>
   </div>
@@ -119,8 +120,8 @@
 <!-- ══ БЕГУЩАЯ СТРОКА ══ -->
 <div class="marquee" aria-hidden="true">
   <div class="marquee__track">
-    <span>невозможно снять · негде снять · слишком дорого снять · </span>
-    <span>невозможно снять · негде снять · слишком дорого снять · </span>
+    <div class="marquee__group"><span>невозможно снять · негде снять · слишком дорого снять ·</span><span>невозможно снять · негде снять · слишком дорого снять ·</span></div>
+    <div class="marquee__group"><span>невозможно снять · негде снять · слишком дорого снять ·</span><span>невозможно снять · негде снять · слишком дорого снять ·</span></div>
   </div>
 </div>
 
@@ -601,7 +602,7 @@
     <div class="imp__text">
       <p class="tag reveal">Невозможное</p>
       <h2 class="section__title reveal">Сколько бы<br>это стоило</h2>
-      <p class="reveal">Один кадр из последней серии: герберы в человеческий рост, модель-альбинос в розовом тюле, съёмка с нижней точки — камера лежит во мху, небо без единого облака. Ниже — смета настоящей съёмки такого кадра. Каждая строка отпадает, потому что снимать ничего не нужно.</p>
+      <p class="reveal">Герберы в человеческий рост, модель в розовом тюле и съёмка с нижней точки среди мха. Как получить такую сцену на обычной съёмке? Найти холм, организовать выезд, собрать команду, подготовить одежду и реквизит. Гигантские цветы можно изготовить или дорисовать в Photoshop. Ниже — ориентировочный бюджет одного съёмочного дня: итог зависит от региона, команды и сложности подготовки.</p>
       <img class="imp__media reveal" src="public/img/impossible.webp"
            width="1400" height="788" loading="lazy" decoding="async"
            alt="Модель-альбинос в розовом тюле среди гигантских гербер, съёмка с нижней точки">
@@ -609,14 +610,18 @@
 
     <div class="imp__aside">
       <div class="invoice reveal">
-        <div class="invoice__row"><span>Локация: холм, 3 съёмочных дня</span><b>620 000 ₽</b></div>
-        <div class="invoice__row"><span>Модель-альбинос + агентство</span><b>310 000 ₽</b></div>
-        <div class="invoice__row"><span>Реквизит: герберы 3 м, бутафорский мох</span><b>480 000 ₽</b></div>
-        <div class="invoice__row"><span>Свет, группа, логистика</span><b>390 000 ₽</b></div>
-        <div class="invoice__row"><span>Постпродакшн и ретушь</span><b>180 000 ₽</b></div>
+        <p class="invoice__note">Ориентир: один съёмочный день</p>
+        <div class="invoice__row"><span>Локация: поиск холма, выезд, бензин и время</span><b>5 000–15 000 ₽</b></div>
+        <div class="invoice__row"><span>Модель и агентство</span><b>20 000–45 000 ₽</b></div>
+        <div class="invoice__row"><span>Реквизит: искусственные герберы, бутафорский мох, одежда</span><b>10 000–25 000 ₽</b></div>
+        <div class="invoice__row"><span>Фотограф, свет, команда и логистика</span><b>20 000–45 000 ₽</b></div>
+        <div class="invoice__row"><span>Визажист</span><b>8 000–15 000 ₽</b></div>
+        <div class="invoice__row"><span>Ретушь, постпродакшн и дорисовка</span><b>15 000–30 000 ₽</b></div>
+        <p class="invoice__budget">Бюджет съёмки: <strong>78 000–175 000 ₽</strong></p>
         <div class="invoice__total">
           <span>Итого у меня</span>
-          <b>1 кадр · 6 часов</b>
+          <b>Серия кадров · от одного дня работы</b>
+          <p>Выбор из вариантов. Модель и локацию можно менять без расходов на повторную съёмку, аренду и выезд команды.</p>
         </div>
       </div>
     </div>
@@ -647,11 +652,11 @@
   <div class="shell">
     <p class="tag reveal">Инструменты</p>
     <h2 class="section__title reveal">На чём<br>собираю</h2>
-    <p class="lead reveal">Сюда список моделей и софта, который реально используешь — по группам.</p>
+    <p class="lead reveal">Подбираю инструменты под задачу: от первых визуальных концепций до монтажа, ретуши и звука.</p>
     <div class="tools">
       <div class="tools__col reveal"><h3>Изображение</h3><ul><li>Midjourney</li><li>Flux</li><li>Nano Banana</li><li>Stable Diffusion</li></ul></div>
-      <div class="tools__col reveal"><h3>Видео</h3><ul><li>Kling</li><li>Veo</li><li>Runway</li><li>Sora</li></ul></div>
-      <div class="tools__col reveal"><h3>Сборка</h3><ul><li>Photoshop</li><li>After Effects</li><li>Premiere</li><li>Topaz</li></ul></div>
+      <div class="tools__col reveal"><h3>Видео</h3><ul><li>Kling</li><li>Veo</li><li>Runway</li><li>Sora</li><li>Higgsfield</li><li>MiniMax</li></ul></div>
+      <div class="tools__col reveal"><h3>Сборка</h3><ul><li>Photoshop</li><li>After Effects</li><li>Premiere</li><li>Topaz</li><li>CapCut</li></ul></div>
       <div class="tools__col reveal"><h3>Звук</h3><ul><li>Suno</li><li>ElevenLabs</li><li>библиотеки</li></ul></div>
     </div>
   </div>
@@ -679,10 +684,10 @@
 <!-- ══ ЦИФРЫ ══ -->
 <section class="section section--blue" id="numbers">
   <div class="shell nums">
-    <div class="nums__it reveal"><span class="num" data-count="120">0</span><small>работ в архиве</small></div>
-    <div class="nums__it reveal"><span class="num" data-count="24">0</span><small>проекта для брендов</small></div>
-    <div class="nums__it reveal"><span class="num" data-count="6">0</span><small>часов до первого варианта</small></div>
-    <div class="nums__it reveal"><span class="num" data-count="3">0</span><small>года в визуале</small></div>
+    <div class="nums__it reveal"><span class="nums__value">5+</span><small>лет в сфере AI</small></div>
+    <div class="nums__it reveal"><span class="nums__value">Фото / видео</span><small>кадры, серии и ролики</small></div>
+    <div class="nums__it reveal"><span class="nums__value">От идеи</span><small>до готового визуала</small></div>
+    <div class="nums__it reveal"><span class="nums__value">Под задачу</span><small>бренд, формат и площадка</small></div>
   </div>
 </section>
 
@@ -696,20 +701,20 @@
         <h3>Кадр</h3>
         <p class="plan__price">от 15 000 ₽</p>
         <ul><li>1 сцена, 3 варианта</li><li>2 круга правок</li><li>исходник 4K</li><li>срок: 1–2 дня</li></ul>
-        <a class="btn btn--ghost" href="#contact">Обсудить</a>
+        <a class="btn btn--ghost" href="https://t.me/cassiopeianse" target="_blank" rel="noopener noreferrer">Обсудить</a>
       </div>
       <div class="plan plan--hl reveal">
         <span class="plan__badge">чаще всего берут</span>
         <h3>Серия</h3>
         <p class="plan__price">от 60 000 ₽</p>
         <ul><li>5–8 кадров в одном мире</li><li>мудборд и арт-дирекшн</li><li>адаптации под площадки</li><li>срок: 4–7 дней</li></ul>
-        <a class="btn" href="#contact">Обсудить</a>
+        <a class="btn" href="https://t.me/cassiopeianse" target="_blank" rel="noopener noreferrer">Обсудить</a>
       </div>
       <div class="plan reveal">
         <h3>Ролик</h3>
         <p class="plan__price">от 90 000 ₽</p>
         <ul><li>до 30 секунд</li><li>раскадровка, монтаж, звук</li><li>вертикаль + горизонталь</li><li>срок: 7–14 дней</li></ul>
-        <a class="btn btn--ghost" href="#contact">Обсудить</a>
+        <a class="btn btn--ghost" href="https://t.me/cassiopeianse" target="_blank" rel="noopener noreferrer">Обсудить</a>
       </div>
     </div>
   </div>
@@ -724,11 +729,12 @@
       <h2 class="section__title reveal">Вопросы,<br>которые задают</h2>
     </div>
     <div class="acc" id="acc">
-      <div class="acc__it reveal"><button class="acc__q">Чем это лучше обычной съёмки?<i></i></button><div class="acc__a"><p>Ответ: про сроки, бюджет и то, что часть кадров вообще нельзя снять.</p></div></div>
-      <div class="acc__it reveal"><button class="acc__q">Можно ли повторить один и тот же персонаж?<i></i></button><div class="acc__a"><p>Ответ: про консистентность героя между кадрами и сериями.</p></div></div>
-      <div class="acc__it reveal"><button class="acc__q">Кому принадлежат права на результат?<i></i></button><div class="acc__a"><p>Ответ: что передаёшь клиенту, что остаётся в портфолио.</p></div></div>
-      <div class="acc__it reveal"><button class="acc__q">Сколько правок входит в стоимость?<i></i></button><div class="acc__a"><p>Ответ: сколько кругов, что считается новой сценой.</p></div></div>
-      <div class="acc__it reveal"><button class="acc__q">Работаешь ли по брендбуку?<i></i></button><div class="acc__a"><p>Ответ: как встраиваешься в фирменный стиль и палитру клиента.</p></div></div>
+      <div class="acc__it reveal"><button class="acc__q" type="button" aria-expanded="false" aria-controls="faq-answer-1">Когда стоит выбрать AI-визуал?<i aria-hidden="true"></i></button><div class="acc__a" id="faq-answer-1"><p>Когда нужны необычные локации, сложные декорации, смелые образы или несколько визуальных направлений без организации съёмки. AI особенно полезен для концепций, рекламы и контента. Если задача требует точной документальной фиксации реального объекта, заранее обсудим сочетание генерации с фотографией и ретушью.</p></div></div>
+      <div class="acc__it reveal"><button class="acc__q" type="button" aria-expanded="false" aria-controls="faq-answer-2">Можно ли сохранить одного персонажа в серии?<i aria-hidden="true"></i></button><div class="acc__a" id="faq-answer-2"><p>Да: сначала согласуем образ и основные референсы, затем работаем с ними во всей серии. Внешность, одежду, свет и настроение контролирую на этапе отбора и доработки. Для узнаваемости конкретного человека понадобятся качественные фотографии; небольшие различия между кадрами могут потребовать дополнительной ретуши.</p></div></div>
+      <div class="acc__it reveal"><button class="acc__q" type="button" aria-expanded="false" aria-controls="faq-answer-3">Как согласуются права и публикация работ?<i aria-hidden="true"></i></button><div class="acc__a" id="faq-answer-3"><p>До начала проекта согласуем коммерческое использование, состав передаваемых файлов и условия работы с исходными материалами. Возможность публикации результата в моём портфолио обсуждаем отдельно. Если проект конфиденциальный, фиксируем это заранее. Права на переданные фотографии, логотипы и другие материалы должны позволять их использование в проекте.</p></div></div>
+      <div class="acc__it reveal"><button class="acc__q" type="button" aria-expanded="false" aria-controls="faq-answer-4">Сколько правок входит в стоимость?<i aria-hidden="true"></i></button><div class="acc__a" id="faq-answer-4"><p>Количество кругов правок фиксируем в выбранном пакете до старта. В пакет «Кадр» входят два круга. На каждом этапе удобно собирать комментарии одним списком: так изменения остаются последовательными. Новая концепция, дополнительная сцена или существенная смена уже утверждённого направления обсуждаются и оцениваются отдельно.</p></div></div>
+      <div class="acc__it reveal"><button class="acc__q" type="button" aria-expanded="false" aria-controls="faq-answer-5">Работаешь ли по брендбуку и с реальным товаром?<i aria-hidden="true"></i></button><div class="acc__a" id="faq-answer-5"><p>Да. Пришлите брендбук, логотипы, палитру, примеры визуала и фотографии товара. Согласуем стиль и композицию до генерации. Надписи, логотипы и детали упаковки проверяю отдельно; когда нужна точная передача продукта, использую его фотографию в композиции и дорабатываю результат в редакторе.</p></div></div>
+      <div class="acc__it reveal"><button class="acc__q" type="button" aria-expanded="false" aria-controls="faq-answer-6">Что нужно для старта и сколько времени займёт работа?<i aria-hidden="true"></i></button><div class="acc__a" id="faq-answer-6"><p>Напишите в Telegram, что хотите получить, для какой площадки и к какому сроку. Можно начать с идеи, пары референсов или короткого голосового сообщения. После обсуждения согласуем объём, стоимость, этапы и формат передачи файлов. Работа над простой серией может занять от одного дня; сложные сцены и видео требуют больше времени. Конкретный срок фиксируем до начала проекта.</p></div></div>
     </div>
   </div>
 </section>
@@ -741,8 +747,8 @@
     <h2 class="section__title cta__title reveal">Давай сделаем<br>то, чего не было</h2>
     <p class="reveal">Напиши, что нужно снять — отвечу в течение дня и покажу похожие работы.</p>
     <div class="cta__links reveal">
-      <a class="btn" href="mailto:hello@example.com">hello@example.com</a>
-      <a class="btn btn--ghost" href="https://t.me/username" target="_blank" rel="noopener">Telegram</a>
+      <a class="btn" href="https://t.me/cassiopeianse" target="_blank" rel="noopener noreferrer">Написать в Telegram</a>
+      <a class="btn btn--ghost" href="https://t.me/aaautomation" target="_blank" rel="noopener noreferrer">Телеграм канал</a>
       <a class="btn btn--ghost" href="https://www.instagram.com/prompt.by.sia/" target="_blank" rel="noopener">Instagram</a>
     </div>
   </div>
@@ -750,7 +756,7 @@
 
 <footer class="footer">
   <div class="shell footer__in">
-    <span>© 2026 Настя · AI-визуализация</span>
+    <span>© 2026 Анастасия Куликова · AI-визуализация</span>
     <a href="#top">Наверх ↑</a>
   </div>
 </footer>
@@ -774,6 +780,6 @@
     </div>
   </div>
 </div>
-<script src="js/main.js?v=flower-scrub-2"></script>
+<script src="js/main.js?v=portfolio-copy-1"></script>
 </body>
 </html>
