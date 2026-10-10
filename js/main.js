@@ -404,7 +404,7 @@
 
   /* ── 11. Скролл-вставка «хромовый цветок» ─────────────────────
      Видео не играет само: currentTime привязан к прогрессу прокрутки
-     секции. Ключевые кадры в файле стоят каждые 6 — без этого
+     секции. Каждый кадр десктопного файла независим от предыдущего — без этого
      перемотка дёргалась бы. На мобильных перемотки нет: в Safari
      currentTime отдаёт кадр с задержкой, там честный луп. */
   (() => {
@@ -416,8 +416,8 @@
     if (reduce) return;
 
     const isMobile = matchMedia('(max-width: 767px)').matches;
-    const px = window.innerWidth * (window.devicePixelRatio || 1);
-    const srcFor = video.dataset[(!isMobile && px > 1400) ? 'srcHd' : 'srcSd'];
+    const light = window.innerWidth <= 1100 || (navigator.connection && navigator.connection.saveData);
+    const srcFor = video.dataset[isMobile ? 'srcSd' : (light ? 'srcLow' : 'srcHd')];
 
     // Источник подставляем не сразу: секция далеко внизу, а файл тяжёлый.
     // Пока он качался на старте, страница тормозила по всей высоте.
@@ -451,9 +451,10 @@
       return;
     }
 
-    let target = 0, current = 0, raf = null, ready = false, near = false;
+    let raf = null, ready = false, near = false;
 
-    video.addEventListener('loadedmetadata', () => { ready = true; tick(); });
+    video.addEventListener('loadeddata', () => { ready = true; kick(); });
+    video.addEventListener('seeked', kick);
 
     // Секция далеко — не делаем вообще ничего. Прежняя версия считала
     // прогресс и дёргала перемотку на каждый скролл по всей странице,
@@ -462,7 +463,7 @@
       // широкий запас — чтобы файл успел встать к подходу к секции
       new IntersectionObserver(es => {
         if (es[0].isIntersecting) loadSrc();
-      }, { rootMargin: '600px 0px' }).observe(section);
+      }, { rootMargin: '1600px 0px' }).observe(section);
 
       new IntersectionObserver(es => {
         near = es[0].isIntersecting;
@@ -482,20 +483,16 @@
 
     function tick() {
       raf = null;
-      if (!ready || !near || document.hidden) return;
-      target = progress() * Math.max(0, (video.duration || 0) - 1 / 60);
-      current += (target - current) * 0.12;           // сглаживание
-      const done = Math.abs(target - current) <= 1 / 60;
-      if (done) current = target;
-      // Новую перемотку шлём, только когда предыдущая завершилась.
-      // Иначе запросы копятся быстрее, чем декодер успевает отдавать
-      // кадры, и картинка застревает — это и есть «виснет».
-      // Setting the same time still starts a seek in some browsers. Stop
-      // once the displayed frame is close enough, including at the end.
-      if (!video.seeking && Math.abs(video.currentTime - current) >= 1 / 30) {
-        video.currentTime = current;
+      if (!ready || !near || document.hidden || video.seeking) return;
+      // Jump straight to the latest scroll position. Intermediate eased
+      // seeks spend decoder time on frames the user has already passed.
+      const fps = 24;
+      const lastFrame = Math.max(0, (video.duration || 0) - 1 / fps);
+      const target = Math.min(lastFrame, Math.round(progress() * lastFrame * fps) / fps);
+      if (Math.abs(video.currentTime - target) >= 1 / (fps * 2)) {
+        video.currentTime = target;
       }
-      if (!done || video.seeking) raf = requestAnimationFrame(tick);
+      // seeked schedules one update for any scroll that arrived meanwhile.
     }
 
     function kick() { if (near && !document.hidden && !raf) raf = requestAnimationFrame(tick); }
