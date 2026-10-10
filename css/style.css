@@ -579,7 +579,7 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 
 /* цифры */
 .nums{display:grid; grid-template-columns:repeat(3,1fr); gap:26px}
-.nums__it{border-top:2px solid rgba(247,241,223,.35); padding-top:16px}
+.nums__it{border-top:2px solid rgba(247,241,223,.35); padding-top:16px; text-align:center}
 .nums__it .num{display:block; margin-bottom:12px; color:var(--cream); font-size:clamp(40px,5.4vw,76px)}
 .nums__it small{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:rgba(251,246,241,.7)}
 
