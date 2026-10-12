@@ -996,3 +996,15 @@ h3{font-family:var(--f-display); font-weight:900; text-transform:uppercase; lett
 
 /* The fading video edge must blend with blue, never with another avatar frame. */
 .hero--video-ready .hero__poster{visibility:hidden}
+
+/* Fade overflowing thumbnails into their own section instead of a dark slab. */
+.drow.is-peek .dstrip::after{display:none}
+.drow.is-peek .dstrip.has-nav .dgrid{
+  --fade-left:0px; --fade-right:56px;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 var(--fade-left),#000 calc(100% - var(--fade-right)),transparent);
+  mask-image:linear-gradient(to right,transparent,#000 var(--fade-left),#000 calc(100% - var(--fade-right)),transparent);
+}
+.drow.is-peek:not(.is-start) .dstrip.has-nav .dgrid{--fade-left:56px}
+.drow.is-peek.is-end .dstrip.has-nav .dgrid{--fade-right:0px}
+
+.drow.is-peek .work.is-edge-sliver{visibility:hidden}

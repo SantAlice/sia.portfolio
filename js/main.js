@@ -243,9 +243,16 @@
       function syncNav() {
         var scrollable = row.classList.contains('is-peek') &&
                          strip.scrollWidth > strip.clientWidth + 1;
-        wrap.classList.toggle('has-nav', scrollable);
+        wrap.classList.toggle('has-nav', scrollable);
+        var bounds = strip.getBoundingClientRect();
+        strip.querySelectorAll('.work').forEach(function (work) {
+          var box = work.getBoundingClientRect();
+          var visible = Math.min(bounds.right, box.right) - Math.max(bounds.left, box.left);
+          work.classList.toggle('is-edge-sliver', scrollable && visible > 0 && visible < 32);
+        });
         if (!scrollable) return;
         prev.disabled = strip.scrollLeft <= 2;
+        row.classList.toggle('is-start', prev.disabled);
         next.disabled = strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - 2;
         row.classList.toggle('is-end', next.disabled);
       }
