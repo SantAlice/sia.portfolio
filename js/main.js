@@ -243,7 +243,7 @@
       function syncNav() {
         var scrollable = row.classList.contains('is-peek') &&
                          strip.scrollWidth > strip.clientWidth + 1;
-        wrap.classList.toggle('has-nav', scrollable);
+        wrap.classList.toggle('has-nav', scrollable);
         var bounds = strip.getBoundingClientRect();
         strip.querySelectorAll('.work').forEach(function (work) {
           var box = work.getBoundingClientRect();
