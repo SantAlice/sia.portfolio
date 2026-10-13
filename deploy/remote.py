@@ -72,6 +72,8 @@ def verify_portfolio():
               ('/public/img/icons/favicon-64.png', 200),
               ('/public/img/icons/favicon.ico', 200),
               ('/public/img/icons/apple-touch-icon.png', 200),
+              ('/public/img/cases/15-scale-fashion.webp', 200),
+              ('/public/video/cases/15-scale-fashion.mp4', 206),
               ('/public/img/chrome-flower-frames/frame-01.webp', 200),
               ('/public/img/chrome-flower-frames/frame-64.webp', 200),
               ('/public/video/hero.mp4', 206),
