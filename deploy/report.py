@@ -67,11 +67,10 @@ if receipt['status'] != 'success':
             annotations = api('/check-runs/' + check_id + '/annotations?per_page=100')
             receipt['errors'].extend(item['message'] for item in annotations
                                      if item.get('annotation_level') == 'failure')
-            if diagnose:
-                receipt['failed_steps'] = [s['name'] for s in job.get('steps', [])
-                                           if s.get('conclusion') == 'failure']
-                receipt['server_diagnostics'] = {a['title']: a['message'] for a in annotations
-                    if a.get('title') in ['Public DNS', 'Portfolio checks passed', 'Existing sites before deployment']}
+            receipt['failed_steps'] = [s['name'] for s in job.get('steps', [])
+                                       if s.get('conclusion') == 'failure']
+            receipt['server_diagnostics'] = {a['title']: a['message'] for a in annotations
+                if a.get('title') in ['Public DNS', 'Portfolio checks passed', 'Existing sites before deployment']}
     except urllib.error.HTTPError as error:
         receipt['diagnostic_error'] = error.code
 if diagnose:
