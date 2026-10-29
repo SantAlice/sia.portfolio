@@ -1,0 +1,29 @@
+name: Diagnose portfolio deployment
+on:
+  push:
+    branches: [main]
+    paths: [deploy/diagnose-request.json]
+permissions:
+  contents: write
+  actions: read
+  checks: read
+concurrency:
+  group: anastasia-pics-server
+  cancel-in-progress: false
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          sparse-checkout: |
+            deploy/report.py
+            deploy/diagnose-request.json
+          sparse-checkout-cone-mode: false
+      - name: Read deployment annotations and public domain status
+        env:
+          GH_STATUS_TOKEN: ${{ github.token }}
+          DEPLOYMENT_RESULT: failure
+          DIAGNOSE_ONLY: 'true'
+        run: python3 deploy/report.py
