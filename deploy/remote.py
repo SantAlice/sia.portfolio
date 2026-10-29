@@ -25,6 +25,7 @@ if operation not in {'inspect', 'deploy', 'verify'}:
     raise SystemExit('Choose inspect, deploy or verify.')
 password = os.environ.get('ANASTASIA_DEPLOY_PASSWORD')
 if not password:
+    print('::error title=Missing deployment secret::ANASTASIA_DEPLOY_PASSWORD is not configured in GitHub Actions.', flush=True)
     raise SystemExit('Missing encrypted deployment secret.')
 
 def notice(title, message):

@@ -46,6 +46,19 @@ receipt = {'kind': 'sia.portfolio-deployment-receipt',
            'run_id': os.environ['GITHUB_RUN_ID'],
            'run_url': f'https://github.com/{repo}/actions/runs/' + os.environ['GITHUB_RUN_ID'],
            'recorded_at': datetime.now(timezone.utc).isoformat()}
+if receipt['status'] != 'success':
+    try:
+        jobs = api('/actions/runs/' + os.environ['GITHUB_RUN_ID'] + '/jobs?per_page=100')['jobs']
+        receipt['errors'] = []
+        for job in jobs:
+            if job['name'] != 'server' or not job.get('check_run_url'):
+                continue
+            check_id = job['check_run_url'].rsplit('/', 1)[-1]
+            annotations = api('/check-runs/' + check_id + '/annotations?per_page=100')
+            receipt['errors'].extend(item['message'] for item in annotations
+                                     if item.get('annotation_level') == 'failure')
+    except urllib.error.HTTPError as error:
+        receipt['diagnostic_error'] = error.code
 tree_payload['tree'] = [
     {'path': 'latest.json', 'mode': '100644', 'type': 'blob',
      'content': json.dumps(receipt, indent=2) + '\n'}]
