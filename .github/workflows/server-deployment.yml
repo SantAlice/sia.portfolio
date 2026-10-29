@@ -1,6 +1,10 @@
 name: Inspect and deploy anastasia.pics
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - deploy/publish-request.json
   workflow_dispatch:
     inputs:
       operation:
@@ -28,9 +32,27 @@ jobs:
       - name: Install SSH client library
         run: python3 -m pip install --quiet 'paramiko>=3.5,<4'
       - name: Build static release
-        if: inputs.operation == 'deploy'
+        if: github.event_name == 'push' || inputs.operation == 'deploy'
         run: python3 scripts/build-release.py /tmp/anastasia-release.tar.gz
       - name: Inspect server or deploy isolated portfolio
         env:
           ANASTASIA_DEPLOY_PASSWORD: ${{ secrets.ANASTASIA_DEPLOY_PASSWORD }}
-        run: python3 deploy/remote.py "${{ inputs.operation }}" /tmp/anastasia-release.tar.gz
+          DEPLOY_OPERATION: ${{ github.event_name == 'push' && 'deploy' || inputs.operation }}
+        run: python3 deploy/remote.py "$DEPLOY_OPERATION" /tmp/anastasia-release.tar.gz
+
+  report:
+    needs: server
+    if: always() && (github.event_name == 'push' || inputs.operation == 'deploy')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          sparse-checkout: deploy/report.py
+          sparse-checkout-cone-mode: false
+      - name: Save deployment receipt to a separate service branch
+        env:
+          GH_STATUS_TOKEN: ${{ github.token }}
+          DEPLOYMENT_RESULT: ${{ needs.server.result }}
+        run: python3 deploy/report.py
