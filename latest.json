@@ -1,8 +1,12 @@
 {
   "kind": "sia.portfolio-deployment-receipt",
   "status": "failure",
-  "sha": "22c5d6a1195f9b7a99b86ae0f31ed44f5b382256",
-  "run_id": "40940989379",
-  "run_url": "https://github.com/SantAlice/sia.portfolio/actions/runs/40940989379",
-  "recorded_at": "2026-10-29T19:34:40.014669+00:00"
+  "sha": "696b964e2e34a9f5ecbd3607eba8a6901e99d1c6",
+  "run_id": "40941600141",
+  "run_url": "https://github.com/SantAlice/sia.portfolio/actions/runs/40941600141",
+  "recorded_at": "2026-10-29T19:39:03.589977+00:00",
+  "errors": [
+    "Process completed with exit code 1.",
+    "URLError: <urlopen error [Errno -2] Name or service not known>"
+  ]
 }
