@@ -1,23 +1,59 @@
 {
   "kind": "sia.portfolio-deployment-diagnostic",
   "status": "failure",
-  "sha": "67fb06cd45d07592913de1b213780d46efa34511",
-  "run_id": "41082868415",
-  "run_url": "https://github.com/SantAlice/sia.portfolio/actions/runs/41082868415",
-  "recorded_at": "2026-10-30T15:40:32.538638+00:00",
-  "for_run_id": "40941600141",
-  "errors": [
-    "Process completed with exit code 1.",
-    "URLError: <urlopen error [Errno -2] Name or service not known>"
-  ],
-  "failed_steps": [
-    "Inspect server or deploy isolated portfolio"
-  ],
-  "server_diagnostics": {
-    "Portfolio checks passed": "HTML, SEO files, analytics configuration, mobile frames and video Range requests passed over HTTPS",
-    "Public DNS": "{'anastasia.pics': [], 'www.anastasia.pics': []}",
-    "Existing sites before deployment": "{'aaautomation.space': '7e69171e51bae94ceae46a9e1b824bf32e0a8b5a23ba6e7eb58ad7b765d2d887  -\\n', 'vancelot3d.space': '7c519044fe6583231a47ca6b82f79998f39067eb4c2c5875781e76d0ed79b012  -\\n'}"
+  "sha": "250ef291278e46b8cc8a56cebeb7bf6660fa6225",
+  "run_id": "41084806880",
+  "run_url": "https://github.com/SantAlice/sia.portfolio/actions/runs/41084806880",
+  "recorded_at": "2026-10-30T15:53:16.757656+00:00",
+  "for_run_id": "41082949489",
+  "errors": [],
+  "deployment_status": {
+    "status": "in_progress",
+    "conclusion": null,
+    "html_url": "https://github.com/SantAlice/sia.portfolio/actions/runs/41082949489",
+    "head_sha": "9b2bebf70b8aa2c572b74a611887e5c508538c0b"
   },
+  "jobs": [
+    {
+      "name": "server",
+      "status": "in_progress",
+      "conclusion": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install SSH client library",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build static release",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Inspect server or deploy isolated portfolio",
+          "status": "in_progress",
+          "conclusion": null
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "pending",
+          "conclusion": null
+        }
+      ]
+    }
+  ],
+  "failed_steps": [],
+  "server_diagnostics": {},
   "dns": {
     "anastasia.pics": [
       "135.106.163.207"
@@ -26,7 +62,7 @@
       "135.106.163.207"
     ],
     "api.github.com": [
-      "140.82.112.5"
+      "140.82.114.6"
     ]
   },
   "registration": {
@@ -50,7 +86,7 @@
       },
       {
         "eventAction": "last update of RDAP database",
-        "eventDate": "2026-10-30T15:40:34.0Z"
+        "eventDate": "2026-10-30T15:53:21.0Z"
       },
       {
         "eventAction": "last changed",
