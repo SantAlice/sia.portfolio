@@ -86,7 +86,7 @@ if receipt['status'] != 'success':
             receipt['failed_steps'] = [s['name'] for s in job.get('steps', [])
                                        if s.get('conclusion') == 'failure']
             receipt['server_diagnostics'] = {a['title']: a['message'] for a in annotations
-                if a.get('title') in ['Public DNS', 'Portfolio checks passed', 'Existing sites before deployment']}
+                if a.get('title') in ['Public DNS', 'Portfolio checks passed', 'Existing sites before deployment', 'Release upload', 'Release delta', 'Upload progress', 'Release files verified', 'Deployment result', 'Existing sites verified']}
     except urllib.error.HTTPError as error:
         receipt['diagnostic_error'] = error.code
 if diagnose:
