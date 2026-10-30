@@ -13,6 +13,7 @@ import urllib.request
 from urllib.parse import urlparse
 
 import paramiko
+from delta import build_delta
 
 HOST = '135.106.163.207'
 DOMAIN = 'anastasia.pics'
@@ -221,14 +222,63 @@ try:
                 raise RuntimeError('Current path is not a managed symlink.')
         if config_before is None and run(f'test -e {BASE} && echo exists || true').strip():
             raise RuntimeError('Site directory already exists without a managed host.')
+        manifest = None
+        if link_before:
+            hash_script = '''import hashlib,json,pathlib,sys
+root=pathlib.Path(sys.argv[1])
+result={}
+for path in root.rglob('*'):
+    if path.is_file() and not path.is_symlink():
+        with path.open('rb') as content:
+            result[str(path.relative_to(root))]=hashlib.file_digest(content,'sha256').hexdigest()
+print(json.dumps(result))
+'''
+            existing = json.loads(run(shlex.join(['python3', '-c', hash_script, f'{BASE}/current']), timeout=180))
+            delta = release.with_name('anastasia-delta.tar.gz')
+            manifest = build_delta(release, delta, existing)
+            release = delta
+            notice('Release delta', f"Reusing {len(manifest['reuse'])} verified files; uploading {len(manifest['hashes']) - len(manifest['reuse'])} changed files, {release.stat().st_size // 1024 // 1024} MB")
         run(f'mkdir -p {folder} {BASE}/acme/.well-known/acme-challenge')
+        if manifest:
+            write(sftp, folder + '/.release-manifest.json', json.dumps(manifest))
+            copy_script = '''import json,pathlib,shutil,sys
+source,root=map(pathlib.Path,sys.argv[1:])
+manifest=json.loads((root/'.release-manifest.json').read_text())
+for name in manifest['reuse']:
+    path=pathlib.PurePosixPath(name)
+    if path.is_absolute() or '..' in path.parts:
+        raise RuntimeError('Invalid reusable path')
+    target=root/name
+    target.parent.mkdir(parents=True,exist_ok=True)
+    shutil.copyfile(source/name,target)
+'''
+            run(shlex.join(['python3', '-c', copy_script, f'{BASE}/current', folder]), timeout=180)
         archive = f'{BASE}/releases/{stamp}.tar.gz'
         notice('Release upload', f'{release.stat().st_size // 1024 // 1024} MB')
-        sftp.put(str(release), archive)
+        last_progress = [-1]
+        def upload_progress(transferred, total):
+            step = transferred // (10 * 1024 * 1024)
+            if step != last_progress[0]:
+                last_progress[0] = step
+                notice('Upload progress', f'{transferred // 1024 // 1024}/{total // 1024 // 1024} MB')
+        sftp.put(str(release), archive, callback=upload_progress)
         digest = hashlib.sha256(release.read_bytes()).hexdigest()
         if run(f'sha256sum {archive}').split()[0] != digest:
             raise RuntimeError('Release checksum mismatch.')
         run(f'tar -xzf {archive} --no-same-owner -C {folder}; chmod -R a+rX {folder}; rm {archive}', timeout=180)
+        if manifest:
+            verify_script = '''import hashlib,json,pathlib,sys
+root=pathlib.Path(sys.argv[1])
+manifest_path=root/'.release-manifest.json'
+manifest=json.loads(manifest_path.read_text())
+for name,expected in manifest['hashes'].items():
+    with (root/name).open('rb') as content:
+        if hashlib.file_digest(content,'sha256').hexdigest()!=expected:
+            raise RuntimeError('Release file checksum mismatch: '+name)
+manifest_path.unlink()
+'''
+            run(shlex.join(['python3', '-c', verify_script, folder]), timeout=180)
+            notice('Release files verified', 'Every reused and uploaded file matches the complete release.')
         tls = bool(config_before and 'listen 443 ssl;' in config_before)
         # DNS must point here before requesting a certificate.
         domains = [DOMAIN, 'www.' + DOMAIN]
