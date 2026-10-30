@@ -1,10 +1,10 @@
 {
   "kind": "sia.portfolio-deployment-diagnostic",
   "status": "failure",
-  "sha": "9dda1b5a276f1d930732a72e9d04f13575a5c45b",
-  "run_id": "40942419073",
-  "run_url": "https://github.com/SantAlice/sia.portfolio/actions/runs/40942419073",
-  "recorded_at": "2026-10-29T19:42:02.905245+00:00",
+  "sha": "67fb06cd45d07592913de1b213780d46efa34511",
+  "run_id": "41082868415",
+  "run_url": "https://github.com/SantAlice/sia.portfolio/actions/runs/41082868415",
+  "recorded_at": "2026-10-30T15:40:32.538638+00:00",
   "for_run_id": "40941600141",
   "errors": [
     "Process completed with exit code 1.",
@@ -19,16 +19,19 @@
     "Existing sites before deployment": "{'aaautomation.space': '7e69171e51bae94ceae46a9e1b824bf32e0a8b5a23ba6e7eb58ad7b765d2d887  -\\n', 'vancelot3d.space': '7c519044fe6583231a47ca6b82f79998f39067eb4c2c5875781e76d0ed79b012  -\\n'}"
   },
   "dns": {
-    "anastasia.pics": "[Errno -2] Name or service not known",
-    "www.anastasia.pics": "[Errno -2] Name or service not known",
+    "anastasia.pics": [
+      "135.106.163.207"
+    ],
+    "www.anastasia.pics": [
+      "135.106.163.207"
+    ],
     "api.github.com": [
-      "140.82.113.6"
+      "140.82.112.5"
     ]
   },
   "registration": {
     "status": [
       "server transfer prohibited",
-      "client hold",
       "client transfer prohibited"
     ],
     "nameservers": [
@@ -47,11 +50,11 @@
       },
       {
         "eventAction": "last update of RDAP database",
-        "eventDate": "2026-10-29T19:42:04.0Z"
+        "eventDate": "2026-10-30T15:40:34.0Z"
       },
       {
         "eventAction": "last changed",
-        "eventDate": "2026-10-25T21:50:36.0Z"
+        "eventDate": "2026-10-30T14:22:44.0Z"
       }
     ]
   }
