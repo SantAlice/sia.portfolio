@@ -1,12 +1,16 @@
 {
   "kind": "sia.portfolio-deployment-receipt",
-  "status": "failure",
-  "sha": "696b964e2e34a9f5ecbd3607eba8a6901e99d1c6",
-  "run_id": "40941600141",
-  "run_url": "https://github.com/SantAlice/sia.portfolio/actions/runs/40941600141",
-  "recorded_at": "2026-10-29T19:39:03.589977+00:00",
+  "status": "cancelled",
+  "sha": "9b2bebf70b8aa2c572b74a611887e5c508538c0b",
+  "run_id": "41082949489",
+  "run_url": "https://github.com/SantAlice/sia.portfolio/actions/runs/41082949489",
+  "recorded_at": "2026-10-30T15:56:29.299804+00:00",
   "errors": [
-    "Process completed with exit code 1.",
-    "URLError: <urlopen error [Errno -2] Name or service not known>"
-  ]
+    "The job has exceeded the maximum execution time of 15m0s",
+    "The operation was canceled."
+  ],
+  "failed_steps": [],
+  "server_diagnostics": {
+    "Existing sites before deployment": "{'aaautomation.space': '7e69171e51bae94ceae46a9e1b824bf32e0a8b5a23ba6e7eb58ad7b765d2d887  -\\n', 'vancelot3d.space': '7c519044fe6583231a47ca6b82f79998f39067eb4c2c5875781e76d0ed79b012  -\\n'}"
+  }
 }
