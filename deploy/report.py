@@ -11,7 +11,8 @@ import urllib.request
 
 repo = os.environ['GITHUB_REPOSITORY']
 diagnose = os.environ.get('DIAGNOSE_ONLY') == 'true'
-target_run = (str(json.loads(Path('deploy/diagnose-request.json').read_text())['run_id'])
+diagnostic_request = json.loads(Path('deploy/diagnose-request.json').read_text()) if diagnose else {}
+target_run = (str(diagnostic_request.get('run_id', '0'))
               if diagnose else os.environ['GITHUB_RUN_ID'])
 if not target_run.isdigit():
     raise RuntimeError('Invalid diagnostic run ID.')
@@ -31,6 +32,15 @@ def api(path, method='GET', data=None):
     with urllib.request.urlopen(request, timeout=30) as response:
         return json.load(response)
 
+
+if diagnose and diagnostic_request.get('head_sha'):
+    head_sha = diagnostic_request['head_sha']
+    if len(head_sha) != 40 or any(c not in '0123456789abcdef' for c in head_sha):
+        raise RuntimeError('Invalid deployment commit SHA.')
+    runs = api('/actions/workflows/server-deployment.yml/runs?head_sha=' + head_sha)['workflow_runs']
+    if not runs:
+        raise RuntimeError('No deployment run found for requested commit.')
+    target_run = str(runs[0]['id'])
 
 try:
     previous = api('/git/ref/heads/' + branch)['object']['sha']
@@ -60,6 +70,12 @@ if receipt['status'] != 'success':
     try:
         jobs = api('/actions/runs/' + target_run + '/jobs?per_page=100')['jobs']
         receipt['errors'] = []
+        if diagnose:
+            run_info = api('/actions/runs/' + target_run)
+            receipt['deployment_status'] = {k: run_info.get(k) for k in ['status', 'conclusion', 'html_url', 'head_sha']}
+            receipt['jobs'] = [{'name': j['name'], 'status': j['status'], 'conclusion': j.get('conclusion'),
+                                'steps': [{'name': s['name'], 'status': s['status'], 'conclusion': s.get('conclusion')}
+                                          for s in j.get('steps', [])]} for j in jobs]
         for job in jobs:
             if job['name'] != 'server' or not job.get('check_run_url'):
                 continue

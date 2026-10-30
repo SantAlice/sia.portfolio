@@ -8,7 +8,7 @@ permissions:
   actions: read
   checks: read
 concurrency:
-  group: anastasia-pics-server
+  group: anastasia-pics-diagnostics
   cancel-in-progress: false
 jobs:
   diagnose:
