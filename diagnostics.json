@@ -1,23 +1,26 @@
 {
   "kind": "sia.portfolio-deployment-diagnostic",
   "status": "failure",
-  "sha": "e0b5bf94d4dc32535e05181f049fb5f9da0d2914",
-  "run_id": "41085810517",
-  "run_url": "https://github.com/SantAlice/sia.portfolio/actions/runs/41085810517",
-  "recorded_at": "2026-10-30T15:59:58.236104+00:00",
-  "for_run_id": "41085575676",
-  "errors": [],
+  "sha": "77c3ee7173c94b27e56b430864cc1472f7219157",
+  "run_id": "41086033390",
+  "run_url": "https://github.com/SantAlice/sia.portfolio/actions/runs/41086033390",
+  "recorded_at": "2026-10-30T16:01:20.279167+00:00",
+  "for_run_id": "41082949489",
+  "errors": [
+    "The job has exceeded the maximum execution time of 15m0s",
+    "The operation was canceled."
+  ],
   "deployment_status": {
-    "status": "in_progress",
-    "conclusion": null,
-    "html_url": "https://github.com/SantAlice/sia.portfolio/actions/runs/41085575676",
-    "head_sha": "d7879553816e08dac1adc40d4ca8fc6bf2474075"
+    "status": "completed",
+    "conclusion": "cancelled",
+    "html_url": "https://github.com/SantAlice/sia.portfolio/actions/runs/41082949489",
+    "head_sha": "9b2bebf70b8aa2c572b74a611887e5c508538c0b"
   },
   "jobs": [
     {
       "name": "server",
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "cancelled",
       "steps": [
         {
           "name": "Set up job",
@@ -41,19 +44,59 @@
         },
         {
           "name": "Inspect server or deploy isolated portfolio",
-          "status": "in_progress",
-          "conclusion": null
+          "status": "completed",
+          "conclusion": "cancelled"
         },
         {
           "name": "Post Run actions/checkout@v5",
-          "status": "pending",
-          "conclusion": null
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "report",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Save deployment receipt to a separate service branch",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
         }
       ]
     }
   ],
   "failed_steps": [],
-  "server_diagnostics": {},
+  "server_diagnostics": {
+    "Release upload": "319 MB",
+    "Existing sites before deployment": "{'aaautomation.space': '7e69171e51bae94ceae46a9e1b824bf32e0a8b5a23ba6e7eb58ad7b765d2d887  -\\n', 'vancelot3d.space': '7c519044fe6583231a47ca6b82f79998f39067eb4c2c5875781e76d0ed79b012  -\\n'}"
+  },
   "dns": {
     "anastasia.pics": [
       "135.106.163.207"
@@ -62,7 +105,7 @@
       "135.106.163.207"
     ],
     "api.github.com": [
-      "140.82.113.5"
+      "140.82.114.5"
     ]
   },
   "registration": {
@@ -86,7 +129,7 @@
       },
       {
         "eventAction": "last update of RDAP database",
-        "eventDate": "2026-10-30T16:00:00.0Z"
+        "eventDate": "2026-10-30T16:01:22.0Z"
       },
       {
         "eventAction": "last changed",
